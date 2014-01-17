@@ -2,7 +2,6 @@ package com.me.rvbgame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class SplashScreen implements Screen, InputProcessor {
+public class SplashScreen extends GameScreen implements InputProcessor {
 	RvbGdxGame mGame;
 	
 	private OrthographicCamera camera;
@@ -20,7 +19,7 @@ public class SplashScreen implements Screen, InputProcessor {
 	private Sprite sprite;
 	
 	public SplashScreen(RvbGdxGame game) {
-		mGame = game;
+		super(game);
 		
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -40,7 +39,8 @@ public class SplashScreen implements Screen, InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
+		super.render(delta);
+		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
@@ -52,36 +52,35 @@ public class SplashScreen implements Screen, InputProcessor {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
+		super.resize(width, height);
 	}
 
 	@Override
 	public void show() {
+		super.show();
+		
 		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-
+		super.hide();
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-
+		super.pause();
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-
+		super.resume();
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		super.dispose();
+		
 		batch.dispose();
 		texture.dispose();
 	}
