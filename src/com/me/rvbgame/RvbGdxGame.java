@@ -8,11 +8,14 @@ import com.badlogic.gdx.graphics.GL10;
 public class RvbGdxGame extends Game implements ApplicationListener {
 	
 	private SplashScreen splash;
-	
+	private MainMenuScreen menuScreen;
+
 	@Override
 	public void create() {		
-		splash = new SplashScreen(this);
-		setScreen(splash);
+//		splash = new SplashScreen(this);
+//		setScreen(splash);
+        menuScreen = new MainMenuScreen(this);
+        setScreen(menuScreen);
 	}
 
 	@Override
