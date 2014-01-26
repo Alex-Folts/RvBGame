@@ -54,7 +54,7 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
 //label "welcome"
         Label welcomeLabel = new Label( "Hi!", getSkin() );
         welcomeLabel.setBounds(currX, currY, BUTTON_WIDTH, BUTTON_HEIGHT / 2);
-//btnBegin
+//btnBegin  //
         currY -= BUTTON_HEIGHT + BUTTON_SPACING;
         TextButton startGameButton = new TextButton("Start game", getSkin());
         startGameButton.setBounds(currX, currY, BUTTON_WIDTH, BUTTON_HEIGHT);
