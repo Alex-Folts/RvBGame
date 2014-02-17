@@ -13,4 +13,7 @@ public class RvBWorld extends RvBBase {
 		super(parentScreen);
 	}
 
+    public void endTurn(RvBPlayer player) {
+//        give the move to other player
+    }
 }
