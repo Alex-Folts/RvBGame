@@ -14,6 +14,7 @@ public class RvbGdxGame extends Game implements ApplicationListener {
 	@Override
 	public void create() {
 		setScreen(new SplashScreen(this));
+		
 	}
 
 	@Override
