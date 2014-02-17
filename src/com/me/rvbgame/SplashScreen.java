@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class SplashScreen extends GameScreen implements InputProcessor {
-	RvbGdxGame mGame;
 	
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -105,8 +104,9 @@ public class SplashScreen extends GameScreen implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		Gdx.app.log("RvB", "SPSettingsScreen:touchDown");
+		mGame.setScreen( new SPSettingsScreen(mGame));
+		return true;
 	}
 
 	@Override
