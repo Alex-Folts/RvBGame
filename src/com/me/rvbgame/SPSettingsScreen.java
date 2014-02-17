@@ -48,7 +48,7 @@ public class SPSettingsScreen extends GameScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
-                mGame.setScreen(new SplashScreen(mGame));
+                mGame.setScreen(new MainMenuScreen(mGame));
             };
         });
         

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -64,7 +63,7 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("BVG", "MainMenuScreen:clicked exit");
 
-                mGame.setScreen(new SplashScreen(mGame));
+                mGame.setScreen(new SPSettingsScreen(mGame));
             };
 
             ;
@@ -79,7 +78,8 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("BVG", "MainMenuScreen:clicked exit");
 
-                mGame.setScreen(new SplashScreen(mGame));
+//                mGame.setScreen(new SplashScreen(mGame));
+                Gdx.app.exit();
             };
         });
         full += "xl ";
