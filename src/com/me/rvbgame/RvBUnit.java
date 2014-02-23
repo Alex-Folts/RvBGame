@@ -4,8 +4,10 @@ package com.me.rvbgame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 
 public abstract class RvBUnit extends RvBBase {
@@ -25,9 +27,15 @@ public abstract class RvBUnit extends RvBBase {
     private Image unitImage;
 
     public UnitType unitType;
+    
+    private RvBPlayer player;
+    private boolean bCanOperate;
+    private boolean bDead;
 
-    public RvBUnit(BattleScreen parentScreen) {
+    public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen);
+        
+        player = playerOwner;
     }
 
     public void setUnitImage(String texturePath, int width, int height){
@@ -51,8 +59,28 @@ public abstract class RvBUnit extends RvBBase {
     public void setUnitImage(Image image) {
         this.unitImage = image;
         this.battleScreen.stage.addActor(this.unitImage);
+        this.unitImage.addListener( new ClickListener() {             
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (battleScreen.world.getCurrentTurnPlayer() == player)
+				{
+					player.setActingUnit(RvBUnit.this);
+				} else
+				{
+					if (player.getActingUnit() != null)
+					{
+						RvBWorld.Damage(player.getActingUnit(), RvBUnit.this, 0);
+						player.getActingUnit().setbCanOperate(false);
+					}
+				}
+			};
+		});
     }
 
+    public static boolean IsPhysAttack(int attackID) {
+		return true;
+	}
+    
     public int getHealth() {
         return health;
     }
@@ -116,4 +144,20 @@ public abstract class RvBUnit extends RvBBase {
     public void setAttackRange(byte attackRange) {
         this.attackRange = attackRange;
     }
+
+	public boolean isbCanOperate() {
+		return bCanOperate;
+	}
+
+	public void setbCanOperate(boolean bCanOperate) {
+		this.bCanOperate = bCanOperate;
+	}
+
+	public boolean isbDead() {
+		return bDead;
+	}
+
+	public void setbDead(boolean bDead) {
+		this.bDead = bDead;
+	}
 }
