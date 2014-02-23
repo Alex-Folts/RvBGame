@@ -9,8 +9,8 @@ public class RvBWorld extends RvBBase {
 	
 	private Image bgImage;
 	
-//	private playerLeft;
-//	private playerRight;
+	private RvBPlayer playerLeft;
+	private RvBPlayer playerRight;
 	
 	public RvBWorld(BattleScreen parentScreen) {
 		super(parentScreen);
@@ -31,14 +31,14 @@ public class RvBWorld extends RvBBase {
 	public boolean CalcTurn() {
 		currentTurnRight = !currentTurnRight;
 		if (currentTurnRight) {
-//			playerRight.beginTurn();
+			playerRight.beginTurn();
 		} else {
-//			playerLeft.beginTurn();
+			playerLeft.beginTurn();
 		}
 		return true;
 	}
 	
-	public boolean endTurn() {
+	public boolean endTurn(RvBPlayer player) {
 		return CalcTurn();
 	}
 }
