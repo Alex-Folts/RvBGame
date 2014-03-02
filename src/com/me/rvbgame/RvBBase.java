@@ -8,4 +8,15 @@ public abstract class RvBBase {
 		battleScreen = parentScreen;
 	}
 
+	public void show() {
+
+	}
+	
+	public void resize(int width, int height) {
+
+	}
+
+	public void dispose() {
+
+	}
 }

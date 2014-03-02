@@ -2,8 +2,11 @@ package com.me.rvbgame;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -24,22 +27,45 @@ public abstract class RvBUnit extends RvBBase {
     private byte targetsNum;
     private byte attackRange;
 
-    private Image unitImage;
+//    private Image unitImage;
 
     public UnitType unitType;
     
-    private RvBPlayer player;
+    protected RvBPlayer player;
     private boolean bCanOperate;
     private boolean bDead;
 
+	protected final String avaPath = "data/Andr_087098.png";
+	
+	protected Image avaImage;
+	private Texture avaTexture;
+	protected int avaTexWidth = 512;
+	protected int avaTexHeight = 512;
+    
     public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen);
         
         player = playerOwner;
     }
 
+    public String getImagePath() {
+		return avaPath;
+	}
+    
+    public int getAvaImagwWidth() {
+		return avaTexWidth;
+	}
+    
+    public int getAvaImagwHeight() {
+		return avaTexHeight;
+	}
+    
+    public Vector2 getAvaSize() {
+		return new Vector2(128, 128);
+	}
+    
     public void setUnitImage(String texturePath, int width, int height){
-        Texture texture = new Texture(Gdx.files.internal(texturePath));
+/*        Texture texture = new Texture(Gdx.files.internal(texturePath));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         TextureRegion region = new TextureRegion(texture, 0,0, width, height);
@@ -49,15 +75,15 @@ public abstract class RvBUnit extends RvBBase {
         splashImage.setSize(width, height);
         splashImage.setColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-        this.setUnitImage(splashImage);
+        this.setUnitImage(splashImage);*/
     }
 
-    public Image getUnitImage() {
+/*    public Image getUnitImage() {
         return unitImage;
-    }
+    }*/
 
     public void setUnitImage(Image image) {
-        this.unitImage = image;
+ /*       this.unitImage = image;
         this.battleScreen.stage.addActor(this.unitImage);
         this.unitImage.addListener( new ClickListener() {             
 			@Override
@@ -69,12 +95,12 @@ public abstract class RvBUnit extends RvBBase {
 				{
 					if (player.getActingUnit() != null)
 					{
-						RvBWorld.Damage(player.getActingUnit(), RvBUnit.this, 0);
+						RvBWorld.damage(player.getActingUnit(), RvBUnit.this, 0);
 						player.getActingUnit().setbCanOperate(false);
 					}
 				}
 			};
-		});
+		});*/
     }
 
     public static boolean IsPhysAttack(int attackID) {
@@ -151,6 +177,15 @@ public abstract class RvBUnit extends RvBBase {
 
 	public void setbCanOperate(boolean bCanOperate) {
 		this.bCanOperate = bCanOperate;
+
+		if (bCanOperate)
+		{
+			settowerColor(new Color(0, 1, 0, 1));
+		} else
+		{
+			settowerColor(new Color(1, 1, 1, 1));
+		}
+		Gdx.app.log("RvB", "setbCanOperate "+bCanOperate);
 	}
 
 	public boolean isbDead() {
@@ -159,5 +194,68 @@ public abstract class RvBUnit extends RvBBase {
 
 	public void setbDead(boolean bDead) {
 		this.bDead = bDead;
+	}
+	
+	@Override
+	public void show() {
+		super.show();
+		
+		avaTexture = new Texture(Gdx.files.internal(getImagePath()));
+		avaTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		avaTexture.dispose();
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		
+		TextureRegion region = new TextureRegion(avaTexture, 0, 0, getAvaImagwWidth(), getAvaImagwHeight());
+		
+		avaImage = new Image(region);
+		avaImage.setScaling(Scaling.stretch);
+		avaImage.setAlign((Align.bottom | Align.left));
+		avaImage.setSize(getAvaSize().x, getAvaSize().y);
+		
+		avaImage.addListener( new ClickListener() {             
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (battleScreen.world.getCurrentTurnPlayer() == player)
+				{
+					player.setActingUnit(RvBUnit.this);
+				} else
+				{
+					if (player.getActingUnit() != null)
+					{
+						RvBWorld.damage(player.getActingUnit(), RvBUnit.this, 0);
+						player.getActingUnit().setbCanOperate(false);
+					}
+				}
+			};
+		});
+		
+		if (bCanOperate)
+		{
+			settowerColor(new Color(0, 1, 0, 1));
+		} else
+		{
+			settowerColor(new Color(1, 1, 1, 1));
+		}
+		
+//		battleScreen.stage.addActor(avaImage);
+		battleScreen.sceneLayerUnits.addActor(avaImage);
+	}
+	
+	public void settowerColor(Color newClor)
+	{
+		if (avaImage != null)
+		{
+			avaImage.setColor(newClor);
+		}
 	}
 }

@@ -43,6 +43,13 @@ public class SPSettingsScreen extends GameScreen {
         factionCaptionLabel.setFontScale(1.0f);
 
         startBattleButton = new TextButton("Start battle", getSkin());
+        startBattleButton.addListener( new ClickListener() {             
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
+                mGame.setScreen(new BattleScreen(mGame));
+            };
+        });
         backButton = new TextButton("Back", getSkin());
         backButton.addListener( new ClickListener() {             
             @Override

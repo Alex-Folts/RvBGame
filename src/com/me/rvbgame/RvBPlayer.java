@@ -21,19 +21,38 @@ public class RvBPlayer extends RvBBase{
     public RvBPlayer(BattleScreen parentScreen/*, RvBWorld world*/) {
         super(parentScreen);
 //        this.world = world;
+        
+        tower = new RvBTower(battleScreen, this);
     }
 
     public void beginTurn()
     {
     	isMyTurn = true;
     	ClearCorpses();
-    	tower.setbCanOperate(true);
-    	slot1.setbCanOperate(true);
-    	slot2.setbCanOperate(true);
-    	slot3.setbCanOperate(true);
-    	slot4.setbCanOperate(true);
-    	slot5.setbCanOperate(true);
-
+    	if (tower != null)
+    	{
+    		tower.setbCanOperate(true);
+    	}
+    	if (slot1 != null)
+    	{
+    		slot1.setbCanOperate(true);
+    	}
+    	if (slot2 != null)
+    	{
+    		slot2.setbCanOperate(true);
+    	}
+    	if (slot3 != null)
+    	{
+    		slot3.setbCanOperate(true);
+    	}
+    	if (slot4 != null)
+    	{
+    		slot4.setbCanOperate(true);
+    	}
+    	if (slot5 != null)
+    	{
+    		slot5.setbCanOperate(true);
+    	}
         if(isAI)
             this.makeMove();
         else {
@@ -55,25 +74,112 @@ public class RvBPlayer extends RvBBase{
 	}
 	
 	private void ClearCorpses() {
-		if (slot1.isbDead())
+		if (slot1 != null)
 		{
-			slot1 = null;
+			if (slot1.isbDead())
+			{
+				slot1 = null;
+			}
 		}
-		if (slot2.isbDead())
+		if (slot2 != null)
 		{
-			slot2 = null;
+			if (slot2.isbDead())
+			{
+				slot2 = null;
+			}
 		}
-		if (slot3.isbDead())
+		if (slot3 != null)
 		{
-			slot3 = null;
+			if (slot3.isbDead())
+			{
+				slot3 = null;
+			}
 		}
-		if (slot4.isbDead())
+		if (slot4 != null)
 		{
-			slot4 = null;
+			if (slot4.isbDead())
+			{
+				slot4 = null;
+			}
 		}
-		if (slot5.isbDead())
+		if (slot5 != null)
 		{
-			slot5 = null;
+			if (slot5.isbDead())
+			{
+				slot5 = null;
+			}
+		}
+	}
+	
+	@Override
+	public void show() {
+		super.show();
+		
+		if (tower != null){
+			tower.show();
+		}
+		if (slot1 != null){
+			slot1.show();
+		}
+		if (slot2 != null){
+			slot2.show();
+		}
+		if (slot3 != null){
+			slot3.show();
+		}
+		if (slot4 != null){
+			slot4.show();
+		}
+		if (slot5 != null){
+			slot5.show();
+		}
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		
+		if (tower != null){
+			tower.resize(width, height);
+		}
+		if (slot1 != null){
+			slot1.resize(width, height);
+		}
+		if (slot2 != null){
+			slot2.resize(width, height);
+		}
+		if (slot3 != null){
+			slot3.resize(width, height);
+		}
+		if (slot4 != null){
+			slot4.resize(width, height);
+		}
+		if (slot5 != null){
+			slot5.resize(width, height);
+		}
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		if (tower != null){
+			tower.dispose();
+		}
+		if (slot1 != null){
+			slot1.dispose();
+		}
+		if (slot2 != null){
+			slot2.dispose();
+		}
+		if (slot3 != null){
+			slot3.dispose();
+		}
+		if (slot4 != null){
+			slot4.dispose();
+		}
+		if (slot5 != null){
+			slot5.dispose();
 		}
 	}
 }
