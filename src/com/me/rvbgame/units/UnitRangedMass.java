@@ -9,18 +9,13 @@ public class UnitRangedMass extends RvBUnit {
 
     public UnitRangedMass(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen, playerOwner);
+
         this.unitType = UnitType.UNIT_TYPE_RANGED_MASS;
+        StatsHelper.initiate(this);
+    }
 
-        this.setHealth(StatsHelper.AVERAGE_VALUE);
-        this.setEnergy(StatsHelper.MAX_VALUE);
-
-        this.setpAttack(StatsHelper.AVERAGE_VALUE);
-        this.setpDefence(StatsHelper.AVERAGE_VALUE);
-
-        this.setiAttack(StatsHelper.AVERAGE_VALUE);
-        this.setiDefence(StatsHelper.AVERAGE_VALUE);
-
-        this.setTargetsNum((byte) 5);
-        this.setAttackRange((byte) 3);
+    public UnitRangedMass(){
+        this.unitType = UnitType.UNIT_TYPE_RANGED_MASS;
+        StatsHelper.initiate(this);
     }
 }

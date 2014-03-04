@@ -8,4 +8,6 @@ public abstract class RvBBase {
 		battleScreen = parentScreen;
 	}
 
+    protected RvBBase() {
+    }
 }

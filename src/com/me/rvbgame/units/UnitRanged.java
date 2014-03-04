@@ -11,19 +11,14 @@ public class UnitRanged extends RvBUnit{
 
     public UnitRanged(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen, playerOwner);
+
         this.unitType = UnitType.UNIT_TYPE_RANGED;
+        StatsHelper.initiate(this);
+    }
 
-        this.setHealth(StatsHelper.MIN_VALUE);
-        this.setEnergy(StatsHelper.AVERAGE_VALUE);
-
-        this.setpAttack(StatsHelper.MAX_VALUE);
-        this.setpDefence(StatsHelper.MIN_VALUE);
-
-        this.setiAttack(StatsHelper.MAX_VALUE);
-        this.setiDefence(StatsHelper.MIN_VALUE);
-
-        this.setTargetsNum((byte) 1);
-        this.setAttackRange((byte) 3);
+    public UnitRanged(){
+        this.unitType = UnitType.UNIT_TYPE_RANGED;
+        StatsHelper.initiate(this);
     }
 
     void useAim(){

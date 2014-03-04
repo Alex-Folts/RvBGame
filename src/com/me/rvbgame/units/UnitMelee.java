@@ -10,17 +10,11 @@ public class UnitMelee extends RvBUnit{
         super(parentScreen, playerOwner);
 
         this.unitType = UnitType.UNIT_TYPE_MELEE;
+        StatsHelper.initiate(this);
+    }
 
-        this.setHealth(StatsHelper.MAX_VALUE);
-        this.setEnergy(StatsHelper.AVERAGE_VALUE);
-
-        this.setpAttack(StatsHelper.MAX_VALUE);
-        this.setpDefence(StatsHelper.AVERAGE_VALUE);
-
-        this.setiAttack(StatsHelper.AVERAGE_VALUE);
-        this.setiDefence(StatsHelper.AVERAGE_VALUE);
-
-        this.setTargetsNum((byte) 1);
-        this.setAttackRange((byte) 1);
+    public UnitMelee(){
+        this.unitType = UnitType.UNIT_TYPE_MELEE;
+        StatsHelper.initiate(this);
     }
 }

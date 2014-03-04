@@ -38,6 +38,9 @@ public abstract class RvBUnit extends RvBBase {
         player = playerOwner;
     }
 
+    protected RvBUnit() {
+    }
+
     public void setUnitImage(String texturePath, int width, int height){
         Texture texture = new Texture(Gdx.files.internal(texturePath));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

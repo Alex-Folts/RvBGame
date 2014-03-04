@@ -10,17 +10,11 @@ public class UnitDefender extends RvBUnit {
     public UnitDefender(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen, playerOwner);
         this.unitType = UnitType.UNIT_TYPE_DEFENDER;
+        StatsHelper.initiate(this);
 
-        this.setHealth(StatsHelper.MAX_VALUE);
-        this.setEnergy(StatsHelper.ZERO_VALUE);
-
-        this.setpAttack(StatsHelper.AVERAGE_VALUE);
-        this.setpDefence(StatsHelper.MAX_VALUE);
-
-        this.setiAttack(StatsHelper.ZERO_VALUE);
-        this.setiDefence(StatsHelper.MAX_VALUE);
-
-        this.setTargetsNum((byte) 1);
-        this.setAttackRange((byte) 1);
+    }
+    public UnitDefender(){
+        this.unitType = UnitType.UNIT_TYPE_DEFENDER;
+        StatsHelper.initiate(this);
     }
 }

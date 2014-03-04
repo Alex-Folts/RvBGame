@@ -9,18 +9,12 @@ public class UnitSpecialStan extends RvBUnit{
     public UnitSpecialStan(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen, playerOwner);
         this.unitType = UnitType.UNIT_TYPE_SPECIAL;
+        StatsHelper.initiate(this);
+    }
 
-        this.setHealth(StatsHelper.MAX_VALUE);
-        this.setEnergy(StatsHelper.AVERAGE_VALUE);
-
-        this.setpAttack(StatsHelper.MAX_VALUE);
-        this.setpDefence(StatsHelper.AVERAGE_VALUE);
-
-        this.setiAttack(StatsHelper.AVERAGE_VALUE);
-        this.setiDefence(StatsHelper.AVERAGE_VALUE);
-
-        this.setTargetsNum((byte) 1);
-        this.setAttackRange((byte) 2);
+    public UnitSpecialStan(){
+        this.unitType = UnitType.UNIT_TYPE_SPECIAL;
+        StatsHelper.initiate(this);
     }
 
     void useAim(){
