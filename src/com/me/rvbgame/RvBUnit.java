@@ -48,6 +48,10 @@ public abstract class RvBUnit extends RvBBase {
         player = playerOwner;
     }
 
+    public RvBUnit() {
+		super();
+	}
+    
     public String getImagePath() {
 		return avaPath;
 	}
@@ -63,7 +67,7 @@ public abstract class RvBUnit extends RvBBase {
     public Vector2 getAvaSize() {
 		return new Vector2(128, 128);
 	}
-    
+
     public void setUnitImage(String texturePath, int width, int height){
 /*        Texture texture = new Texture(Gdx.files.internal(texturePath));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
