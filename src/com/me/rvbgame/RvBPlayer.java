@@ -1,5 +1,7 @@
 package com.me.rvbgame;
 
+
+
 public class RvBPlayer extends RvBBase{
 
     public RvBTower tower;
@@ -22,7 +24,10 @@ public class RvBPlayer extends RvBBase{
         super(parentScreen);
 //        this.world = world;
         
-        tower = new RvBTower(battleScreen, this);
+        tower = new RvBTower(battleScreen, this, "data/json_files/tower.json");
+        
+//        units = new RvBUnit[1];
+//        units[0] = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
     }
 
     public void beginTurn()

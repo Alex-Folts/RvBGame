@@ -7,14 +7,20 @@ import com.me.rvbgame.UnitType;
 
 public class UnitDefender extends RvBUnit {
 
+    public UnitDefender(BattleScreen parentScreen, RvBPlayer playerOwner, String jsonData) {
+        super(parentScreen, playerOwner, jsonData);
+        this.unitType = UnitType.UNIT_TYPE_DEFENDER;
+    }
+	
     public UnitDefender(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen, playerOwner);
         this.unitType = UnitType.UNIT_TYPE_DEFENDER;
-        StatsHelper.initiate(this);
+//        StatsHelper.initiate(this);
 
     }
+	
     public UnitDefender(){
         this.unitType = UnitType.UNIT_TYPE_DEFENDER;
-        StatsHelper.initiate(this);
+//        StatsHelper.initiate(this);
     }
 }

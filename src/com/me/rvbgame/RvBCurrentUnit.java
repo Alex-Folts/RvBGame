@@ -7,6 +7,10 @@ public class RvBCurrentUnit extends RvBUnit {
         this.unitType = unitType;
     }
     
+    public RvBCurrentUnit() {
+
+    }
+    
     @Override
     public void resize(int width, int height) {
     	super.resize(width, height);

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Scaling;
 
 public abstract class RvBUnit extends RvBBase {
@@ -27,21 +28,49 @@ public abstract class RvBUnit extends RvBBase {
     private byte targetsNum;
     private byte attackRange;
 
-//    private Image unitImage;
-
     public UnitType unitType;
     
     protected RvBPlayer player;
     private boolean bCanOperate;
     private boolean bDead;
 
-	protected final String avaPath = "data/Andr_087098.png";
+    protected String avaPath = "data/Andr_087098.png";
 	
 	protected Image avaImage;
 	private Texture avaTexture;
-	protected int avaTexWidth = 512;
-	protected int avaTexHeight = 512;
+	protected int avaTexWidth = 1024;
+	protected int avaTexHeight = 1024;
+	protected Vector2 avaSize = new Vector2(256, 256);
     
+    public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner, String jsonData) {
+        super(parentScreen);
+        
+        player = playerOwner;
+        
+        Json js = new Json();
+        
+        RvBUnit tmpUnit = js.fromJson(RvBTower.class, Gdx.files.internal(jsonData));
+        if (tmpUnit != null)
+        {
+        	this.setHealth(tmpUnit.getHealth());
+        	this.setEnergy(tmpUnit.getEnergy());
+        	
+        	this.setpAttack(tmpUnit.getpAttack());
+        	this.setpDefence(tmpUnit.getpDefence());
+        	
+        	this.setiAttack(tmpUnit.getiAttack());
+        	this.setiDefence(tmpUnit.getiDefence());
+        	
+        	this.setTargetsNum(tmpUnit.getTargetsNum());
+        	this.setAttackRange(tmpUnit.getAttackRange());
+        	
+        	this.avaPath = tmpUnit.avaPath;
+        	this.avaTexWidth = tmpUnit.avaTexWidth;
+        	this.avaTexHeight = tmpUnit.avaTexHeight;
+        	this.avaSize = tmpUnit.avaSize;
+        }
+    }
+	
     public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen);
         
@@ -68,8 +97,8 @@ public abstract class RvBUnit extends RvBBase {
 		return new Vector2(128, 128);
 	}
 
-    public void setUnitImage(String texturePath, int width, int height){
-/*        Texture texture = new Texture(Gdx.files.internal(texturePath));
+/*    public void setUnitImage(String texturePath, int width, int height){
+        Texture texture = new Texture(Gdx.files.internal(texturePath));
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         TextureRegion region = new TextureRegion(texture, 0,0, width, height);
@@ -79,15 +108,15 @@ public abstract class RvBUnit extends RvBBase {
         splashImage.setSize(width, height);
         splashImage.setColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-        this.setUnitImage(splashImage);*/
-    }
+        this.setUnitImage(splashImage);
+    }*/
 
 /*    public Image getUnitImage() {
         return unitImage;
     }*/
 
-    public void setUnitImage(Image image) {
- /*       this.unitImage = image;
+/*    public void setUnitImage(Image image) {
+        this.unitImage = image;
         this.battleScreen.stage.addActor(this.unitImage);
         this.unitImage.addListener( new ClickListener() {             
 			@Override
@@ -104,8 +133,8 @@ public abstract class RvBUnit extends RvBBase {
 					}
 				}
 			};
-		});*/
-    }
+		});
+    }*/
 
     public static boolean IsPhysAttack(int attackID) {
 		return true;
@@ -250,9 +279,18 @@ public abstract class RvBUnit extends RvBBase {
 		{
 			settowerColor(new Color(1, 1, 1, 1));
 		}
-		
-//		battleScreen.stage.addActor(avaImage);
-		battleScreen.sceneLayerUnits.addActor(avaImage);
+
+//		battleScreen.sceneLayerUnits.addActor(avaImage);
+		switch (unitType)
+		{
+			case UNIT_TYPE_TOWER:
+				battleScreen.sceneLayerTowers.addActor(avaImage);
+				break;
+	
+			default:
+				battleScreen.sceneLayerUnits.addActor(avaImage);
+				break;
+		}
 	}
 	
 	public void settowerColor(Color newClor)

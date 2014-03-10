@@ -4,11 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.me.rvbgame.RvBUnit;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.me.rvbgame.RvBUnit;
 
 public class StatsHelper {
 
@@ -73,7 +73,7 @@ public class StatsHelper {
 
 
     public static JSONObject parsedJSON(String filePath){
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = null;        
         try {
             // read the json file
 
