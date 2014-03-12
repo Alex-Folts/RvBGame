@@ -85,11 +85,11 @@ public abstract class RvBUnit extends RvBBase {
 		return avaPath;
 	}
     
-    public int getAvaImagwWidth() {
+    public int getAvaImageWidth() {
 		return avaTexWidth;
 	}
     
-    public int getAvaImagwHeight() {
+    public int getAvaImageHeight() {
 		return avaTexHeight;
 	}
     
@@ -248,7 +248,7 @@ public abstract class RvBUnit extends RvBBase {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		
-		TextureRegion region = new TextureRegion(avaTexture, 0, 0, getAvaImagwWidth(), getAvaImagwHeight());
+		TextureRegion region = new TextureRegion(avaTexture, 0, 0, getAvaImageWidth(), getAvaImageHeight());
 		
 		avaImage = new Image(region);
 		avaImage.setScaling(Scaling.stretch);
@@ -293,11 +293,11 @@ public abstract class RvBUnit extends RvBBase {
 		}
 	}
 	
-	public void settowerColor(Color newClor)
+	public void settowerColor(Color newColor)
 	{
 		if (avaImage != null)
 		{
-			avaImage.setColor(newClor);
+			avaImage.setColor(newColor);
 		}
 	}
 }

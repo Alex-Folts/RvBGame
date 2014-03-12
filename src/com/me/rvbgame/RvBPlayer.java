@@ -33,6 +33,7 @@ public class RvBPlayer extends RvBBase{
     public void beginTurn()
     {
     	isMyTurn = true;
+//        if (battleScreen != null && battleScreen.world != null) battleScreen.world.actionPointsLeftLabel.setText("200");
     	ClearCorpses();
     	if (tower != null)
     	{
@@ -64,6 +65,42 @@ public class RvBPlayer extends RvBBase{
 //       enable interaction
         }
     }
+
+    public void endTurn()
+    {
+        isMyTurn = true;
+        ClearCorpses();
+        if (tower != null)
+        {
+            tower.setbCanOperate(false);
+        }
+        if (slot1 != null)
+        {
+            slot1.setbCanOperate(false);
+        }
+        if (slot2 != null)
+        {
+            slot2.setbCanOperate(false);
+        }
+        if (slot3 != null)
+        {
+            slot3.setbCanOperate(false);
+        }
+        if (slot4 != null)
+        {
+            slot4.setbCanOperate(false);
+        }
+        if (slot5 != null)
+        {
+            slot5.setbCanOperate(false);
+        }
+        if(isAI)
+            this.makeMove();
+        else {
+//       enable interaction
+        }
+    }
+
 
     private void makeMove() {
 //        make move by AI

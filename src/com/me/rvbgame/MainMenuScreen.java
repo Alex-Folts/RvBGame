@@ -12,13 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-/**
- * Created with love.
- * User: Sasha
- * Package: com.me.rvbgame
- */
-
-
 public class MainMenuScreen extends GameScreen implements InputProcessor {
 
     private OrthographicCamera camera;
@@ -61,7 +54,7 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
                 addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("BVG", "MainMenuScreen:clicked exit");
+                Gdx.app.log("BVG", "MainMenuScreen:clicked start");
 
                 mGame.setScreen(new SPSettingsScreen(mGame));
             };
@@ -97,21 +90,6 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
     public MainMenuScreen(RvbGdxGame game) {
         super(game);
         mGame = game;
-
-//        float w = Gdx.graphics.getWidth();
-//        float h = Gdx.graphics.getHeight();
-//
-//        camera = new OrthographicCamera(1, h/w);
-//        batch = new SpriteBatch();
-//
-//        texture = new Texture(Gdx.files.internal("data/Andr_087098.png"));
-//        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//        TextureRegion region = new TextureRegion(texture, 0, 0, 512, 288);
-//
-//        sprite = new Sprite(region);
-//        sprite.setSize(1.0f, 1.0f * sprite.getHeight() / sprite.getWidth());
-//        sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-//        sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
     }
 
     @Override
