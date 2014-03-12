@@ -1,5 +1,6 @@
 package com.me.rvbgame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
 public class BattleScreen extends GameScreen {
@@ -15,6 +16,9 @@ public class BattleScreen extends GameScreen {
 	protected Group sceneLayerMenu = new Group();
 	protected Group sceneLayerTop = new Group();
 	
+	public float screenResW;
+	public float screenResH;
+	
 	public BattleScreen(RvbGdxGame game) {
 		super(game);
 		
@@ -29,6 +33,11 @@ public class BattleScreen extends GameScreen {
 		stage.addActor(sceneLayerGUI);
 		stage.addActor(sceneLayerMenu);
 		stage.addActor(sceneLayerTop);
+		
+/*		if (world != null)
+		{
+			world.initWorld();
+		}*/
 	}
 
 	@Override
@@ -43,6 +52,9 @@ public class BattleScreen extends GameScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
+		
+		screenResW = width;
+		screenResH = height;
 		
 		if (world != null){
 			world.resize(width, height);

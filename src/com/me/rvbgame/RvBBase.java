@@ -8,6 +8,14 @@ public abstract class RvBBase {
 		battleScreen = parentScreen;
 	}
 
+	public void addToDraw() {
+		
+	}
+	
+	public void removeFromDraw() {
+		
+	}
+	
 	public RvBBase() {
 		
 	}

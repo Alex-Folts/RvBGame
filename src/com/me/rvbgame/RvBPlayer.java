@@ -1,5 +1,7 @@
 package com.me.rvbgame;
 
+import com.me.rvbgame.units.UnitDefender;
+
 
 
 public class RvBPlayer extends RvBBase{
@@ -17,17 +19,23 @@ public class RvBPlayer extends RvBBase{
     public boolean isMyTurn;
 
     private RvBUnit actingUnit;
-    
-//    private RvBWorld world;
 
-    public RvBPlayer(BattleScreen parentScreen/*, RvBWorld world*/) {
+    public RvBPlayer(BattleScreen parentScreen) {
         super(parentScreen);
-//        this.world = world;
         
         tower = new RvBTower(battleScreen, this, "data/json_files/tower.json");
         
-//        units = new RvBUnit[1];
-//        units[0] = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        units = new RvBUnit[5];
+        slot1 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        units[0] = slot1;
+        slot2 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        units[1] = slot2;
+        slot3 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        units[2] = slot3;
+        slot4 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        units[3] = slot4;
+        slot5 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        units[4] = slot5;
     }
 
     public void beginTurn()

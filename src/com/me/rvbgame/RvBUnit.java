@@ -38,9 +38,9 @@ public abstract class RvBUnit extends RvBBase {
 	
 	protected Image avaImage;
 	private Texture avaTexture;
-	protected int avaTexWidth = 1024;
-	protected int avaTexHeight = 1024;
-	protected Vector2 avaSize = new Vector2(256, 256);
+	protected int avaTexWidth = 128;
+	protected int avaTexHeight = 128;
+	protected Vector2 avaSize = new Vector2(48, 48);
     
     public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner, String jsonData) {
         super(parentScreen);
@@ -85,16 +85,16 @@ public abstract class RvBUnit extends RvBBase {
 		return avaPath;
 	}
     
-    public int getAvaImagwWidth() {
+    public int getAvaImageWidth() {
 		return avaTexWidth;
 	}
     
-    public int getAvaImagwHeight() {
+    public int getAvaImageHeight() {
 		return avaTexHeight;
 	}
     
     public Vector2 getAvaSize() {
-		return new Vector2(128, 128);
+		return avaSize;
 	}
 
 /*    public void setUnitImage(String texturePath, int width, int height){
@@ -229,21 +229,24 @@ public abstract class RvBUnit extends RvBBase {
 		this.bDead = bDead;
 	}
 	
-	@Override
+/*	@Override
 	public void show() {
 		super.show();
 		
 		avaTexture = new Texture(Gdx.files.internal(getImagePath()));
 		avaTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 	}
-	
+	*/
 	@Override
 	public void dispose() {
 		super.dispose();
 		
-		avaTexture.dispose();
+		if (avaTexture != null)
+		{
+			avaTexture.dispose();
+		}
 	}
-	
+/*	
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
@@ -291,13 +294,246 @@ public abstract class RvBUnit extends RvBBase {
 				battleScreen.sceneLayerUnits.addActor(avaImage);
 				break;
 		}
+		
+		if (unitType != UnitType.UNIT_TYPE_TOWER)
+		{
+	    	if (player == battleScreen.world.playerRight)
+	    	{
+	    		if (player.slot1 == this)
+	    		{
+	    			avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
+	    		} else 
+				if (player.slot2 == this)
+				{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot3 == this)
+				{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot4 == this)
+				{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot5 == this)
+	    		{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
+	    		}
+	    	} else
+	    	{
+	    		if (player.slot1 == this)
+	    		{
+	    			avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
+	    		} else 
+				if (player.slot2 == this)
+				{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot3 == this)
+				{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot4 == this)
+				{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot5 == this)
+	    		{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
+	    		}
+	    	}
+		}
 	}
-	
+	*/
 	public void settowerColor(Color newClor)
 	{
 		if (avaImage != null)
 		{
 			avaImage.setColor(newClor);
 		}
+	}
+	
+	@Override
+	public void show() {
+		super.show();
+		
+		addToDraw();
+	}
+	
+	@Override
+	public void addToDraw() {
+		super.addToDraw();
+		
+		avaTexture = new Texture(Gdx.files.internal(getImagePath()));
+		avaTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		TextureRegion region = new TextureRegion(avaTexture, 0, 0, getAvaImageWidth(), getAvaImageHeight());
+		
+		avaImage = new Image(region);
+		avaImage.setScaling(Scaling.stretch);
+		avaImage.setAlign((Align.bottom | Align.left));
+		avaImage.setSize(getAvaSize().x, getAvaSize().y);
+		
+		avaImage.addListener( new ClickListener() {             
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (battleScreen.world.getCurrentTurnPlayer() == player)
+				{
+					player.setActingUnit(RvBUnit.this);
+				} else
+				{
+					if (player.getActingUnit() != null)
+					{
+						RvBWorld.damage(player.getActingUnit(), RvBUnit.this, 0);
+						player.getActingUnit().setbCanOperate(false);
+					}
+				}
+			};
+		});	
+		
+		if (bCanOperate)
+		{
+			settowerColor(new Color(0, 1, 0, 1));
+		} else
+		{
+			settowerColor(new Color(1, 1, 1, 1));
+		}
+
+		switch (unitType)
+		{
+			case UNIT_TYPE_TOWER:
+				battleScreen.sceneLayerTowers.addActor(avaImage);
+				break;
+	
+			default:
+				battleScreen.sceneLayerUnits.addActor(avaImage);
+				break;
+		}
+		
+		if (unitType != UnitType.UNIT_TYPE_TOWER)
+		{
+/*			Gdx.app.log("RvB", "addToDraw player = "+player);
+			Gdx.app.log("RvB", "addToDraw battleScreen = "+battleScreen);
+			Gdx.app.log("RvB", "addToDraw world = "+battleScreen.world);
+			Gdx.app.log("RvB", "addToDraw playerRight = "+battleScreen.world.playerRight);*/
+	    	if (player == battleScreen.world.playerRight)
+	    	{
+	    		if (player.slot1 == this)
+	    		{
+	    			avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
+	    		} else 
+				if (player.slot2 == this)
+				{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot3 == this)
+				{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot4 == this)
+				{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot5 == this)
+	    		{
+					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
+	    		}
+	    	} else
+	    	{
+	    		if (player.slot1 == this)
+	    		{
+	    			avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
+	    		} else 
+				if (player.slot2 == this)
+				{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot3 == this)
+				{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot4 == this)
+				{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot5 == this)
+	    		{
+					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
+	    		}
+	    	}
+	    }
+	}
+	
+	@Override
+	public void removeFromDraw() {
+		super.removeFromDraw();
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		
+		if (unitType != UnitType.UNIT_TYPE_TOWER)
+		{
+    		float deltaWidthCoef = (battleScreen.screenResW / RvBWorld.WORLD_NATIVE_RES.x);
+    		float deltaHeightCoef = (battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y);
+    		float deltaAvaSizeW = getAvaSize().x * deltaHeightCoef;
+	    	if (player == battleScreen.world.playerRight)
+	    	{
+	    		if (player.slot1 == this)
+	    		{
+	    			avaImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT01.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT01.y * deltaHeightCoef);
+//	    			avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
+	    		} else 
+				if (player.slot2 == this)
+				{
+					avaImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT02.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT02.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot3 == this)
+				{
+					avaImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT03.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT03.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot4 == this)
+				{
+					avaImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT04.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT04.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot5 == this)
+	    		{
+					avaImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT05.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT05.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
+	    		}
+	    	} else
+	    	{
+	    		if (player.slot1 == this)
+	    		{
+	    			avaImage.setPosition((RvBWorld.LEFT_UNIT_SLOT01.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT01.y * deltaHeightCoef);
+//	    			avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
+	    		} else 
+				if (player.slot2 == this)
+				{
+					avaImage.setPosition((RvBWorld.LEFT_UNIT_SLOT02.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT02.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot3 == this)
+				{
+					avaImage.setPosition((RvBWorld.LEFT_UNIT_SLOT03.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT03.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot4 == this)
+				{
+					avaImage.setPosition((RvBWorld.LEFT_UNIT_SLOT04.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT04.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
+				} else 
+				if (player.slot5 == this)
+	    		{
+					avaImage.setPosition((RvBWorld.LEFT_UNIT_SLOT05.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT05.y * deltaHeightCoef);
+//					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
+	    		}
+	    	}
+	    	avaImage.setSize(deltaAvaSizeW, deltaAvaSizeW);
+	    }
 	}
 }
