@@ -211,13 +211,13 @@ public abstract class RvBUnit extends RvBBase {
 	public void setbCanOperate(boolean bCanOperate) {
 		this.bCanOperate = bCanOperate;
 
-		if (bCanOperate)
+/*		if (bCanOperate)
 		{
 			settowerColor(new Color(0, 1, 0, 1));
 		} else
 		{
 			settowerColor(new Color(1, 1, 1, 1));
-		}
+		}*/
 		Gdx.app.log("RvB", "setbCanOperate "+bCanOperate);
 	}
 
@@ -251,7 +251,7 @@ public abstract class RvBUnit extends RvBBase {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		
-		TextureRegion region = new TextureRegion(avaTexture, 0, 0, getAvaImagwWidth(), getAvaImagwHeight());
+		TextureRegion region = new TextureRegion(avaTexture, 0, 0, getAvaImageWidth(), getAvaImageHeight());
 		
 		avaImage = new Image(region);
 		avaImage.setScaling(Scaling.stretch);
@@ -344,12 +344,14 @@ public abstract class RvBUnit extends RvBBase {
 	    	}
 		}
 	}
+
 	*/
-	public void settowerColor(Color newClor)
+	
+	public void settowerColor(Color newColor)
 	{
 		if (avaImage != null)
 		{
-			avaImage.setColor(newClor);
+			avaImage.setColor(newColor);
 		}
 	}
 	
@@ -377,20 +379,24 @@ public abstract class RvBUnit extends RvBBase {
 		avaImage.addListener( new ClickListener() {             
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				Gdx.app.log("BVGE", "clicked:"+this);
 				if (battleScreen.world.getCurrentTurnPlayer() == player)
 				{
 					player.setActingUnit(RvBUnit.this);
 				} else
 				{
-					if (player.getActingUnit() != null)
+					if (battleScreen.world.getCurrentTurnPlayer().getActingUnit() != null)
 					{
-						RvBWorld.damage(player.getActingUnit(), RvBUnit.this, 0);
-						player.getActingUnit().setbCanOperate(false);
+						if (battleScreen.world.getCurrentTurnPlayer().getActingUnit().isbCanOperate())
+						{
+							RvBWorld.damage(battleScreen.world.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this, 0);
+							battleScreen.world.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
+						}
 					}
 				}
 			};
 		});	
-		
+/*		
 		if (bCanOperate)
 		{
 			settowerColor(new Color(0, 1, 0, 1));
@@ -398,7 +404,7 @@ public abstract class RvBUnit extends RvBBase {
 		{
 			settowerColor(new Color(1, 1, 1, 1));
 		}
-
+*/
 		switch (unitType)
 		{
 			case UNIT_TYPE_TOWER:
@@ -467,6 +473,17 @@ public abstract class RvBUnit extends RvBBase {
 	@Override
 	public void removeFromDraw() {
 		super.removeFromDraw();
+		
+		switch (unitType)
+		{
+			case UNIT_TYPE_TOWER:
+				battleScreen.sceneLayerTowers.removeActor(avaImage);
+				break;
+	
+			default:
+				battleScreen.sceneLayerUnits.removeActor(avaImage);
+				break;
+		}
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package com.me.rvbgame;
 
+import com.badlogic.gdx.graphics.Color;
 import com.me.rvbgame.units.UnitDefender;
-
 
 
 public class RvBPlayer extends RvBBase{
@@ -41,6 +41,7 @@ public class RvBPlayer extends RvBBase{
     public void beginTurn()
     {
     	isMyTurn = true;
+//        if (battleScreen != null && battleScreen.world != null) battleScreen.world.actionPointsLeftLabel.setText("200");
     	ClearCorpses();
     	if (tower != null)
     	{
@@ -73,6 +74,44 @@ public class RvBPlayer extends RvBBase{
         }
     }
 
+    public void endTurn()
+    {
+        isMyTurn = true;
+        ClearCorpses();
+        if (tower != null)
+        {
+            tower.setbCanOperate(false);
+        }
+        if (slot1 != null)
+        {
+            slot1.setbCanOperate(false);
+        }
+        if (slot2 != null)
+        {
+            slot2.setbCanOperate(false);
+        }
+        if (slot3 != null)
+        {
+            slot3.setbCanOperate(false);
+        }
+        if (slot4 != null)
+        {
+            slot4.setbCanOperate(false);
+        }
+        if (slot5 != null)
+        {
+            slot5.setbCanOperate(false);
+        }
+        if(isAI)
+            this.makeMove();
+        else {
+//       enable interaction
+        }
+
+        setActingUnit(null);
+    }
+
+
     private void makeMove() {
 //        make move by AI
         this.battleScreen.world.endTurn(this);
@@ -84,6 +123,41 @@ public class RvBPlayer extends RvBBase{
 
 	public void setActingUnit(RvBUnit actingUnit) {
 		this.actingUnit = actingUnit;
+		
+		clearSelection();
+
+		if (this.actingUnit != null)
+		{
+			this.actingUnit.settowerColor(new Color(0, 1, 0, 1));
+		}
+	}
+	
+	public void clearSelection(){
+		if (tower != null)
+		{
+			tower.settowerColor(new Color(1, 1, 1, 1));
+		}
+
+		if (slot1 != null)
+		{
+			slot1.settowerColor(new Color(1, 1, 1, 1));
+		}
+		if (slot2 != null)
+		{
+			slot2.settowerColor(new Color(1, 1, 1, 1));
+		}
+		if (slot3 != null)
+		{
+			slot3.settowerColor(new Color(1, 1, 1, 1));
+		}
+		if (slot4 != null)
+		{
+			slot4.settowerColor(new Color(1, 1, 1, 1));
+		}
+		if (slot5 != null)
+		{
+			slot5.settowerColor(new Color(1, 1, 1, 1));
+		}
 	}
 	
 	private void ClearCorpses() {
@@ -91,6 +165,7 @@ public class RvBPlayer extends RvBBase{
 		{
 			if (slot1.isbDead())
 			{
+				slot1.removeFromDraw();
 				slot1 = null;
 			}
 		}
@@ -98,6 +173,7 @@ public class RvBPlayer extends RvBBase{
 		{
 			if (slot2.isbDead())
 			{
+				slot2.removeFromDraw();
 				slot2 = null;
 			}
 		}
@@ -105,6 +181,7 @@ public class RvBPlayer extends RvBBase{
 		{
 			if (slot3.isbDead())
 			{
+				slot3.removeFromDraw();
 				slot3 = null;
 			}
 		}
@@ -112,6 +189,7 @@ public class RvBPlayer extends RvBBase{
 		{
 			if (slot4.isbDead())
 			{
+				slot4.removeFromDraw();
 				slot4 = null;
 			}
 		}
@@ -119,6 +197,7 @@ public class RvBPlayer extends RvBBase{
 		{
 			if (slot5.isbDead())
 			{
+				slot5.removeFromDraw();
 				slot5 = null;
 			}
 		}

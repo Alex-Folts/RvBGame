@@ -5,8 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 
 public class RvBWorld extends RvBBase {
@@ -16,7 +20,10 @@ public class RvBWorld extends RvBBase {
 	
 	private Image bgImage;
 	private Texture bgTexture;
-	
+
+    private TextButton nextTurnButton;
+    public Label actionPointsLeftLabel;
+
 	protected RvBPlayer playerLeft;
 	protected RvBPlayer playerRight;
 	
@@ -37,7 +44,9 @@ public class RvBWorld extends RvBBase {
 	static final Vector2 WORLD_NATIVE_RES = new Vector2(480, 360);
 	static final float WORLD_NATIVE_RATIO = (WORLD_NATIVE_RES.x / WORLD_NATIVE_RES.y);
 	
-	public RvBWorld(BattleScreen parentScreen) {
+    private int actionPointsLeft = 10;
+
+    public RvBWorld(BattleScreen parentScreen) {
 		super(parentScreen);
 		
 		playerLeft = new RvBPlayer(battleScreen);
@@ -49,9 +58,12 @@ public class RvBWorld extends RvBBase {
 	public static boolean damage(RvBUnit attacker, RvBUnit victim, int attackID) {
 		int finalDamage;
 		
+		Gdx.app.log("BVGE", "damage: "+attacker+" "+victim);
+		
 		if (RvBUnit.IsPhysAttack(attackID))
 		{
-			finalDamage = attacker.getpAttack() - victim.getpDefence();
+//			finalDamage = attacker.getpAttack() - victim.getpDefence(); //ignore pDef for now
+			finalDamage = attacker.getpAttack();
 		} else
 		{
 			finalDamage = attacker.getiAttack() - victim.getiDefence();
@@ -70,6 +82,8 @@ public class RvBWorld extends RvBBase {
 		}
 		victim.setHealth(newHealth);
 		
+		Gdx.app.log("BVGE", "damage: victim.health = "+victim.getHealth());
+		
 		return true;
 	}
 	
@@ -83,10 +97,15 @@ public class RvBWorld extends RvBBase {
 	
 	public boolean calcTurn() {
 		currentTurnRight = !currentTurnRight;
+
 		if (currentTurnRight) {
 			playerRight.beginTurn();
+            playerLeft.endTurn();
+            Gdx.app.log("BVGE", "Current turn: Right");
 		} else {
+            Gdx.app.log("BVGE", "Current turn: Left");
 			playerLeft.beginTurn();
+            playerRight.endTurn();
 		}
 		return true;
 	}
@@ -121,6 +140,14 @@ public class RvBWorld extends RvBBase {
 		
 		initWorld();
 		calcTurn();;
+
+        nextTurnButton = new TextButton("Next turn", battleScreen.getSkin());
+        actionPointsLeftLabel = new Label(String.format("AP: %d",actionPointsLeft),battleScreen.getSkin());
+
+        battleScreen.sceneLayerGUI.addActor(nextTurnButton);
+        battleScreen.sceneLayerGUI.addActor(actionPointsLeftLabel);
+
+        Gdx.input.setInputProcessor(battleScreen.stage);
 	}
 	
 	@Override
@@ -154,6 +181,36 @@ public class RvBWorld extends RvBBase {
 		bgImage.setScaling(Scaling.stretch);
 		bgImage.setAlign((Align.bottom | Align.left));
 		bgImage.setSize(width, height);
+
+//      nextTurnButton
+        float currX = width-100;
+        float currY = RIGHT_TOWER_SLOT.y;
+        float bWidth = 100;
+        float bHeight = 100;
+        nextTurnButton.setBounds(currX, currY, bWidth, bHeight);
+        nextTurnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("BVGE", "Next turn");
+
+                if (currentTurnRight) {
+                    endTurn(playerRight);
+                } else
+                    endTurn(playerLeft);
+
+                if (actionPointsLeft>=0)
+                {
+                    actionPointsLeft--;
+//                    actionPointsLeftLabel.setText(String.format("AP: %d",actionPointsLeft));
+                }
+            }
+
+            ;
+        });
+        actionPointsLeftLabel.setBounds(0,height-30,30,30);
+
+
+
 //		bgImage.setZIndex(WorldDrawLayer.DRAW_LAYER_BG);
 		
 //		battleScreen.stage.addActor(bgImage);
