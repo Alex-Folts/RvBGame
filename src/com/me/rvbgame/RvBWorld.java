@@ -1,6 +1,7 @@
 package com.me.rvbgame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -22,7 +23,23 @@ public class RvBWorld extends RvBBase {
 	private Texture bgTexture;
 
     private TextButton nextTurnButton;
+    //Stats:
     public Label actionPointsLeftLabel;
+    public Label statHealthLabel;
+    public Label statEnergyLabel;
+    public Label statPAtackLabel;
+    public Label statPDefLabel;
+    public Label statIDefLabel;
+    public Label statIAtackLabel;
+    public Label statRangeLabel;
+
+    private Image healthImage;
+    private Image energyImage;
+    private Image pAtackImage;
+    private Image pDefenceImage;
+    private Image iAtackImage;
+    private Image iDefenceImage;
+    private Image rangeImage;
 
 	protected RvBPlayer playerLeft;
 	protected RvBPlayer playerRight;
@@ -102,8 +119,12 @@ public class RvBWorld extends RvBBase {
 			playerRight.beginTurn();
             playerLeft.endTurn();
             Gdx.app.log("BVGE", "Current turn: Right");
+            if (actionPointsLeftLabel != null)
+            actionPointsLeftLabel.setText(String.format("Curr: right"));
 		} else {
             Gdx.app.log("BVGE", "Current turn: Left");
+            if (actionPointsLeftLabel != null)
+            actionPointsLeftLabel.setText(String.format("Curr: left"));
 			playerLeft.beginTurn();
             playerRight.endTurn();
 		}
@@ -139,10 +160,96 @@ public class RvBWorld extends RvBBase {
 		bgTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		initWorld();
-		calcTurn();;
+		calcTurn();
 
         nextTurnButton = new TextButton("Next turn", battleScreen.getSkin());
         actionPointsLeftLabel = new Label(String.format("AP: %d",actionPointsLeft),battleScreen.getSkin());
+
+        statHealthLabel = new Label("",battleScreen.getSkin());
+        statEnergyLabel = new Label("",battleScreen.getSkin());
+        statIAtackLabel = new Label("",battleScreen.getSkin());
+        statIDefLabel = new Label("",battleScreen.getSkin());
+        statPAtackLabel = new Label("",battleScreen.getSkin());
+        statPDefLabel = new Label("",battleScreen.getSkin());
+        statRangeLabel = new Label("",battleScreen.getSkin());
+
+
+        Texture texture = new Texture(Gdx.files.internal("data/heart_ico.png"));
+        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+        TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
+        healthImage = new Image(region);
+        healthImage.setScaling(Scaling.stretch);
+        healthImage.setAlign((Align.bottom | Align.left));
+        healthImage.setSize(48, 48);
+        healthImage.setColor(Color.DARK_GRAY);
+
+        texture = new Texture(Gdx.files.internal("data/ap_icon.png"));
+        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        energyImage = new Image(region);
+        energyImage.setScaling(Scaling.stretch);
+        energyImage.setAlign((Align.bottom | Align.left));
+        energyImage.setSize(48,48);
+        energyImage.setColor(Color.DARK_GRAY);
+
+        texture = new Texture(Gdx.files.internal("data/sword_icon.png"));
+        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        pAtackImage = new Image(region);
+        pAtackImage.setScaling(Scaling.stretch);
+        pAtackImage.setAlign((Align.bottom | Align.left));
+        pAtackImage.setSize(48,48);
+        pAtackImage.setColor(Color.DARK_GRAY);
+
+        iAtackImage = new Image(region);
+        iAtackImage.setScaling(Scaling.stretch);
+        iAtackImage.setAlign((Align.bottom | Align.left));
+        iAtackImage.setSize(48,48);
+        iAtackImage.setColor(Color.DARK_GRAY);
+
+        texture = new Texture(Gdx.files.internal("data/shield_icon.png"));
+        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        pDefenceImage = new Image(region);
+        pDefenceImage.setScaling(Scaling.stretch);
+        pDefenceImage.setAlign((Align.bottom | Align.left));
+        pDefenceImage.setSize(48,48);
+        pDefenceImage.setColor(Color.DARK_GRAY);
+
+        iDefenceImage = new Image(region);
+        iDefenceImage.setScaling(Scaling.stretch);
+        iDefenceImage.setAlign((Align.bottom | Align.left));
+        iDefenceImage.setSize(48,48);
+        iDefenceImage.setColor(Color.DARK_GRAY);
+
+        texture = new Texture(Gdx.files.internal("data/range_cross.png"));
+        texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        rangeImage = new Image(region);
+        rangeImage.setScaling(Scaling.stretch);
+        rangeImage.setAlign((Align.bottom | Align.left));
+        rangeImage.setSize(48, 48);
+        rangeImage.setColor(Color.DARK_GRAY);
+
+        battleScreen.sceneLayerGUI.addActor(healthImage);
+        battleScreen.sceneLayerGUI.addActor(energyImage);
+        battleScreen.sceneLayerGUI.addActor(pAtackImage);
+        battleScreen.sceneLayerGUI.addActor(iAtackImage);
+        battleScreen.sceneLayerGUI.addActor(pDefenceImage);
+        battleScreen.sceneLayerGUI.addActor(iDefenceImage);
+        battleScreen.sceneLayerGUI.addActor(rangeImage);
+
+        battleScreen.sceneLayerGUI.addActor(statHealthLabel);
+        battleScreen.sceneLayerGUI.addActor(statEnergyLabel);
+        battleScreen.sceneLayerGUI.addActor(statIAtackLabel);
+        battleScreen.sceneLayerGUI.addActor(statIDefLabel);
+        battleScreen.sceneLayerGUI.addActor(statPAtackLabel);
+        battleScreen.sceneLayerGUI.addActor(statPDefLabel);
+        battleScreen.sceneLayerGUI.addActor(statRangeLabel);
 
         battleScreen.sceneLayerGUI.addActor(nextTurnButton);
         battleScreen.sceneLayerGUI.addActor(actionPointsLeftLabel);
@@ -184,7 +291,7 @@ public class RvBWorld extends RvBBase {
 
 //      nextTurnButton
         float currX = width-100;
-        float currY = RIGHT_TOWER_SLOT.y;
+        float currY = LEFT_TOWER_SLOT.y;
         float bWidth = 100;
         float bHeight = 100;
         nextTurnButton.setBounds(currX, currY, bWidth, bHeight);
@@ -192,7 +299,7 @@ public class RvBWorld extends RvBBase {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("BVGE", "Next turn");
-
+                clearStatLabels();
                 if (currentTurnRight) {
                     endTurn(playerRight);
                 } else
@@ -207,8 +314,33 @@ public class RvBWorld extends RvBBase {
 
             ;
         });
-        actionPointsLeftLabel.setBounds(0,height-30,30,30);
+        actionPointsLeftLabel.setBounds(35, height-60, 30, 30);
+        healthImage.setBounds   (0, height - 30, 30, 30);
+        statHealthLabel.setBounds(0, height - 30, 30, 30);
+        statHealthLabel.setAlignment(Align.center, Align.center);
 
+        energyImage.setBounds   (0, height - 60, 30, 30);
+        statEnergyLabel.setBounds (0, height - 60, 30, 30);
+        statEnergyLabel.setAlignment(Align.center, Align.center);
+
+        pDefenceImage.setBounds (35, height - 30, 30, 30);
+        statPDefLabel.setBounds (35, height - 30, 30, 30);
+        statPDefLabel.setAlignment(Align.center, Align.center);
+        iDefenceImage.setBounds (65, height - 30, 30, 30);
+        statIDefLabel.setBounds  (65, height - 30, 30, 30);
+        statIDefLabel.setAlignment(Align.center, Align.center);
+
+        pAtackImage.setBounds   (95, height - 30, 30, 30);
+        statPAtackLabel.setBounds(95, height - 30, 30, 30);
+        statPAtackLabel.setAlignment(Align.center, Align.center);
+
+        iAtackImage.setBounds   (125, height - 30, 30, 30);
+        statIAtackLabel.setBounds   (125, height - 30, 30, 30);
+        statIAtackLabel.setAlignment(Align.center, Align.center);
+
+        rangeImage.setBounds    (155, height - 30, 30, 30);
+        statRangeLabel.setBounds   (155, height - 30, 30, 30);
+        statRangeLabel.setAlignment(Align.center, Align.center);
 
 
 //		bgImage.setZIndex(WorldDrawLayer.DRAW_LAYER_BG);
@@ -216,7 +348,43 @@ public class RvBWorld extends RvBBase {
 //		battleScreen.stage.addActor(bgImage);
 //		battleScreen.sceneLayerBG.addActor(bgImage);
 	}
-	
+
+    public void updateStatLabels(RvBUnit unit){
+        statPAtackLabel.setText(String.format("%d",unit.getpAttack()));
+        statIAtackLabel.setText(String.format("%d",unit.getiAttack()));
+        statIDefLabel.setText(String.format("%d",unit.getiDefence()));
+        statPDefLabel.setText(String.format("%d",unit.getpDefence()));
+        statHealthLabel.setText(unit.healthLeftLabel.getText());
+        statEnergyLabel.setText(String.format("%d",unit.getEnergy()));
+        statRangeLabel.setText(String.format("%d",unit.getAttackRange()));
+
+        healthImage.setColor(Color.RED);
+        energyImage.setColor(Color.BLUE);
+        pAtackImage.setColor(Color.RED);
+        pDefenceImage.setColor(Color.RED);
+        iAtackImage.setColor(Color.BLUE);
+        iDefenceImage.setColor(Color.BLUE);
+        rangeImage.setColor(Color.RED);
+    }
+
+    public void clearStatLabels(){
+        statPAtackLabel.setText("");
+        statIAtackLabel.setText("");
+        statIDefLabel.setText("");
+        statPDefLabel.setText("");
+        statHealthLabel.setText("");
+        statEnergyLabel.setText("");
+        statRangeLabel.setText("");
+
+        healthImage.setColor(Color.DARK_GRAY);
+        energyImage.setColor(Color.DARK_GRAY);
+        pAtackImage.setColor(Color.DARK_GRAY);
+        iAtackImage.setColor(Color.DARK_GRAY);
+        pDefenceImage.setColor(Color.DARK_GRAY);
+        iDefenceImage.setColor(Color.DARK_GRAY);
+        rangeImage.setColor(Color.DARK_GRAY);
+    }
+
 	protected void initWorld()
 	{
 /*		if (playerLeft != null)

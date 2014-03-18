@@ -129,6 +129,7 @@ public class RvBPlayer extends RvBBase{
 		if (this.actingUnit != null)
 		{
 			this.actingUnit.settowerColor(new Color(0, 1, 0, 1));
+            battleScreen.world.updateStatLabels(this.actingUnit);
 		}
 	}
 	

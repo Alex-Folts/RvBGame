@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
@@ -18,6 +19,7 @@ public abstract class RvBUnit extends RvBBase {
 
     private int health;
     private int energy;
+    private int maxHealth;
 
     private int pAttack;    //physical attack
     private int pDefence;   //physical defence
@@ -37,6 +39,7 @@ public abstract class RvBUnit extends RvBBase {
     protected String avaPath = "data/Andr_087098.png";
 	
 	protected Image avaImage;
+    protected Label healthLeftLabel;
 	private Texture avaTexture;
 	protected int avaTexWidth = 128;
 	protected int avaTexHeight = 128;
@@ -68,6 +71,10 @@ public abstract class RvBUnit extends RvBBase {
         	this.avaTexWidth = tmpUnit.avaTexWidth;
         	this.avaTexHeight = tmpUnit.avaTexHeight;
         	this.avaSize = tmpUnit.avaSize;
+            this.healthLeftLabel = new Label(String.format("%d", tmpUnit.getHealth()),battleScreen.getSkin());
+            this.healthLeftLabel.setColor(Color.GREEN);
+            this.healthLeftLabel.setAlignment(Align.center, Align.center);
+            this.maxHealth = tmpUnit.getHealth();
         }
     }
 	
@@ -146,6 +153,11 @@ public abstract class RvBUnit extends RvBBase {
 
     public void setHealth(int health) {
         this.health = health;
+        if(healthLeftLabel!=null){
+            healthLeftLabel.setText(String.format("%d",health));
+            if (health<maxHealth) healthLeftLabel.setColor(Color.YELLOW);
+            else if (health!=maxHealth) healthLeftLabel.setColor(Color.RED);
+        }
     }
 
     public int getEnergy() {
@@ -409,11 +421,15 @@ public abstract class RvBUnit extends RvBBase {
 		{
 			case UNIT_TYPE_TOWER:
 				battleScreen.sceneLayerTowers.addActor(avaImage);
+                battleScreen.sceneLayerTowers.addActor(healthLeftLabel);
+//                battleScreen.sceneLayerTowers.addActor(healthMaxLabel);
 				break;
 	
 			default:
 				battleScreen.sceneLayerUnits.addActor(avaImage);
-				break;
+//				battleScreen.sceneLayerUnits.addActor(healthMaxLabel);
+                battleScreen.sceneLayerUnits.addActor(healthLeftLabel);
+                break;
 		}
 		
 		if (unitType != UnitType.UNIT_TYPE_TOWER)
@@ -427,7 +443,7 @@ public abstract class RvBUnit extends RvBBase {
 	    		if (player.slot1 == this)
 	    		{
 	    			avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
-	    		} else 
+                } else
 				if (player.slot2 == this)
 				{
 					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
@@ -468,7 +484,9 @@ public abstract class RvBUnit extends RvBBase {
 	    		}
 	    	}
 	    }
-	}
+
+        healthLeftLabel.setPosition(avaImage.getX(),avaImage.getY());
+    }
 	
 	@Override
 	public void removeFromDraw() {
@@ -478,10 +496,14 @@ public abstract class RvBUnit extends RvBBase {
 		{
 			case UNIT_TYPE_TOWER:
 				battleScreen.sceneLayerTowers.removeActor(avaImage);
+//                battleScreen.sceneLayerTowers.removeActor(healthMaxLabel);
+                battleScreen.sceneLayerTowers.removeActor(healthLeftLabel);
 				break;
 	
 			default:
 				battleScreen.sceneLayerUnits.removeActor(avaImage);
+                battleScreen.sceneLayerUnits.removeActor(healthLeftLabel);
+//                battleScreen.sceneLayerUnits.removeActor(healthMaxLabel);
 				break;
 		}
 	}
@@ -551,6 +573,9 @@ public abstract class RvBUnit extends RvBBase {
 	    		}
 	    	}
 	    	avaImage.setSize(deltaAvaSizeW, deltaAvaSizeW);
+
+            healthLeftLabel.setPosition(avaImage.getX(),avaImage.getY());
+
 	    }
 	}
 }
