@@ -1,7 +1,7 @@
 package com.me.rvbgame;
 
 import com.badlogic.gdx.graphics.Color;
-import com.me.rvbgame.units.UnitDefender;
+import com.me.rvbgame.units.*;
 
 
 public class RvBPlayer extends RvBBase{
@@ -26,15 +26,15 @@ public class RvBPlayer extends RvBBase{
         tower = new RvBTower(battleScreen, this, "data/json_files/tower.json");
         
         units = new RvBUnit[5];
-        slot1 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        slot1 = new UnitRanged(battleScreen, this, "data/json_files/ranged.json");
         units[0] = slot1;
-        slot2 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        slot2 = new UnitSpecialStan(battleScreen, this, "data/json_files/special_stan.json");
         units[1] = slot2;
-        slot3 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        slot3 = new UnitRangedMass(battleScreen, this, "data/json_files/ranged_mass.json");
         units[2] = slot3;
         slot4 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
         units[3] = slot4;
-        slot5 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        slot5 = new UnitMelee(battleScreen, this, "data/json_files/melee.json");
         units[4] = slot5;
     }
 
@@ -85,22 +85,27 @@ public class RvBPlayer extends RvBBase{
         if (slot1 != null)
         {
             slot1.setbCanOperate(false);
+            if (slot1.bFreeze) slot1.unFreeze();
         }
         if (slot2 != null)
         {
             slot2.setbCanOperate(false);
+            if (slot2.bFreeze) slot2.unFreeze();
         }
         if (slot3 != null)
         {
             slot3.setbCanOperate(false);
+            if (slot3.bFreeze) slot3.unFreeze();
         }
         if (slot4 != null)
         {
             slot4.setbCanOperate(false);
+            if (slot4.bFreeze) slot4.unFreeze();
         }
         if (slot5 != null)
         {
             slot5.setbCanOperate(false);
+            if (slot5.bFreeze) slot5.unFreeze();
         }
         if(isAI)
             this.makeMove();
@@ -128,7 +133,7 @@ public class RvBPlayer extends RvBBase{
 
 		if (this.actingUnit != null)
 		{
-			this.actingUnit.settowerColor(new Color(0, 1, 0, 1));
+			this.actingUnit.settowerColor(StatsHelper.COLOR_DARK_GREEN);
             battleScreen.world.updateStatLabels(this.actingUnit);
 		}
 	}
@@ -136,28 +141,28 @@ public class RvBPlayer extends RvBBase{
 	public void clearSelection(){
 		if (tower != null)
 		{
-			tower.settowerColor(new Color(1, 1, 1, 1));
+			tower.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 
 		if (slot1 != null)
 		{
-			slot1.settowerColor(new Color(1, 1, 1, 1));
+			slot1.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot2 != null)
 		{
-			slot2.settowerColor(new Color(1, 1, 1, 1));
+			slot2.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot3 != null)
 		{
-			slot3.settowerColor(new Color(1, 1, 1, 1));
+			slot3.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot4 != null)
 		{
-			slot4.settowerColor(new Color(1, 1, 1, 1));
+			slot4.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot5 != null)
 		{
-			slot5.settowerColor(new Color(1, 1, 1, 1));
+			slot5.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 	}
 	
@@ -275,4 +280,28 @@ public class RvBPlayer extends RvBBase{
 			slot5.dispose();
 		}
 	}
+
+    public void fillAvailableVictims(byte attackRange) {
+        clearSelection();
+        switch (attackRange){
+            case 1:
+                if (slot4!=null) slot4.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot5!=null) slot5.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                break;
+            case 2:
+                if (slot2!=null) slot2.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot4!=null) slot4.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot5!=null) slot5.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                break;
+            case 3:
+                if (slot1!=null) slot1.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot2!=null) slot2.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot3!=null) slot3.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot4!=null) slot4.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot5!=null) slot5.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                break;
+            default:
+                break;
+        }
+    }
 }

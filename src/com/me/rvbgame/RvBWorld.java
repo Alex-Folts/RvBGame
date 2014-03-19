@@ -13,10 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
+import com.me.rvbgame.units.StatsHelper;
+import com.me.rvbgame.units.UnitRangedMass;
 
 public class RvBWorld extends RvBBase {
 
-	private boolean currentTurnRight = true;
+	private static boolean currentTurnRight = true;
 	private String bgPath = "data/Andr_087098.png";
 	
 	private Image bgImage;
@@ -41,8 +43,8 @@ public class RvBWorld extends RvBBase {
     private Image iDefenceImage;
     private Image rangeImage;
 
-	protected RvBPlayer playerLeft;
-	protected RvBPlayer playerRight;
+	protected static RvBPlayer playerLeft;
+	protected static RvBPlayer playerRight;
 	
 	static final Vector2 LEFT_TOWER_SLOT = new Vector2((64 - 64), (360 - 300) - 64);
 	static final Vector2 LEFT_UNIT_SLOT01 = new Vector2((64 - 24), (360 - 180) - 24);
@@ -73,38 +75,132 @@ public class RvBWorld extends RvBBase {
 	}
 
 	public static boolean damage(RvBUnit attacker, RvBUnit victim, int attackID) {
-		int finalDamage;
+		int finalHealthDamage = 0, finalEnergyDamage = 0;
 		
 		Gdx.app.log("BVGE", "damage: "+attacker+" "+victim);
-		
-		if (RvBUnit.IsPhysAttack(attackID))
-		{
-//			finalDamage = attacker.getpAttack() - victim.getpDefence(); //ignore pDef for now
-			finalDamage = attacker.getpAttack();
-		} else
-		{
-			finalDamage = attacker.getiAttack() - victim.getiDefence();
-		}
-		
-		if (finalDamage <= 0)
-		{
-			return false;
-		}
-		
-		int newHealth = victim.getHealth() - finalDamage;
-		if (newHealth <= 0)
-		{
-			newHealth = 0;
-			victim.setbDead(true);
-		}
-		victim.setHealth(newHealth);
-		
-		Gdx.app.log("BVGE", "damage: victim.health = "+victim.getHealth());
-		
+        switch (attacker.unitType) {
+            case UNIT_TYPE_DEFENDER:
+            case UNIT_TYPE_MELEE:
+                finalHealthDamage = attacker.getpAttack() - victim.getpDefence();
+                break;
+
+            case UNIT_TYPE_SPECIAL:
+                finalHealthDamage = attacker.getpAttack() - victim.getpDefence();
+                finalEnergyDamage = attacker.getiAttack() - victim.getiDefence();
+                if (attacker.getEnergy()>0){    //can freeze
+                    victim.freeze();
+                    attacker.setEnergy(attacker.getEnergy()-20);
+                }
+                break;
+
+            case UNIT_TYPE_RANGED:
+                finalHealthDamage = attacker.getpAttack() - victim.getpDefence();
+                finalEnergyDamage = attacker.getiAttack() - victim.getiDefence();
+                break;
+
+            case UNIT_TYPE_RANGED_MASS:
+                return massDamage(attacker, getOppositePlayer(), victim.getAttackRange());
+
+            case UNIT_TYPE_TOWER:
+                break;
+        }
+
+        if (attacker.unitType == UnitType.UNIT_TYPE_RANGED_MASS)
+            return true;
+
+        int newEnergy = victim.getEnergy() - finalEnergyDamage;
+        if (newEnergy <= 0 && finalEnergyDamage>0)
+        {
+            finalHealthDamage += -newEnergy;
+            newEnergy = 0;
+            victim.setEnergy(newEnergy);
+        }else if (finalEnergyDamage>0) victim.setEnergy(newEnergy);
+
+        Gdx.app.log("BVGE", "energy damage: ");
+
+        if (finalHealthDamage<0)
+            return false;
+
+        int newHealth = victim.getHealth() - finalHealthDamage;
+        if (newHealth <= 0)
+        {
+            newHealth = 0;
+            victim.setbDead(true);
+        }
+        victim.setHealth(newHealth);
+
 		return true;
 	}
-	
-	public boolean performTickDamage() {
+
+    public static boolean ordinaryDamage(RvBUnit unitRangedMass, RvBUnit unit, int additionalDamage){
+        if (unit != null){
+            int finalHealthDamage = 0, finalEnergyDamage = 0;
+
+            finalHealthDamage = unitRangedMass.getpAttack() - unit.getpDefence()+additionalDamage;
+            finalEnergyDamage = unitRangedMass.getiAttack() - unit.getiDefence();
+
+            int newEnergy = unit.getEnergy() - finalEnergyDamage;
+            if (newEnergy <= 0 && finalEnergyDamage>0)
+            {
+                finalHealthDamage += -newEnergy;
+                newEnergy = 0;
+                unit.setEnergy(newEnergy);
+            }else if (finalEnergyDamage>0) unit.setEnergy(newEnergy);
+
+            if (finalHealthDamage>0){
+                int newHealth = unit.getHealth() - finalHealthDamage;
+                if (newHealth <= 0)
+                {
+                    newHealth = 0;
+                    unit.setbDead(true);
+                }
+                unit.setHealth(newHealth);
+            }
+        }
+        return true;
+    }
+
+	public static boolean massDamage(RvBUnit unitRangedMass, RvBPlayer oppositePlayer, byte attackRange){
+        int randDamage = 0;
+        /* And there you have it. A random integer value in the range [Min,Max], or per the example [5,10]:
+
+            5 + (int)(Math.random() * ((10 - 5) + 1))
+        * */
+        if (attackRange == 3){
+            for(RvBUnit unit : oppositePlayer.units){
+                if (unitRangedMass.getEnergy()>0)
+                    randDamage = (int)(Math.random() * (unitRangedMass.getEnergy()/5));
+                else
+                    randDamage = 0;
+                ordinaryDamage(unitRangedMass,unit,randDamage);
+            }
+            unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
+        }
+        else
+        if (attackRange == 2)
+        {
+            if (unitRangedMass.getEnergy()>0)
+                randDamage = 5+(int)(Math.random() * (unitRangedMass.getEnergy()/3));
+            else
+                randDamage = 0;
+            unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
+            ordinaryDamage(unitRangedMass,oppositePlayer.slot2,randDamage);
+            ordinaryDamage(unitRangedMass,oppositePlayer.slot4,randDamage);
+            ordinaryDamage(unitRangedMass,oppositePlayer.slot5,randDamage);
+        }
+        else
+        if (attackRange == 1){
+            if (unitRangedMass.getEnergy()>0)
+                randDamage = (int)(Math.random() * (unitRangedMass.getEnergy()/2));
+            else
+                randDamage = 0;
+            unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
+            ordinaryDamage(unitRangedMass,oppositePlayer.slot4,0);
+            ordinaryDamage(unitRangedMass,oppositePlayer.slot5,0);
+        }
+        return true;
+    }
+    public boolean performTickDamage() {
 		return false;
 	}
 	
@@ -136,7 +232,7 @@ public class RvBWorld extends RvBBase {
 		return calcTurn();
 	}
 	
-	public RvBPlayer getCurrentTurnPlayer() {
+	public static  RvBPlayer getCurrentTurnPlayer() {
 		if (currentTurnRight)
 		{
 			return playerRight;
@@ -144,7 +240,16 @@ public class RvBWorld extends RvBBase {
 
 		return playerLeft;
 	}
-	
+
+    public static RvBPlayer getOppositePlayer(){
+        if (!currentTurnRight)
+        {
+            return playerRight;
+        }
+
+        return playerLeft;
+    }
+
 	@Override
 	public void show() {
 		super.show();
@@ -358,13 +463,13 @@ public class RvBWorld extends RvBBase {
         statEnergyLabel.setText(String.format("%d",unit.getEnergy()));
         statRangeLabel.setText(String.format("%d",unit.getAttackRange()));
 
-        healthImage.setColor(Color.RED);
-        energyImage.setColor(Color.BLUE);
-        pAtackImage.setColor(Color.RED);
-        pDefenceImage.setColor(Color.RED);
-        iAtackImage.setColor(Color.BLUE);
-        iDefenceImage.setColor(Color.BLUE);
-        rangeImage.setColor(Color.RED);
+        healthImage.setColor(StatsHelper.COLOR_DARK_RED);//(Color.RED);
+        energyImage.setColor(StatsHelper.COLOR_DARK_BLUE);
+        pAtackImage.setColor(StatsHelper.COLOR_DARK_RED);
+        pDefenceImage.setColor(StatsHelper.COLOR_DARK_RED);
+        iAtackImage.setColor(StatsHelper.COLOR_DARK_BLUE);
+        iDefenceImage.setColor(StatsHelper.COLOR_DARK_BLUE);
+        rangeImage.setColor(StatsHelper.COLOR_DARK_RED);
     }
 
     public void clearStatLabels(){

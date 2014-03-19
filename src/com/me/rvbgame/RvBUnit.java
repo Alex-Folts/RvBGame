@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Scaling;
+import com.me.rvbgame.units.StatsHelper;
 
 public abstract class RvBUnit extends RvBBase {
 
@@ -35,6 +36,7 @@ public abstract class RvBUnit extends RvBBase {
     protected RvBPlayer player;
     private boolean bCanOperate;
     private boolean bDead;
+    public boolean bFreeze;
 
     protected String avaPath = "data/Andr_087098.png";
 	
@@ -165,6 +167,7 @@ public abstract class RvBUnit extends RvBBase {
     }
 
     public void setEnergy(int energy) {
+        if (energy<0) energy = 0;
         this.energy = energy;
     }
 
@@ -223,17 +226,22 @@ public abstract class RvBUnit extends RvBBase {
 	public void setbCanOperate(boolean bCanOperate) {
 		this.bCanOperate = bCanOperate;
 
-/*		if (bCanOperate)
+//		if (bFreeze && !bCanOperate)
+//            this.unFreeze();
+
+        if (!bCanOperate && !bFreeze)
 		{
-			settowerColor(new Color(0, 1, 0, 1));
-		} else
+			settowerColor(Color.DARK_GRAY);
+		} else if (!bFreeze)
 		{
 			settowerColor(new Color(1, 1, 1, 1));
-		}*/
+		}
 		Gdx.app.log("RvB", "setbCanOperate "+bCanOperate);
 	}
 
-	public boolean isbDead() {
+
+
+    public boolean isbDead() {
 		return bDead;
 	}
 
@@ -387,22 +395,28 @@ public abstract class RvBUnit extends RvBBase {
 		avaImage.setScaling(Scaling.stretch);
 		avaImage.setAlign((Align.bottom | Align.left));
 		avaImage.setSize(getAvaSize().x, getAvaSize().y);
+        avaImage.setColor(Color.DARK_GRAY);
 		
 		avaImage.addListener( new ClickListener() {             
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.log("BVGE", "clicked:"+this);
-				if (battleScreen.world.getCurrentTurnPlayer() == player)
+				if (RvBWorld.getCurrentTurnPlayer() == player)
 				{
-					player.setActingUnit(RvBUnit.this);
+                    if (!RvBUnit.this.bFreeze){
+                        RvBWorld.getOppositePlayer().fillAvailableVictims(RvBUnit.this.getAttackRange());
+                        player.setActingUnit(RvBUnit.this);
+                    }
 				} else
 				{
-					if (battleScreen.world.getCurrentTurnPlayer().getActingUnit() != null)
+					if (RvBWorld.getCurrentTurnPlayer().getActingUnit() != null)
 					{
-						if (battleScreen.world.getCurrentTurnPlayer().getActingUnit().isbCanOperate())
+						if (RvBWorld.getCurrentTurnPlayer().getActingUnit().isbCanOperate()
+                                && RvBWorld.getCurrentTurnPlayer().getActingUnit().getAttackRange() >= RvBUnit.this.getAttackRange()
+                                && !RvBWorld.getCurrentTurnPlayer().getActingUnit().bFreeze)
 						{
-							RvBWorld.damage(battleScreen.world.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this, 0);
-							battleScreen.world.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
+							RvBWorld.damage(RvBWorld.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this, 0);
+							RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
 						}
 					}
 				}
@@ -573,9 +587,19 @@ public abstract class RvBUnit extends RvBBase {
 	    		}
 	    	}
 	    	avaImage.setSize(deltaAvaSizeW, deltaAvaSizeW);
+            avaImage.setColor(Color.DARK_GRAY);
 
             healthLeftLabel.setPosition(avaImage.getX(),avaImage.getY());
 
 	    }
 	}
+
+    public void freeze() {
+        this.bFreeze = true;
+        this.avaImage.setColor(StatsHelper.COLOR_DARK_BLUE);
+    }
+    public void unFreeze() {
+        this.bFreeze = false;
+        this.avaImage.setColor(Color.DARK_GRAY);
+    }
 }
