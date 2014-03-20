@@ -157,7 +157,7 @@ public abstract class RvBUnit extends RvBBase {
         this.health = health;
         if(healthLeftLabel!=null){
             healthLeftLabel.setText(String.format("%d",health));
-            if (health<maxHealth) healthLeftLabel.setColor(Color.YELLOW);
+            if (health<maxHealth && health>maxHealth/2) healthLeftLabel.setColor(Color.YELLOW);
             else if (health!=maxHealth) healthLeftLabel.setColor(Color.RED);
         }
     }
@@ -404,7 +404,7 @@ public abstract class RvBUnit extends RvBBase {
 				if (RvBWorld.getCurrentTurnPlayer() == player)
 				{
                     if (!RvBUnit.this.bFreeze){
-                        RvBWorld.getOppositePlayer().fillAvailableVictims(RvBUnit.this.getAttackRange());
+                        RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this,RvBUnit.this.getAttackRange());
                         player.setActingUnit(RvBUnit.this);
                     }
 				} else

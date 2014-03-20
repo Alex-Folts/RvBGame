@@ -281,17 +281,39 @@ public class RvBPlayer extends RvBBase{
 		}
 	}
 
-    public void fillAvailableVictims(byte attackRange) {
+    public void fillAvailableVictims(RvBUnit unit, byte attackRange) {
         clearSelection();
         switch (attackRange){
             case 1:
                 if (slot4!=null) slot4.settowerColor(StatsHelper.COLOR_DARK_GREEN);
                 if (slot5!=null) slot5.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot4!=null || slot5!=null) unit.setAttackRange((byte) 1);
+                if (slot4 == null && slot5 == null && slot2 != null){
+                    slot2.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    unit.setAttackRange((byte) 2);
+                }
+                else if (slot4 == null && slot5 == null && slot2 == null) {
+                    if (slot1!=null) slot1.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    if (slot3!=null) slot3.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    unit.setAttackRange((byte) 3);
+                }
                 break;
             case 2:
                 if (slot2!=null) slot2.settowerColor(StatsHelper.COLOR_DARK_GREEN);
                 if (slot4!=null) slot4.settowerColor(StatsHelper.COLOR_DARK_GREEN);
                 if (slot5!=null) slot5.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+
+                if (slot4 == null && slot5 == null && unit.unitType!=UnitType.UNIT_TYPE_DEFENDER && unit.unitType != UnitType.UNIT_TYPE_MELEE) {
+                    if (slot1!=null) slot1.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    if (slot3!=null) slot3.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    unit.setAttackRange((byte) 3);
+                }else
+                if (slot4 == null && slot5 == null && slot2 == null) {
+                    if (slot1!=null) slot1.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    if (slot3!=null) slot3.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    unit.setAttackRange((byte) 3);
+                }else
+                    unit.setAttackRange((byte) 2);
                 break;
             case 3:
                 if (slot1!=null) slot1.settowerColor(StatsHelper.COLOR_DARK_GREEN);
