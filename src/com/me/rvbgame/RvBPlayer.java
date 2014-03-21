@@ -326,4 +326,11 @@ public class RvBPlayer extends RvBBase{
                 break;
         }
     }
+
+    public boolean checkIfUnitsDead() {
+      if (slot1 == null && slot2 == null && slot3 == null && slot4 == null && slot5 == null)
+            return true;
+      else
+            return false;
+    }
 }

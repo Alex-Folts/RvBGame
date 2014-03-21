@@ -211,13 +211,20 @@ public class RvBWorld extends RvBBase {
 	public boolean calcTurn() {
 		currentTurnRight = !currentTurnRight;
 
-		if (currentTurnRight) {
+        if (playerLeft.checkIfUnitsDead())
+            battleScreen.mGame.setScreen( new WinScreen(battleScreen.mGame, false));
+        else if (playerRight.checkIfUnitsDead())
+            battleScreen.mGame.setScreen( new WinScreen(battleScreen.mGame, true));
+
+        if (currentTurnRight) {
 			playerRight.beginTurn();
             playerLeft.endTurn();
             Gdx.app.log("BVGE", "Current turn: Right");
             if (actionPointsLeftLabel != null)
             actionPointsLeftLabel.setText(String.format("Curr: right"));
 		} else {
+
+
             Gdx.app.log("BVGE", "Current turn: Left");
             if (actionPointsLeftLabel != null)
             actionPointsLeftLabel.setText(String.format("Curr: left"));
