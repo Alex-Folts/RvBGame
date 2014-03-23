@@ -26,7 +26,7 @@ public class SplashScreen extends GameScreen implements InputProcessor {
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
 
-		texture = new Texture(Gdx.files.internal("data/Andr_087098.png"));
+		texture = new Texture(Gdx.files.internal("data/Andr_087099.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 288);
 		

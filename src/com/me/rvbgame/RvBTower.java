@@ -66,6 +66,7 @@ public class RvBTower extends RvBUnit {
     	    		avaImage.setPosition((RvBWorld.LEFT_TOWER_SLOT.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - getAvaSize().x) / battleScreen.screenResW))), RvBWorld.LEFT_TOWER_SLOT.y * deltaHeightCoef);
     	    	}
     	    	avaImage.setSize(deltaAvaSizeW, deltaAvaSizeW);
+    	    	healthLeftLabel.setPosition(avaImage.getX(),avaImage.getY());
         	}
     	}
 /*    

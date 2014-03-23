@@ -14,12 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
-import com.me.rvbgame.units.*;
 
 public class RvBWorld extends RvBBase {
 
 	private static boolean currentTurnRight = true;
-	private String bgPath = "data/Andr_087098.png";
+	private String bgPath = "data/abstract_v1.png";
+	static final Vector2 BG_IMAGE_SIZE = new Vector2(1024, 522);
 	
 	private Image bgImage;
 	private Texture bgTexture;
@@ -132,6 +132,7 @@ public class RvBWorld extends RvBBase {
             victim.setbDead(true);
         }
         victim.setHealth(newHealth);
+        Gdx.app.log("BVGE", "victim health = "+victim.getHealth());
 
 		return true;
 	}
@@ -400,12 +401,15 @@ public class RvBWorld extends RvBBase {
 			playerRight.resize(width, height);
 		}
 		
-		TextureRegion region = new TextureRegion(bgTexture, 0, 0, 512, 288);
+		TextureRegion region = new TextureRegion(bgTexture, 0, 0, 1024, 522);
 		
 		bgImage = new Image(region);
 		bgImage.setScaling(Scaling.stretch);
 		bgImage.setAlign((Align.bottom | Align.left));
-		bgImage.setSize(width, height);
+		bgImage.setSize(-(height * (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y)), height);//mirrored image!!
+		bgImage.setPosition((width * 0.5f) - (bgImage.getWidth() * 0.5f), 0);
+//		bgImage.setColor(0.75f, 0.75f, 0.75f, 1);
+//		bgImage.setSize(width, (float)width / (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y));
 
 		buttonsTable = new Table();
 		buttonsTable.size(width, height);
@@ -430,7 +434,7 @@ public class RvBWorld extends RvBBase {
         });
 		
 //      battleScreen.sceneLayerGUI.addActor(toggleInventoryButton);
-		buttonsTable.add(toggleInventoryButton);
+		buttonsTable.add(toggleInventoryButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
 		buttonsTable.row();
 		
 //      nextTurnButton
@@ -458,7 +462,7 @@ public class RvBWorld extends RvBBase {
 
             ;
         });
-        buttonsTable.add(nextTurnButton);
+        buttonsTable.add(nextTurnButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
         
         actionPointsLeftLabel.setBounds(35, height-60, 30, 30);
         healthImage.setBounds   (0, height - 30, 30, 30);
@@ -492,7 +496,7 @@ public class RvBWorld extends RvBBase {
 //		bgImage.setZIndex(WorldDrawLayer.DRAW_LAYER_BG);
 		
 //		battleScreen.stage.addActor(bgImage);
-//		battleScreen.sceneLayerBG.addActor(bgImage);
+		battleScreen.sceneLayerBG.addActor(bgImage);
         
 //        Gdx.app.log("BVGE", "resize!!");
 	}
