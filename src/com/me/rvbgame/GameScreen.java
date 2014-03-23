@@ -34,6 +34,11 @@ public abstract class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+//		FreeTypeFontGenerator fg;
+//		if (skin != null)
+//		{
+//			skin.
+//		}
 		stage.setViewport( width, height, true );
 	}
 

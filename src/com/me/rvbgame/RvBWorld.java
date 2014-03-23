@@ -9,12 +9,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.me.rvbgame.units.StatsHelper;
-import com.me.rvbgame.units.UnitRangedMass;
 
 public class RvBWorld extends RvBBase {
 
@@ -24,6 +24,10 @@ public class RvBWorld extends RvBBase {
 	private Image bgImage;
 	private Texture bgTexture;
 
+	private Table buttonsTable;
+
+    private TextButton toggleInventoryButton;
+	
     private TextButton nextTurnButton;
     //Stats:
     public Label actionPointsLeftLabel;
@@ -356,10 +360,12 @@ public class RvBWorld extends RvBBase {
         battleScreen.sceneLayerGUI.addActor(statPDefLabel);
         battleScreen.sceneLayerGUI.addActor(statRangeLabel);
 
-        battleScreen.sceneLayerGUI.addActor(nextTurnButton);
+//        battleScreen.sceneLayerGUI.addActor(nextTurnButton);
         battleScreen.sceneLayerGUI.addActor(actionPointsLeftLabel);
-
+        
         Gdx.input.setInputProcessor(battleScreen.stage);
+        
+//        Gdx.app.log("BVGE", "show!!");
 	}
 	
 	@Override
@@ -394,6 +400,32 @@ public class RvBWorld extends RvBBase {
 		bgImage.setAlign((Align.bottom | Align.left));
 		bgImage.setSize(width, height);
 
+		buttonsTable = new Table();
+		buttonsTable.size(width, height);
+		buttonsTable.bottom();
+		buttonsTable.right();
+		
+		battleScreen.sceneLayerGUI.addActor(buttonsTable);
+		
+		//inventory button
+		toggleInventoryButton = new TextButton("Inventory", battleScreen.getSkin());
+		toggleInventoryButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	if (currentTurnRight)
+            	{
+            		playerRight.inventoryVisible(true);
+            	} else
+            	{
+            		playerLeft.inventoryVisible(true);
+            	}
+            };
+        });
+		
+//      battleScreen.sceneLayerGUI.addActor(toggleInventoryButton);
+		buttonsTable.add(toggleInventoryButton);
+		buttonsTable.row();
+		
 //      nextTurnButton
         float currX = width-100;
         float currY = LEFT_TOWER_SLOT.y;
@@ -419,6 +451,8 @@ public class RvBWorld extends RvBBase {
 
             ;
         });
+        buttonsTable.add(nextTurnButton);
+        
         actionPointsLeftLabel.setBounds(35, height-60, 30, 30);
         healthImage.setBounds   (0, height - 30, 30, 30);
         statHealthLabel.setBounds(0, height - 30, 30, 30);
@@ -452,6 +486,8 @@ public class RvBWorld extends RvBBase {
 		
 //		battleScreen.stage.addActor(bgImage);
 //		battleScreen.sceneLayerBG.addActor(bgImage);
+        
+//        Gdx.app.log("BVGE", "resize!!");
 	}
 
     public void updateStatLabels(RvBUnit unit){

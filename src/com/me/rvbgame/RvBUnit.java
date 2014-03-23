@@ -382,6 +382,7 @@ public abstract class RvBUnit extends RvBBase {
 		addToDraw();
 	}
 	
+	//unused
 	@Override
 	public void addToDraw() {
 		super.addToDraw();
