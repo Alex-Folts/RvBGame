@@ -1,4 +1,4 @@
-package com.me.rvbgame.units;
+package com.me.rvbgame;
 
 import com.badlogic.gdx.graphics.Color;
 
