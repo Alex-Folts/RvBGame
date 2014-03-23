@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
-import com.me.rvbgame.units.StatsHelper;
+import com.me.rvbgame.units.*;
 import com.me.rvbgame.units.UnitDefender;
 import com.me.rvbgame.units.UnitMelee;
 import com.me.rvbgame.units.UnitRanged;
@@ -651,6 +651,7 @@ public class RvBPlayer extends RvBBase{
                 break;
         }
     }
+<<<<<<< HEAD
 	
 	public void toggleInventory() {
 		inventoryVisible(!isInventoryOpened);
@@ -711,4 +712,11 @@ public class RvBPlayer extends RvBBase{
         bWaitForCard = false;
         waitForSlotUnit = null;
 	}
+
+    public boolean checkIfUnitsDead() {
+      if (slot1 == null && slot2 == null && slot3 == null && slot4 == null && slot5 == null)
+            return true;
+      else
+            return false;
+    }
 }
