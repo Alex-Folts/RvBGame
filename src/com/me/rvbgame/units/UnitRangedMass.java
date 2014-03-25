@@ -1,6 +1,6 @@
 package com.me.rvbgame.units;
 
-import com.me.rvbgame.BattleScreen;
+import com.me.rvbgame.screens.BattleScreen;
 import com.me.rvbgame.RvBPlayer;
 import com.me.rvbgame.RvBUnit;
 import com.me.rvbgame.UnitType;
