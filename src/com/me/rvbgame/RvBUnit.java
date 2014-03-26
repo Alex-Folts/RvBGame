@@ -32,7 +32,8 @@ public abstract class RvBUnit extends RvBBase {
     private byte attackRange;
 
     public UnitType unitType;
-    
+    public ActionType actionType;
+
     protected RvBPlayer player;
     private boolean bCanOperate;
     private boolean bDead;
@@ -46,7 +47,7 @@ public abstract class RvBUnit extends RvBBase {
 	protected int avaTexWidth = 128;
 	protected int avaTexHeight = 128;
 	protected Vector2 avaSize = new Vector2(48, 48);
-    
+
     public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner, String jsonData) {
         super(parentScreen);
         
@@ -77,6 +78,7 @@ public abstract class RvBUnit extends RvBBase {
             this.healthLeftLabel.setColor(Color.GREEN);
             this.healthLeftLabel.setAlignment(Align.center, Align.center);
             this.maxHealth = tmpUnit.getHealth();
+            this.actionType = ActionType.ACTION_TYPE_DONE;
         }
     }
 	
@@ -404,20 +406,25 @@ public abstract class RvBUnit extends RvBBase {
 				Gdx.app.log("BVGE", "clicked:"+this);
 				if (RvBWorld.getCurrentTurnPlayer() == player)
 				{
-                    if (!RvBUnit.this.bFreeze){
+                    if (!RvBUnit.this.bFreeze && RvBUnit.this.bCanOperate){
                         RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this,RvBUnit.this.getAttackRange());
                         player.setActingUnit(RvBUnit.this);
                     }
-				} else
+				}
+                else
 				{
 					if (RvBWorld.getCurrentTurnPlayer().getActingUnit() != null)
 					{
-						if (RvBWorld.getCurrentTurnPlayer().getActingUnit().isbCanOperate()
-                                && RvBWorld.getCurrentTurnPlayer().getActingUnit().getAttackRange() >= RvBUnit.this.getAttackRange()
-                                && !RvBWorld.getCurrentTurnPlayer().getActingUnit().bFreeze)
+						if (//RvBWorld.getCurrentTurnPlayer().getActingUnit().isbCanOperate() &&
+                                RvBWorld.getCurrentTurnPlayer().getActingUnit().getAttackRange() >= RvBUnit.this.getAttackRange()
+                                && !RvBWorld.getCurrentTurnPlayer().getActingUnit().bFreeze
+                                && RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType == ActionType.ACTION_TYPE_ATTACK)
 						{
 							RvBWorld.damage(RvBWorld.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this, 0);
+
 							RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
+                            RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
+                            battleScreen.sceneLayerRadialMenu.hide();
 						}
 					}
 				}

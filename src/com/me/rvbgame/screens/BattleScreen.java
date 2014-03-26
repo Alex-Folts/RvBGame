@@ -1,21 +1,22 @@
 package com.me.rvbgame.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.me.rvbgame.RvBRadialMenu;
 import com.me.rvbgame.RvBWorld;
 import com.me.rvbgame.RvbGdxGame;
 
 public class BattleScreen extends GameScreen {
 
 	public final RvBWorld world;
-	protected Group sceneLayerZero = new Group();
+    public Group sceneLayerZero = new Group();
 	public Group sceneLayerBG = new Group();
 	public Group sceneLayerTowers = new Group();
 	public Group sceneLayerUnits = new Group();
-	protected Group sceneLayerFX = new Group();
-	protected Group sceneLayerRadialmenu = new Group();
+    public Group sceneLayerFX = new Group();
+    public RvBRadialMenu sceneLayerRadialMenu = null;
 	public Group sceneLayerGUI = new Group();
 	public Group sceneLayerMenu = new Group();
-	protected Group sceneLayerTop = new Group();
+    public Group sceneLayerTop = new Group();
 	
 	public float screenResW;
 	public float screenResH;
@@ -30,7 +31,7 @@ public class BattleScreen extends GameScreen {
 		stage.addActor(sceneLayerTowers);
 		stage.addActor(sceneLayerUnits);
 		stage.addActor(sceneLayerFX);
-		stage.addActor(sceneLayerRadialmenu);
+//		stage.addActor(sceneLayerRadialMenu);
 		stage.addActor(sceneLayerGUI);
 		stage.addActor(sceneLayerMenu);
 		stage.addActor(sceneLayerTop);

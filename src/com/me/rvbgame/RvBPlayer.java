@@ -62,6 +62,7 @@ public class RvBPlayer extends RvBBase{
     private boolean bWaitForSlot = false;
     
     private RvBUnit waitForSlotUnit;
+
     
     public RvBPlayer(BattleScreen parentScreen) {
         super(parentScreen);
@@ -101,10 +102,12 @@ public class RvBPlayer extends RvBBase{
     	if (tower != null)
     	{
     		tower.setbCanOperate(true);
+//            tower.actionType = ActionType.ACTION_TYPE_READY;
     	}
     	if (slot1 != null)
     	{
     		slot1.setbCanOperate(true);
+//            slot1.actionType = ActionType.ACTION_TYPE_READY;
     	} else
     	{
 //    		Gdx.app.log("BVGE", "beginTurn: ");
@@ -113,6 +116,7 @@ public class RvBPlayer extends RvBBase{
     	if (slot2 != null)
     	{
     		slot2.setbCanOperate(true);
+//            slot2.actionType = ActionType.ACTION_TYPE_READY;
     	} else
     	{
     		slot02EmptyImage.setVisible(true);
@@ -120,6 +124,7 @@ public class RvBPlayer extends RvBBase{
     	if (slot3 != null)
     	{
     		slot3.setbCanOperate(true);
+//            slot3.actionType = ActionType.ACTION_TYPE_READY;
     	} else
     	{
     		slot03EmptyImage.setVisible(true);
@@ -127,6 +132,7 @@ public class RvBPlayer extends RvBBase{
     	if (slot4 != null)
     	{
     		slot4.setbCanOperate(true);
+//            slot4.actionType = ActionType.ACTION_TYPE_READY;
     	} else
     	{
     		slot04EmptyImage.setVisible(true);
@@ -134,6 +140,7 @@ public class RvBPlayer extends RvBBase{
     	if (slot5 != null)
     	{
     		slot5.setbCanOperate(true);
+//            slot5.actionType = ActionType.ACTION_TYPE_READY;
     	} else
     	{
     		slot05EmptyImage.setVisible(true);
@@ -152,30 +159,36 @@ public class RvBPlayer extends RvBBase{
         if (tower != null)
         {
             tower.setbCanOperate(false);
+//            tower.actionType = ActionType.ACTION_TYPE_DONE;
         }
         if (slot1 != null)
         {
             slot1.setbCanOperate(false);
+//            slot1.actionType = ActionType.ACTION_TYPE_DONE;
             if (slot1.bFreeze) slot1.unFreeze();
         }
         if (slot2 != null)
         {
             slot2.setbCanOperate(false);
+//            slot2.actionType = ActionType.ACTION_TYPE_DONE;
             if (slot2.bFreeze) slot2.unFreeze();
         }
         if (slot3 != null)
         {
             slot3.setbCanOperate(false);
+//            slot3.actionType = ActionType.ACTION_TYPE_DONE;
             if (slot3.bFreeze) slot3.unFreeze();
         }
         if (slot4 != null)
         {
             slot4.setbCanOperate(false);
+//            slot4.actionType = ActionType.ACTION_TYPE_DONE;
             if (slot4.bFreeze) slot4.unFreeze();
         }
         if (slot5 != null)
         {
             slot5.setbCanOperate(false);
+//            slot4.actionType = ActionType.ACTION_TYPE_DONE;
             if (slot5.bFreeze) slot5.unFreeze();
         }
         if(isAI)
@@ -208,6 +221,7 @@ public class RvBPlayer extends RvBBase{
 		{
 			this.actingUnit.settowerColor(StatsHelper.COLOR_DARK_GREEN);
             battleScreen.world.updateStatLabels(this.actingUnit);
+            battleScreen.world.revealRadialMenu(this.actingUnit);
 		}
 	}
 	

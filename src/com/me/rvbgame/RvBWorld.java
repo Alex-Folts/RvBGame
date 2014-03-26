@@ -596,4 +596,20 @@ public class RvBWorld extends RvBBase {
 			}
 		}*/
 	}
+
+    public void revealRadialMenu(RvBUnit actingUnit) {
+
+        if (battleScreen.sceneLayerRadialMenu == null){
+            battleScreen.sceneLayerRadialMenu = new RvBRadialMenu(actingUnit);
+            battleScreen.sceneLayerRadialMenu.setVisible(true);
+            battleScreen.stage.addActor(battleScreen.sceneLayerRadialMenu);
+            Gdx.app.log("RM", "Creating...");
+        }else {
+            battleScreen.sceneLayerRadialMenu.changeCoords(actingUnit);
+            battleScreen.sceneLayerRadialMenu.setVisible(true);
+            Gdx.app.log("RM", "Moving...");
+        }
+
+    }
+
 }
