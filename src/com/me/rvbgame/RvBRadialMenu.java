@@ -117,8 +117,14 @@ public class RvBRadialMenu extends Group{
     private void applyAction(ActionType actionType) {
         unit.actionType = actionType;
         if (actionType != ActionType.ACTION_TYPE_ATTACK && actionType!=ActionType.ACTION_TYPE_FREEZE){
-            unit.setbCanOperate(false);
-            this.hide();
+            unit.battleScreen.world.applyActionOnSelf(unit);
+            if (unit.getActionPoints() == 0){
+                unit.setbCanOperate(false);
+                this.hide();
+                if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
+                    RvBWorld.getCurrentTurnPlayer().endTurn();
+                }
+            }
         }
     }
 
@@ -198,11 +204,12 @@ public class RvBRadialMenu extends Group{
                     unit.avaImage.getX() - unit.avaSize.x,
                     unit.avaImage.getY() - unit.avaSize.y / 2
             );
-            if (unit.unitType == UnitType.UNIT_TYPE_RANGED)
+            if (unit.unitType == UnitType.UNIT_TYPE_RANGED || unit.unitType == UnitType.UNIT_TYPE_RANGED_MASS)
                 bottomLeftChoiceImage.setVisible(true);
             else
                 bottomLeftChoiceImage.setVisible(false);
-        }else if (unit.unitType == UnitType.UNIT_TYPE_RANGED){
+        }else if (unit.unitType == UnitType.UNIT_TYPE_RANGED || unit.unitType == UnitType.UNIT_TYPE_RANGED_MASS){
+
             Image avaImage = applyTexture("data/radial_menu_files/rm_aim.png");
             avaImage.addListener(new ClickListener(){
                 @Override
@@ -213,8 +220,10 @@ public class RvBRadialMenu extends Group{
                     applyAction(ActionType.ACTION_TYPE_AIM);
                 }
             });
+
             this.bottomLeftChoiceImage = avaImage;
             this.addActor(bottomLeftChoiceImage);
+
             bottomLeftChoiceImage.setPosition(
                     unit.avaImage.getX() - unit.avaSize.x,
                     unit.avaImage.getY() - unit.avaSize.y / 2

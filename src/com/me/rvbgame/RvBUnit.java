@@ -31,6 +31,9 @@ public abstract class RvBUnit extends RvBBase {
     private byte targetsNum;
     private byte attackRange;
 
+    private int criticalChance;
+    private int actionPoints;
+
     public UnitType unitType;
     public ActionType actionType;
 
@@ -47,6 +50,7 @@ public abstract class RvBUnit extends RvBBase {
 	protected int avaTexWidth = 128;
 	protected int avaTexHeight = 128;
 	protected Vector2 avaSize = new Vector2(48, 48);
+    private boolean defended;
 
     public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner, String jsonData) {
         super(parentScreen);
@@ -79,6 +83,11 @@ public abstract class RvBUnit extends RvBBase {
             this.healthLeftLabel.setAlignment(Align.center, Align.center);
             this.maxHealth = tmpUnit.getHealth();
             this.actionType = ActionType.ACTION_TYPE_DONE;
+            if (tmpUnit.getCriticalChance() > 0){
+                this.criticalChance = tmpUnit.getCriticalChance();
+            }
+            this.actionPoints = tmpUnit.actionPoints;
+
         }
     }
 	
@@ -108,44 +117,6 @@ public abstract class RvBUnit extends RvBBase {
 		return avaSize;
 	}
 
-/*    public void setUnitImage(String texturePath, int width, int height){
-        Texture texture = new Texture(Gdx.files.internal(texturePath));
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-        TextureRegion region = new TextureRegion(texture, 0,0, width, height);
-        Image splashImage = new Image( region);
-        splashImage.setScaling(Scaling.stretch);
-        splashImage.setAlign((Align.bottom | Align.left));
-        splashImage.setSize(width, height);
-        splashImage.setColor(1.0f, 1.0f, 1.0f, 0.0f);
-
-        this.setUnitImage(splashImage);
-    }*/
-
-/*    public Image getUnitImage() {
-        return unitImage;
-    }*/
-
-/*    public void setUnitImage(Image image) {
-        this.unitImage = image;
-        this.battleScreen.stage.addActor(this.unitImage);
-        this.unitImage.addListener( new ClickListener() {             
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				if (battleScreen.world.getCurrentTurnPlayer() == player)
-				{
-					player.setActingUnit(RvBUnit.this);
-				} else
-				{
-					if (player.getActingUnit() != null)
-					{
-						RvBWorld.damage(player.getActingUnit(), RvBUnit.this, 0);
-						player.getActingUnit().setbCanOperate(false);
-					}
-				}
-			};
-		});
-    }*/
 
     public static boolean IsPhysAttack(int attackID) {
 		return true;
@@ -170,6 +141,8 @@ public abstract class RvBUnit extends RvBBase {
 
     public void setEnergy(int energy) {
         if (energy<0) energy = 0;
+        if (battleScreen.world != null)
+            battleScreen.world.updateStatLabels(this);
         this.energy = energy;
     }
 
@@ -251,14 +224,6 @@ public abstract class RvBUnit extends RvBBase {
 		this.bDead = bDead;
 	}
 	
-/*	@Override
-	public void show() {
-		super.show();
-		
-		avaTexture = new Texture(Gdx.files.internal(getImagePath()));
-		avaTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-	}
-	*/
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -268,107 +233,7 @@ public abstract class RvBUnit extends RvBBase {
 			avaTexture.dispose();
 		}
 	}
-/*	
-	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
-		
-		TextureRegion region = new TextureRegion(avaTexture, 0, 0, getAvaImageWidth(), getAvaImageHeight());
-		
-		avaImage = new Image(region);
-		avaImage.setScaling(Scaling.stretch);
-		avaImage.setAlign((Align.bottom | Align.left));
-		avaImage.setSize(getAvaSize().x, getAvaSize().y);
-		
-		avaImage.addListener( new ClickListener() {             
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				if (battleScreen.world.getCurrentTurnPlayer() == player)
-				{
-					player.setActingUnit(RvBUnit.this);
-				} else
-				{
-					if (player.getActingUnit() != null)
-					{
-						RvBWorld.damage(player.getActingUnit(), RvBUnit.this, 0);
-						player.getActingUnit().setbCanOperate(false);
-					}
-				}
-			};
-		});
-		
-		if (bCanOperate)
-		{
-			settowerColor(new Color(0, 1, 0, 1));
-		} else
-		{
-			settowerColor(new Color(1, 1, 1, 1));
-		}
 
-//		battleScreen.sceneLayerUnits.addActor(avaImage);
-		switch (unitType)
-		{
-			case UNIT_TYPE_TOWER:
-				battleScreen.sceneLayerTowers.addActor(avaImage);
-				break;
-	
-			default:
-				battleScreen.sceneLayerUnits.addActor(avaImage);
-				break;
-		}
-		
-		if (unitType != UnitType.UNIT_TYPE_TOWER)
-		{
-	    	if (player == battleScreen.world.playerRight)
-	    	{
-	    		if (player.slot1 == this)
-	    		{
-	    			avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
-	    		} else 
-				if (player.slot2 == this)
-				{
-					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
-				} else 
-				if (player.slot3 == this)
-				{
-					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
-				} else 
-				if (player.slot4 == this)
-				{
-					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
-				} else 
-				if (player.slot5 == this)
-	    		{
-					avaImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
-	    		}
-	    	} else
-	    	{
-	    		if (player.slot1 == this)
-	    		{
-	    			avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT01.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT01.y - (avaImage.getHeight() * 0.5f));
-	    		} else 
-				if (player.slot2 == this)
-				{
-					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT02.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT02.y - (avaImage.getHeight() * 0.5f));
-				} else 
-				if (player.slot3 == this)
-				{
-					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT03.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT03.y - (avaImage.getHeight() * 0.5f));
-				} else 
-				if (player.slot4 == this)
-				{
-					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT04.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT04.y - (avaImage.getHeight() * 0.5f));
-				} else 
-				if (player.slot5 == this)
-	    		{
-					avaImage.setPosition(RvBWorld.LEFT_UNIT_SLOT05.x - (avaImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT05.y - (avaImage.getHeight() * 0.5f));
-	    		}
-	    	}
-		}
-	}
-
-	*/
-	
 	public void settowerColor(Color newColor)
 	{
 		if (avaImage != null)
@@ -404,7 +269,8 @@ public abstract class RvBUnit extends RvBBase {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.log("BVGE", "clicked:"+this);
-				if (RvBWorld.getCurrentTurnPlayer() == player)
+				//show radial menu
+                if (RvBWorld.getCurrentTurnPlayer() == player)
 				{
                     if (!RvBUnit.this.bFreeze && RvBUnit.this.bCanOperate){
                         RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this,RvBUnit.this.getAttackRange());
@@ -412,18 +278,19 @@ public abstract class RvBUnit extends RvBBase {
                     }
 				}
                 else
+                //or apply selected action on victim
 				{
 					if (RvBWorld.getCurrentTurnPlayer().getActingUnit() != null)
 					{
-						if (//RvBWorld.getCurrentTurnPlayer().getActingUnit().isbCanOperate() &&
-                                RvBWorld.getCurrentTurnPlayer().getActingUnit().getAttackRange() >= RvBUnit.this.getAttackRange()
-                                && !RvBWorld.getCurrentTurnPlayer().getActingUnit().bFreeze
-                                && RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType == ActionType.ACTION_TYPE_ATTACK)
+                        if(RvBWorld.applyActionOnVictim(RvBWorld.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this));
 						{
-							RvBWorld.damage(RvBWorld.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this, 0);
-
-							RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
-                            RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
+                            if (RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints() == 0){
+                                RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
+                                RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
+                                if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
+                                    RvBWorld.getCurrentTurnPlayer().endTurn();
+                                }
+                            }
                             battleScreen.sceneLayerRadialMenu.hide();
 						}
 					}
@@ -608,5 +475,29 @@ public abstract class RvBUnit extends RvBBase {
     public void unFreeze() {
         this.bFreeze = false;
         this.avaImage.setColor(Color.DARK_GRAY);
+    }
+
+    public void setDefended(boolean defended) {
+        this.defended = defended;
+    }
+
+    public boolean isDefended() {
+        return defended;
+    }
+
+    public int getCriticalChance() {
+        return criticalChance;
+    }
+
+    public void setCriticalChance(int criticalChance) {
+        this.criticalChance = criticalChance;
+    }
+
+    public int getActionPoints() {
+        return actionPoints;
+    }
+
+    public void setActionPoints(int actionPoints) {
+        this.actionPoints = actionPoints;
     }
 }
