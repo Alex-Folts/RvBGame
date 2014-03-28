@@ -187,26 +187,31 @@ public class RvBPlayer extends RvBBase{
         {
             slot1.setbCanOperate(false);
             if (slot1.bFreeze) slot1.unFreeze();
+            if  (slot1.getActionPoints() <= 0) slot1.setActionPoints(slot1.getMinActionPoints());
         }
         if (slot2 != null)
         {
             slot2.setbCanOperate(false);
             if (slot2.bFreeze) slot2.unFreeze();
+            if (slot2.getActionPoints() <= 0) slot2.setActionPoints(slot2.getMinActionPoints());
         }
         if (slot3 != null)
         {
             slot3.setbCanOperate(false);
             if (slot3.bFreeze) slot3.unFreeze();
+            if (slot3.getActionPoints() <= 0) slot3.setActionPoints(slot3.getMinActionPoints());
         }
         if (slot4 != null)
         {
             slot4.setbCanOperate(false);
             if (slot4.bFreeze) slot4.unFreeze();
+            if (slot4.getActionPoints() <= 0) slot4.setActionPoints(slot4.getMinActionPoints());
         }
         if (slot5 != null)
         {
             slot5.setbCanOperate(false);
             if (slot5.bFreeze) slot5.unFreeze();
+            if (slot5.getActionPoints() <= 0) slot5.setActionPoints(slot5.getMinActionPoints());
         }
         if(isAI)
             this.makeMove();
@@ -217,6 +222,9 @@ public class RvBPlayer extends RvBBase{
         clearWaitingUnit();
         
         setActingUnit(null);
+
+        if (this.battleScreen.sceneLayerRadialMenu!=null)
+            this.battleScreen.sceneLayerRadialMenu.setDefaultColors();
     }
 
 

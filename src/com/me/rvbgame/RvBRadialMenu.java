@@ -62,6 +62,7 @@ public class RvBRadialMenu extends Group{
 
                 //This method is overrided with:
                 Gdx.app.log("RM", "clicked: attack");
+                upperChoiceImage.setColor(StatsHelper.COLOR_DARK_RED);
                 applyAction(ActionType.ACTION_TYPE_ATTACK);
             }
         });
@@ -121,6 +122,7 @@ public class RvBRadialMenu extends Group{
             if (unit.getActionPoints() == 0){
                 unit.setbCanOperate(false);
                 this.hide();
+                this.setDefaultColors();
                 if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
                     RvBWorld.getCurrentTurnPlayer().endTurn();
                 }
@@ -187,6 +189,7 @@ public class RvBRadialMenu extends Group{
 
                     //This method is overrided with:
                     Gdx.app.log("RM", "clicked: freeze");
+                    bottomRightChoiceImage.setColor(StatsHelper.COLOR_DARK_RED);
                     applyAction(ActionType.ACTION_TYPE_FREEZE);
                 }
             });
@@ -244,5 +247,12 @@ public class RvBRadialMenu extends Group{
         avaImage.setSize(unit.getAvaSize().x, unit.getAvaSize().y);
 
         return avaImage;
+    }
+
+    public void setDefaultColors() {
+        if (upperChoiceImage != null)
+            upperChoiceImage.setColor(Color.WHITE);
+        if (bottomRightChoiceImage != null)
+            bottomRightChoiceImage.setColor(Color.WHITE);
     }
 }

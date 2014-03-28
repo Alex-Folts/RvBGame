@@ -34,6 +34,12 @@ public abstract class RvBUnit extends RvBBase {
     private int criticalChance;
     private int actionPoints;
 
+    public int getMinActionPoints() {
+        return minActionPoints;
+    }
+
+    protected int minActionPoints;
+
     public UnitType unitType;
     public ActionType actionType;
 
@@ -87,6 +93,7 @@ public abstract class RvBUnit extends RvBBase {
                 this.criticalChance = tmpUnit.getCriticalChance();
             }
             this.actionPoints = tmpUnit.actionPoints;
+            this.minActionPoints = tmpUnit.actionPoints;
 
         }
     }
@@ -285,12 +292,14 @@ public abstract class RvBUnit extends RvBBase {
                         if(RvBWorld.applyActionOnVictim(RvBWorld.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this));
 						{
                             if (RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints() == 0){
+
                                 RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
                                 RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
                                 if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
                                     RvBWorld.getCurrentTurnPlayer().endTurn();
                                 }
                             }
+                            battleScreen.sceneLayerRadialMenu.setDefaultColors();
                             battleScreen.sceneLayerRadialMenu.hide();
 						}
 					}
