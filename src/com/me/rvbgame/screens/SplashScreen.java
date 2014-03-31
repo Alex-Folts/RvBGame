@@ -47,7 +47,7 @@ public class SplashScreen extends GameScreen implements InputProcessor {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		sprite.draw(batch);
-		batch.end();
+        batch.end();
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class SplashScreen extends GameScreen implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		Gdx.app.log("RvB", "SPSettingsScreen:touchDown");
 //		mGame.setScreen( new MainMenuScreen(mGame));
-        mGame.setScreen( new BattleScreen(mGame));
+        mGame.setScreen( new SPSettingsScreen(mGame));
 		return true;
 	}
 

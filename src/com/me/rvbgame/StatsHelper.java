@@ -34,4 +34,10 @@ public class StatsHelper {
         }
         return "";
     }
+    public static final int MAX_AVAILABLE_UNITS = 12;
+    public static int MAX_AVAILABLE_DEF = 4;
+    public static int MAX_AVAILABLE_ATT = 4;
+    public static int MAX_AVAILABLE_RAN = 4;
+    public static int MAX_AVAILABLE_MAS = 4;
+    public static int MAX_AVAILABLE_SPE = 4;
 }
