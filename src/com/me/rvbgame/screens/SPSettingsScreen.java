@@ -14,6 +14,7 @@ import com.me.rvbgame.StatsHelper;
 import com.me.rvbgame.UnitType;
 import com.me.rvbgame.units.UnitDefender;
 import java.util.ArrayList;
+import java.util.EventListener;
 
 public class SPSettingsScreen extends GameScreen {
 
@@ -87,7 +88,9 @@ public class SPSettingsScreen extends GameScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
-                mGame.setScreen(new BattleScreen(mGame));
+                BattleScreen battleScreen = new BattleScreen(mGame);
+                battleScreen.world.selectedUnitsList = selectedUnitsList;
+                mGame.setScreen(battleScreen);
             };
         });
         backButton = new TextButton("Back", getSkin());
@@ -114,7 +117,10 @@ public class SPSettingsScreen extends GameScreen {
         table.row();
         table.add(backButton);
         table.add(startBattleButton);
-        
+        stage.addActor(backButton);
+        stage.addActor(startBattleButton);
+        backButton.setPosition(width - backButton.getWidth(),backButton.getHeight());
+        startBattleButton.setPosition(width - startBattleButton.getWidth(),0);
 //        stage.addActor(table);
 ////////////////////////////////
         skin = new Skin();
@@ -127,7 +133,7 @@ public class SPSettingsScreen extends GameScreen {
         skin.add("mass_ranged", new Texture("data/mass_ranged.png"));
         skin.add("special_stan", new Texture("data/special_stan.png"));
 
-        infoLabel = new Label(String.format("Units left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS),skin);
+        infoLabel = new Label(String.format("Drag units into box to add them\nUnits left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS),skin);
         stage.addActor(infoLabel);
 
         imageSize = height/6;
@@ -350,7 +356,9 @@ public class SPSettingsScreen extends GameScreen {
 
     private boolean updateLabels() {
         boolean updated = false;
+
         infoLabel.setText(String.format("Units left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS - selectedUnitsList.size()-1 ));
+
         switch (unitTypeCurrent) {
             case UNIT_TYPE_DEFENDER:
                 maxDefNum--;
@@ -358,12 +366,32 @@ public class SPSettingsScreen extends GameScreen {
                     defLeftLabel.setText(String.format("x%d", maxDefNum));
                     if (defSelectedImage == null){
                         defSelectedImage = new Image(skin,"defender");
+                        defSelectedImage.addListener( new ClickListener(){
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                super.clicked(event, x, y);
+
+                                selectedUnitsList.remove(UnitType.UNIT_TYPE_DEFENDER);
+                                infoLabel.setText(String.format("Units left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS - selectedUnitsList.size() ));
+                                maxDefNum++;
+
+                                if (maxDefNum != StatsHelper.MAX_AVAILABLE_DEF){
+                                    defChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_DEF - maxDefNum));
+                                    defLeftLabel.setText(String.format("x%d", maxDefNum));
+                                }
+                                else
+                                {
+                                    defChosenLabel.setVisible(false);
+                                    defSelectedImage.setVisible(false);
+                                }
+                            }
+                        });
                         defSelectedImage.setBounds(
                                 stage.getWidth() - imageSize,
                                 stage.getHeight() - imageSize,
                                 imageSize,
                                 imageSize
-                                );
+                        );
                         stage.addActor(defSelectedImage);
                         defChosenLabel = new Label(String.format("x%d", StatsHelper.MAX_AVAILABLE_DEF - maxDefNum),skin);
                         defChosenLabel.setPosition(defSelectedImage.getX() - defChosenLabel.getPrefWidth(), defSelectedImage.getY());
@@ -371,6 +399,8 @@ public class SPSettingsScreen extends GameScreen {
                     }
                     else
                     {
+                        defChosenLabel.setVisible(true);
+                        defSelectedImage.setVisible(true);
                         defChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_DEF - maxDefNum));
                     }
                     updated = true;
@@ -384,6 +414,25 @@ public class SPSettingsScreen extends GameScreen {
                     atackLeftLabel.setText(String.format("x%d", maxAttNum));
                     if (attSelectedImage == null){
                         attSelectedImage = new Image(skin,"atacker_melee");
+                        attSelectedImage.addListener(new ClickListener(){
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                super.clicked(event, x, y);
+
+                                selectedUnitsList.remove(UnitType.UNIT_TYPE_MELEE);
+                                infoLabel.setText(String.format("Units left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS - selectedUnitsList.size() ));
+                                maxAttNum++;
+                                atackLeftLabel.setText(String.format("x%d", maxAttNum));
+
+                                if (maxAttNum != StatsHelper.MAX_AVAILABLE_ATT)
+                                    atackChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_ATT - maxAttNum));
+                                else
+                                {
+                                    atackChosenLabel.setVisible(false);
+                                    attSelectedImage.setVisible(false);
+                                }
+                            }
+                        });
                         attSelectedImage.setBounds(
                                 stage.getWidth() - imageSize,
                                 stage.getHeight() - imageSize * 2,
@@ -397,6 +446,8 @@ public class SPSettingsScreen extends GameScreen {
                     }
                     else
                     {
+                        attSelectedImage.setVisible(true);
+                        atackChosenLabel.setVisible(true);
                         atackChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_ATT - maxAttNum));
                     }
                     updated = true;
@@ -409,6 +460,25 @@ public class SPSettingsScreen extends GameScreen {
                     stanLeftLabel.setText(String.format("x%d", maxSpeNum));
                     if (speSelectedImage == null){
                         speSelectedImage = new Image(skin,"special_stan");
+                        speSelectedImage.addListener(new ClickListener(){
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                super.clicked(event, x, y);
+
+                                selectedUnitsList.remove(UnitType.UNIT_TYPE_SPECIAL);
+                                infoLabel.setText(String.format("Units left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS - selectedUnitsList.size() ));
+                                maxSpeNum++;
+                                stanLeftLabel.setText(String.format("x%d", maxSpeNum));
+
+                                if (maxSpeNum != StatsHelper.MAX_AVAILABLE_SPE)
+                                    stanChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_SPE - maxSpeNum));
+                                else
+                                {
+                                    stanChosenLabel.setVisible(false);
+                                    speSelectedImage.setVisible(false);
+                                }
+                            }
+                        });
                         speSelectedImage.setBounds(
                                 stage.getWidth() - imageSize,
                                 stage.getHeight() - imageSize * 3,
@@ -422,6 +492,8 @@ public class SPSettingsScreen extends GameScreen {
                     }
                     else
                     {
+                        speSelectedImage.setVisible(true);
+                        stanChosenLabel.setVisible(true);
                         stanChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_SPE - maxSpeNum));
                     }
                     updated = true;
@@ -434,6 +506,25 @@ public class SPSettingsScreen extends GameScreen {
                     rangedLeftLabel.setText(String.format("x%d", maxRanNum));
                     if (ranSelectedImage == null){
                         ranSelectedImage = new Image(skin,"atacker_ranged");
+                        ranSelectedImage.addListener(new ClickListener(){
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                super.clicked(event, x, y);
+
+                                selectedUnitsList.remove(UnitType.UNIT_TYPE_RANGED);
+                                infoLabel.setText(String.format("Units left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS - selectedUnitsList.size() ));
+                                maxRanNum++;
+                                rangedLeftLabel.setText(String.format("x%d", maxRanNum));
+
+                                if (maxRanNum != StatsHelper.MAX_AVAILABLE_RAN)
+                                    rangedChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_RAN - maxRanNum));
+                                else
+                                {
+                                    rangedChosenLabel.setVisible(false);
+                                    ranSelectedImage.setVisible(false);
+                                }
+                            }
+                        });
                         ranSelectedImage.setBounds(
                                 stage.getWidth() - imageSize,
                                 stage.getHeight() - imageSize * 4,
@@ -447,6 +538,8 @@ public class SPSettingsScreen extends GameScreen {
                     }
                     else
                     {
+                        ranSelectedImage.setVisible(true);
+                        rangedChosenLabel.setVisible(true);
                         rangedChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_RAN - maxRanNum));
                     }
                     updated = true;
@@ -459,6 +552,24 @@ public class SPSettingsScreen extends GameScreen {
                     massLeftLabel.setText(String.format("x%d", maxMRaNum));
                     if (masSelectedImage == null){
                         masSelectedImage = new Image(skin,"mass_ranged");
+                        masSelectedImage.addListener(new ClickListener(){
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                super.clicked(event, x, y);
+
+                                selectedUnitsList.remove(UnitType.UNIT_TYPE_RANGED_MASS);
+                                infoLabel.setText(String.format("Units left to choose:\n%d",StatsHelper.MAX_AVAILABLE_UNITS - selectedUnitsList.size() ));
+                                maxMRaNum++;
+                                massLeftLabel.setText(String.format("x%d", maxMRaNum));
+
+                                if (maxMRaNum != StatsHelper.MAX_AVAILABLE_MAS)
+                                    massChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_MAS - maxMRaNum));
+                                else
+                                {
+                                    massChosenLabel.setVisible(false);
+                                    masSelectedImage.setVisible(false);
+                                }                            }
+                        });
                         masSelectedImage.setBounds(
                                 stage.getWidth() - imageSize,
                                 stage.getHeight() - imageSize * 5,
@@ -472,6 +583,8 @@ public class SPSettingsScreen extends GameScreen {
                     }
                     else
                     {
+                        masSelectedImage.setVisible(true);
+                        massChosenLabel.setVisible(true);
                         massChosenLabel.setText(String.format("x%d", StatsHelper.MAX_AVAILABLE_MAS - maxMRaNum));
                     }
                     updated = true;
