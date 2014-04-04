@@ -1,0 +1,13 @@
+package com.me.rvbgame;
+
+public enum ActionType {
+    ACTION_TYPE_ATTACK,
+    ACTION_TYPE_DEFEND,
+    ACTION_TYPE_WAIT,
+    ACTION_TYPE_FREEZE,
+    ACTION_TYPE_DONE,
+    ACTION_TYPE_AIM,
+    ACTION_TYPE_HEAL,
+    ACTION_TYPE_HACK,
+    ACTION_TYPE_READY
+}
