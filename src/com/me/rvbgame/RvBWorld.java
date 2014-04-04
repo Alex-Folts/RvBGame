@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.Scaling;
 import com.me.rvbgame.screens.BattleScreen;
 import com.me.rvbgame.screens.WinScreen;
 
+import java.util.ArrayList;
+
 public class RvBWorld extends RvBBase {
 
 	private static boolean currentTurnRight = true;
@@ -71,7 +73,8 @@ public class RvBWorld extends RvBBase {
 	
 	static final Vector2 WORLD_NATIVE_RES = new Vector2(480, 360);
 	static final float WORLD_NATIVE_RATIO = (WORLD_NATIVE_RES.x / WORLD_NATIVE_RES.y);
-	
+    public ArrayList<UnitType> selectedUnitsList = new ArrayList<UnitType>();
+
 //    private int actionPointsLeft = 10;
 
     public RvBWorld(BattleScreen parentScreen) {
