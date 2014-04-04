@@ -44,6 +44,7 @@ public class RvBWorld extends RvBBase {
     public Label statRangeLabel;
     public Label critChanceLabel;
 
+    
     private Image healthImage;
     private Image energyImage;
     private Image pAtackImage;
