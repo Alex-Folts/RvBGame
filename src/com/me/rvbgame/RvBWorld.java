@@ -40,6 +40,7 @@ public class RvBWorld extends RvBBase {
     public Label statIDefLabel;
     public Label statIAtackLabel;
     public Label statRangeLabel;
+    public Label critChanceLabel;
 
     private Image healthImage;
     private Image energyImage;
@@ -48,6 +49,8 @@ public class RvBWorld extends RvBBase {
     private Image iAtackImage;
     private Image iDefenceImage;
     private Image rangeImage;
+    private Image critChanceImage;
+    private Image actionPointsImage;
 
 	protected static RvBPlayer playerLeft;
 	protected static RvBPlayer playerRight;
@@ -69,7 +72,7 @@ public class RvBWorld extends RvBBase {
 	static final Vector2 WORLD_NATIVE_RES = new Vector2(480, 360);
 	static final float WORLD_NATIVE_RATIO = (WORLD_NATIVE_RES.x / WORLD_NATIVE_RES.y);
 	
-    private int actionPointsLeft = 10;
+//    private int actionPointsLeft = 10;
 
     public RvBWorld(BattleScreen parentScreen) {
 		super(parentScreen);
@@ -93,15 +96,16 @@ public class RvBWorld extends RvBBase {
             case UNIT_TYPE_SPECIAL:
                 finalHealthDamage = attacker.getpAttack() - victim.getpDefence();
                 finalEnergyDamage = attacker.getiAttack() - victim.getiDefence();
-                if (attacker.getEnergy()>0){    //can freeze
-                    victim.freeze();
-                    attacker.setEnergy(attacker.getEnergy()-20);
-                }
                 break;
 
             case UNIT_TYPE_RANGED:
                 finalHealthDamage = attacker.getpAttack() - victim.getpDefence();
                 finalEnergyDamage = attacker.getiAttack() - victim.getiDefence();
+                int rand = (int)(Math.random() * 100) ;
+                if (  rand <= attacker.getCriticalChance()){
+                    finalHealthDamage += attacker.getpAttack()/2;
+                    finalEnergyDamage += attacker.getiAttack()/2;
+                }
                 break;
 
             case UNIT_TYPE_RANGED_MASS:
@@ -169,17 +173,17 @@ public class RvBWorld extends RvBBase {
 
 	public static boolean massDamage(RvBUnit unitRangedMass, RvBPlayer oppositePlayer, byte attackRange){
         int randDamage = 0;
-        /* And there you have it. A random integer value in the range [Min,Max], or per the example [5,10]:
-
-            5 + (int)(Math.random() * ((10 - 5) + 1))
-        * */
+        int critDamage = 0;
+        int rand = (int)(Math.random() * 100) ;
+        if (rand <= unitRangedMass.getCriticalChance())
+            critDamage += unitRangedMass.getpAttack()/2;
         if (attackRange == 3){
             for(RvBUnit unit : oppositePlayer.units){
                 if (unitRangedMass.getEnergy()>0)
                     randDamage = (int)(Math.random() * (unitRangedMass.getEnergy()/5));
                 else
                     randDamage = 0;
-                ordinaryDamage(unitRangedMass,unit,randDamage);
+                ordinaryDamage(unitRangedMass,unit,randDamage+critDamage);
             }
             unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
         }
@@ -193,7 +197,7 @@ public class RvBWorld extends RvBBase {
             unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
             ordinaryDamage(unitRangedMass,oppositePlayer.slot2,randDamage);
             ordinaryDamage(unitRangedMass,oppositePlayer.slot4,randDamage);
-            ordinaryDamage(unitRangedMass,oppositePlayer.slot5,randDamage);
+            ordinaryDamage(unitRangedMass, oppositePlayer.slot5, randDamage);
         }
         else
         if (attackRange == 1){
@@ -201,7 +205,7 @@ public class RvBWorld extends RvBBase {
                 randDamage = (int)(Math.random() * (unitRangedMass.getEnergy()/2));
             else
                 randDamage = 0;
-            unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
+            unitRangedMass.setEnergy(unitRangedMass.getEnergy() - randDamage);
             ordinaryDamage(unitRangedMass,oppositePlayer.slot4,0);
             ordinaryDamage(unitRangedMass,oppositePlayer.slot5,0);
         }
@@ -282,7 +286,7 @@ public class RvBWorld extends RvBBase {
 		calcTurn();
 
         nextTurnButton = new TextButton("Next turn", battleScreen.getSkin());
-        actionPointsLeftLabel = new Label(String.format("AP: %d",actionPointsLeft),battleScreen.getSkin());
+        actionPointsLeftLabel = new Label("",battleScreen.getSkin());
 
         statHealthLabel = new Label("",battleScreen.getSkin());
         statEnergyLabel = new Label("",battleScreen.getSkin());
@@ -291,6 +295,7 @@ public class RvBWorld extends RvBBase {
         statPAtackLabel = new Label("",battleScreen.getSkin());
         statPDefLabel = new Label("",battleScreen.getSkin());
         statRangeLabel = new Label("",battleScreen.getSkin());
+        critChanceLabel = new Label("",battleScreen.getSkin());
 
 
         Texture texture = new Texture(Gdx.files.internal("data/heart_ico.png"));
@@ -354,6 +359,27 @@ public class RvBWorld extends RvBBase {
         rangeImage.setSize(48, 48);
         rangeImage.setColor(Color.DARK_GRAY);
 
+        texture = new Texture(Gdx.files.internal("data/crit_chance.png"));
+        texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        critChanceImage = new Image(region);
+        critChanceImage.setScaling(Scaling.stretch);
+        critChanceImage.setAlign((Align.bottom | Align.left));
+        critChanceImage.setSize(48, 48);
+        critChanceImage.setColor(Color.DARK_GRAY);
+
+        texture = new Texture(Gdx.files.internal("data/action_points.png"));
+        texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        actionPointsImage = new Image(region);
+        actionPointsImage.setScaling(Scaling.stretch);
+        actionPointsImage.setAlign((Align.bottom | Align.left));
+        actionPointsImage.setSize(48, 48);
+        actionPointsImage.setColor(Color.DARK_GRAY);
+
+
         battleScreen.sceneLayerGUI.addActor(healthImage);
         battleScreen.sceneLayerGUI.addActor(energyImage);
         battleScreen.sceneLayerGUI.addActor(pAtackImage);
@@ -361,6 +387,7 @@ public class RvBWorld extends RvBBase {
         battleScreen.sceneLayerGUI.addActor(pDefenceImage);
         battleScreen.sceneLayerGUI.addActor(iDefenceImage);
         battleScreen.sceneLayerGUI.addActor(rangeImage);
+        battleScreen.sceneLayerGUI.addActor(critChanceImage);
 
         battleScreen.sceneLayerGUI.addActor(statHealthLabel);
         battleScreen.sceneLayerGUI.addActor(statEnergyLabel);
@@ -369,6 +396,8 @@ public class RvBWorld extends RvBBase {
         battleScreen.sceneLayerGUI.addActor(statPAtackLabel);
         battleScreen.sceneLayerGUI.addActor(statPDefLabel);
         battleScreen.sceneLayerGUI.addActor(statRangeLabel);
+        battleScreen.sceneLayerGUI.addActor(critChanceLabel);
+        battleScreen.sceneLayerGUI.addActor(actionPointsImage);
 
 //        battleScreen.sceneLayerGUI.addActor(nextTurnButton);
         battleScreen.sceneLayerGUI.addActor(actionPointsLeftLabel);
@@ -455,11 +484,6 @@ public class RvBWorld extends RvBBase {
                 } else
                     endTurn(playerLeft);
 
-                if (actionPointsLeft>=0)
-                {
-                    actionPointsLeft--;
-//                    actionPointsLeftLabel.setText(String.format("AP: %d",actionPointsLeft));
-                }
             }
 
             ;
@@ -467,6 +491,9 @@ public class RvBWorld extends RvBBase {
         buttonsTable.add(nextTurnButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
         
         actionPointsLeftLabel.setBounds(35, height-60, 30, 30);
+        actionPointsLeftLabel.setAlignment(Align.center);
+        actionPointsImage.setBounds(35, height-60, 30, 30);
+
         healthImage.setBounds   (0, height - 30, 30, 30);
         statHealthLabel.setBounds(0, height - 30, 30, 30);
         statHealthLabel.setAlignment(Align.center, Align.center);
@@ -494,6 +521,9 @@ public class RvBWorld extends RvBBase {
         statRangeLabel.setBounds   (155, height - 30, 30, 30);
         statRangeLabel.setAlignment(Align.center, Align.center);
 
+        critChanceImage.setBounds(185, height - 30, 30, 30);
+        critChanceLabel.setBounds(185, height - 30, 30, 30);
+        critChanceLabel.setAlignment(Align.center);
 
 //		bgImage.setZIndex(WorldDrawLayer.DRAW_LAYER_BG);
 		
@@ -511,6 +541,7 @@ public class RvBWorld extends RvBBase {
         statHealthLabel.setText(unit.healthLeftLabel.getText());
         statEnergyLabel.setText(String.format("%d",unit.getEnergy()));
         statRangeLabel.setText(String.format("%d",unit.getAttackRange()));
+        actionPointsLeftLabel.setText(String.format("%d",unit.getActionPoints()));
 
         healthImage.setColor(StatsHelper.COLOR_DARK_RED);//(Color.RED);
         energyImage.setColor(StatsHelper.COLOR_DARK_BLUE);
@@ -519,6 +550,18 @@ public class RvBWorld extends RvBBase {
         iAtackImage.setColor(StatsHelper.COLOR_DARK_BLUE);
         iDefenceImage.setColor(StatsHelper.COLOR_DARK_BLUE);
         rangeImage.setColor(StatsHelper.COLOR_DARK_RED);
+
+        if (unit.unitType == UnitType.UNIT_TYPE_RANGED || unit.unitType == UnitType.UNIT_TYPE_RANGED_MASS)
+        {
+            critChanceLabel.setText(String.format("%d%%", unit.getCriticalChance()));
+            critChanceImage.setColor(Color.GRAY);
+            critChanceLabel.setVisible(true);
+            critChanceImage.setVisible(true);
+        }else{
+            critChanceLabel.setVisible(false);
+            critChanceImage.setVisible(false);
+        }
+
     }
 
     public void clearStatLabels(){
@@ -596,4 +639,72 @@ public class RvBWorld extends RvBBase {
 			}
 		}*/
 	}
+
+    public void revealRadialMenu(RvBUnit actingUnit) {
+
+        if (battleScreen.sceneLayerRadialMenu == null){
+            battleScreen.sceneLayerRadialMenu = new RvBRadialMenu(actingUnit);
+            battleScreen.sceneLayerRadialMenu.setVisible(true);
+            battleScreen.stage.addActor(battleScreen.sceneLayerRadialMenu);
+            Gdx.app.log("RM", "Creating...");
+        }else {
+            battleScreen.sceneLayerRadialMenu.changeCoords(actingUnit);
+            battleScreen.sceneLayerRadialMenu.setVisible(true);
+            Gdx.app.log("RM", "Moving...");
+        }
+
+    }
+
+    public static boolean applyActionOnVictim(RvBUnit attacker, RvBUnit victim) {
+        switch (attacker.actionType) {
+            case ACTION_TYPE_ATTACK:
+                Gdx.app.log("RM","v def"+victim.getpDefence());
+                if (damage(attacker,victim,0)){
+                    attacker.setActionPoints(attacker.getActionPoints()-1);
+                    return true;
+                };
+                break;
+            case ACTION_TYPE_FREEZE:
+                if (attacker.getEnergy()>0){    //can freeze
+                    victim.freeze();
+                    attacker.setEnergy(attacker.getEnergy()-20);
+                    attacker.setActionPoints(attacker.getActionPoints()-1);
+                }
+                return true;
+            case ACTION_TYPE_DONE:
+                break;
+            case ACTION_TYPE_HEAL:
+                break;
+            case ACTION_TYPE_HACK:
+                break;
+        }
+        return false;
+    }
+
+    public void applyActionOnSelf(RvBUnit unit) {
+
+        switch (unit.actionType) {
+            case ACTION_TYPE_DEFEND:
+                unit.setiDefence(unit.getiDefence()*2);
+                unit.setpDefence(unit.getpDefence() * 2);
+                unit.setDefended(true);
+                unit.setActionPoints(unit.getActionPoints()-1);
+                this.updateStatLabels(unit);
+                break;
+            case ACTION_TYPE_WAIT:
+                unit.setActionPoints(unit.getActionPoints()+1);
+                unit.setbCanOperate(false);
+                this.battleScreen.sceneLayerRadialMenu.hide();
+                this.updateStatLabels(unit);
+                break;
+            case ACTION_TYPE_AIM:
+                unit.setCriticalChance(unit.getCriticalChance()*2);
+                unit.setActionPoints(unit.getActionPoints()-1);
+                updateStatLabels(unit);
+                break;
+            case ACTION_TYPE_HEAL:
+                break;
+        }
+
+    }
 }

@@ -64,6 +64,7 @@ public class RvBPlayer extends RvBBase{
     private boolean bWaitForSlot = false;
     
     private RvBUnit waitForSlotUnit;
+
     
     public RvBPlayer(BattleScreen parentScreen) {
         super(parentScreen);
@@ -107,6 +108,11 @@ public class RvBPlayer extends RvBBase{
     	if (slot1 != null)
     	{
     		slot1.setbCanOperate(true);
+            if (slot1.isDefended()) {
+                slot1.setDefended(false);
+                slot1.setiDefence(slot1.getiDefence()/2);
+                slot1.setpDefence(slot1.getpDefence()/2);
+            }
     	} else
     	{
 //    		Gdx.app.log("BVGE", "beginTurn: ");
@@ -115,6 +121,11 @@ public class RvBPlayer extends RvBBase{
     	if (slot2 != null)
     	{
     		slot2.setbCanOperate(true);
+            if (slot2.isDefended()) {
+                slot2.setDefended(false);
+                slot2.setiDefence(slot2.getiDefence()/2);
+                slot2.setpDefence(slot2.getpDefence()/2);
+            }
     	} else
     	{
     		slot02EmptyImage.setVisible(true);
@@ -122,21 +133,39 @@ public class RvBPlayer extends RvBBase{
     	if (slot3 != null)
     	{
     		slot3.setbCanOperate(true);
-    	} else
+            if (slot3.isDefended()) {
+                slot3.setDefended(false);
+                slot3.setiDefence(slot3.getiDefence()/2);
+                slot3.setpDefence(slot3.getpDefence()/2);
+            }
+
+        } else
     	{
     		slot03EmptyImage.setVisible(true);
     	}
     	if (slot4 != null)
     	{
     		slot4.setbCanOperate(true);
-    	} else
+            if (slot4.isDefended()) {
+                slot4.setDefended(false);
+                slot4.setiDefence(slot4.getiDefence()/2);
+                slot4.setpDefence(slot4.getpDefence()/2);
+            }
+
+        } else
     	{
     		slot04EmptyImage.setVisible(true);
     	}
     	if (slot5 != null)
     	{
     		slot5.setbCanOperate(true);
-    	} else
+            if (slot5.isDefended()) {
+                slot5.setDefended(false);
+                slot5.setiDefence(slot5.getiDefence()/2);
+                slot5.setpDefence(slot5.getpDefence()/2);
+            }
+
+        } else
     	{
     		slot05EmptyImage.setVisible(true);
     	}
@@ -154,31 +183,37 @@ public class RvBPlayer extends RvBBase{
         if (tower != null)
         {
             tower.setbCanOperate(false);
+//            tower.actionType = ActionType.ACTION_TYPE_DONE;
         }
         if (slot1 != null)
         {
             slot1.setbCanOperate(false);
             if (slot1.bFreeze) slot1.unFreeze();
+            if  (slot1.getActionPoints() <= 0) slot1.setActionPoints(slot1.getMinActionPoints());
         }
         if (slot2 != null)
         {
             slot2.setbCanOperate(false);
             if (slot2.bFreeze) slot2.unFreeze();
+            if (slot2.getActionPoints() <= 0) slot2.setActionPoints(slot2.getMinActionPoints());
         }
         if (slot3 != null)
         {
             slot3.setbCanOperate(false);
             if (slot3.bFreeze) slot3.unFreeze();
+            if (slot3.getActionPoints() <= 0) slot3.setActionPoints(slot3.getMinActionPoints());
         }
         if (slot4 != null)
         {
             slot4.setbCanOperate(false);
             if (slot4.bFreeze) slot4.unFreeze();
+            if (slot4.getActionPoints() <= 0) slot4.setActionPoints(slot4.getMinActionPoints());
         }
         if (slot5 != null)
         {
             slot5.setbCanOperate(false);
             if (slot5.bFreeze) slot5.unFreeze();
+            if (slot5.getActionPoints() <= 0) slot5.setActionPoints(slot5.getMinActionPoints());
         }
         if(isAI)
             this.makeMove();
@@ -189,6 +224,9 @@ public class RvBPlayer extends RvBBase{
         clearWaitingUnit();
         
         setActingUnit(null);
+
+        if (this.battleScreen.sceneLayerRadialMenu!=null)
+            this.battleScreen.sceneLayerRadialMenu.setDefaultColors();
     }
 
 
@@ -210,6 +248,7 @@ public class RvBPlayer extends RvBBase{
 		{
 			this.actingUnit.settowerColor(StatsHelper.COLOR_DARK_GREEN);
             battleScreen.world.updateStatLabels(this.actingUnit);
+            battleScreen.world.revealRadialMenu(this.actingUnit);
 		}
 	}
 	
@@ -1034,5 +1073,13 @@ public class RvBPlayer extends RvBBase{
 		public void setStatsRangeImage(Image statsRangeImage) {
 			this.statsRangeImage = statsRangeImage;
 		}
+    }
+    
+    public boolean checkIfCanMove() {
+        return  (slot1.isbCanOperate()
+                || slot2.isbCanOperate()
+                || slot3.isbCanOperate()
+                || slot4.isbCanOperate()
+                || slot5.isbCanOperate());
     }
 }
