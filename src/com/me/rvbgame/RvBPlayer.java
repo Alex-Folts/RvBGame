@@ -7,8 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -694,9 +696,18 @@ public class RvBPlayer extends RvBBase{
 //								Gdx.app.log("BVGE", "inventoryUpdated: "+event.getListenerActor().toString());
 							}
 						};
-					});	
+					});
 					
-					inventoryItemsTable.add(tmpImage).width(battleScreen.screenResH * 0.35f).height(battleScreen.screenResH * 0.35f).padLeft(5).padRight(5).padBottom(20).padTop(10);
+					InventoryItem tmpInvItem = new InventoryItem();
+					tmpInvItem.setUnit(units.get(i));
+					tmpInvItem.setAvaImage(tmpImage);
+					
+					
+					
+//					inventoryItemsTable.add(tmpImage).width(battleScreen.screenResH * 0.35f).height(battleScreen.screenResH * 0.35f).padLeft(5).padRight(5).padBottom(20).padTop(10);
+					inventoryItemsTable.add(tmpInvItem).width(battleScreen.screenResH * 0.35f).height(battleScreen.screenResH * 0.55f).padLeft(5).padRight(5).padBottom(20).padTop(10);
+					
+					tmpInvItem.init(battleScreen.screenResH * 0.35f, battleScreen.screenResH * 0.55f);
 				}
 			} else
 			{
@@ -716,5 +727,311 @@ public class RvBPlayer extends RvBBase{
             return true;
       else
             return false;
+    }
+    
+    class InventoryItem extends Group
+    {
+    	private RvBUnit unit;
+    	private Image avaImage;
+    	private TextButton pickButton;
+    	private Table bgTable;
+    	private Table fgTable;
+    	
+    	private Label statsHpLabel;
+    	private Label statsEpLabel;
+    	
+    	private Label statsPDmgLabel;
+    	private Label statsPDefLabel;
+    	
+    	private Label statsIDmgLabel;
+    	private Label statsIDefLabel;
+    	
+    	private Label statsTargetsLabel;
+    	private Label statsRangeLabel;
+    	
+    	private Image statsHpImage;
+    	private Image statsEpImage;
+    	
+    	private Image statsPDmgImage;
+    	private Image statsPDefImage;
+    	
+    	private Image statsIDmgImage;
+    	private Image statsIDefImage;
+    	
+    	private Image statsTargetsImage;
+    	private Image statsRangeImage;
+    	
+    	InventoryItem(){
+    		super();
+    	}
+
+    	void init(float width, float height)
+    	{
+    		float statsIcoSize = 24;
+    		
+    		setWidth(width);
+    		setHeight(height);
+    		
+//    		Gdx.app.log("BVGE", "init: "+getWidth()+" x "+getHeight());
+    		
+    		bgTable = new Table(battleScreen.getSkin());
+    		bgTable.setWidth(width);
+    		bgTable.setHeight(height);
+
+    		fgTable = new Table(battleScreen.getSkin());
+    		fgTable.setWidth(width);
+    		fgTable.setHeight(height);
+    		
+    		this.addActor(bgTable);
+    		this.addActor(fgTable);
+    		
+    		setPickButton(new TextButton("pick", battleScreen.getSkin()));
+    		setStatsHpLabel(new Label("HP: ", battleScreen.getSkin()));
+    		setStatsEpLabel(new Label("EP: ", battleScreen.getSkin()));
+    		setStatsPDmgLabel(new Label("PDmg: ", battleScreen.getSkin()));
+    		setStatsPDefLabel(new Label("PDef: ", battleScreen.getSkin()));
+    		setStatsIDmgLabel(new Label("IDmg: ", battleScreen.getSkin()));
+    		setStatsIDefLabel(new Label("IDef: ", battleScreen.getSkin()));
+    		setStatsTargetsLabel(new Label("Targets: ", battleScreen.getSkin()));
+    		setStatsRangeLabel(new Label("Range: ", battleScreen.getSkin()));
+    		
+    		setStatsHpImage(makeStatsIco(0, "data/heart_ico.png", StatsHelper.COLOR_DARK_RED));
+    		setStatsEpImage(makeStatsIco(0, "data/ap_icon.png", StatsHelper.COLOR_DARK_BLUE));
+    		
+    		setStatsPDmgImage(makeStatsIco(0, "data/sword_icon.png", StatsHelper.COLOR_DARK_RED));
+    		setStatsPDefImage(makeStatsIco(0, "data/shield_icon.png", StatsHelper.COLOR_DARK_RED));
+    		
+    		setStatsIDmgImage(makeStatsIco(0, "data/sword_icon.png", StatsHelper.COLOR_DARK_BLUE));
+    		setStatsIDefImage(makeStatsIco(0, "data/shield_icon.png", StatsHelper.COLOR_DARK_BLUE));
+    		
+    		setStatsTargetsImage(makeStatsIco(0, "data/range_cross.png", StatsHelper.COLOR_DARK_BLUE));
+    		setStatsRangeImage(makeStatsIco(0, "data/range_cross.png", StatsHelper.COLOR_DARK_BLUE));
+    		
+    		fgTable.left();
+    		fgTable.bottom();
+    		fgTable.add(statsHpImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsHpLabel);
+    		fgTable.row();
+    		fgTable.add(statsEpImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsEpLabel);
+    		fgTable.row();
+    		fgTable.add(statsPDmgImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsPDmgLabel);
+    		fgTable.row();
+    		fgTable.add(statsPDefImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsPDefLabel);
+    		fgTable.row();
+    		fgTable.add(statsIDmgImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsIDmgLabel);
+    		fgTable.row();
+    		fgTable.add(statsIDefImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsIDefLabel);
+    		fgTable.row();
+    		fgTable.add(statsTargetsImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsTargetsLabel);
+    		fgTable.row();
+    		fgTable.add(statsRangeImage).width(statsIcoSize).height(statsIcoSize);
+    		fgTable.add(statsRangeLabel);
+//    		fgTable.row();
+    		fgTable.add(pickButton);
+    		
+    		bgTable.add(this.avaImage);
+    		
+    		avaImage.setColor(0.222f, 0.555f, 0.555f, 1.0f);
+    		
+    		fillLabels();
+    	}
+    	
+    	public void fillLabels()
+    	{
+    		statsHpLabel.setText(""+unit.getHealth());
+    		statsEpLabel.setText(""+unit.getEnergy());
+    		statsPDmgLabel.setText(""+unit.getpAttack());
+    		statsPDefLabel.setText(""+unit.getpDefence());
+    		statsIDmgLabel.setText(""+unit.getiAttack());
+    		statsIDefLabel.setText(""+unit.getiDefence());
+    		statsTargetsLabel.setText(""+unit.getTargetsNum());
+    		statsRangeLabel.setText(""+unit.getAttackRange());
+    	}
+    	
+		public RvBUnit getUnit() {
+			return unit;
+		}
+
+		public void setUnit(RvBUnit unit) {
+			this.unit = unit;
+		}
+
+		public Image getAvaImage() {
+			return avaImage;
+		}
+
+		public void setAvaImage(Image avaImage) {
+			this.avaImage = avaImage;
+		}
+
+		public TextButton getPickButton() {
+			return pickButton;
+		}
+
+		public void setPickButton(TextButton pickButton) {
+			this.pickButton = pickButton;
+		}
+
+		public Label getStatsHpLabel() {
+			return statsHpLabel;
+		}
+
+		public void setStatsHpLabel(Label statsHpLabel) {
+			this.statsHpLabel = statsHpLabel;
+		}
+
+		public Label getStatsEpLabel() {
+			return statsEpLabel;
+		}
+
+		public void setStatsEpLabel(Label statsEpLabel) {
+			this.statsEpLabel = statsEpLabel;
+		}
+
+		public Label getStatsPDmgLabel() {
+			return statsPDmgLabel;
+		}
+
+		public void setStatsPDmgLabel(Label statsPDmgLabel) {
+			this.statsPDmgLabel = statsPDmgLabel;
+		}
+
+		public Label getStatsPDefLabel() {
+			return statsPDefLabel;
+		}
+
+		public void setStatsPDefLabel(Label statsPDefLabel) {
+			this.statsPDefLabel = statsPDefLabel;
+		}
+
+		public Label getStatsIDmgLabel() {
+			return statsIDmgLabel;
+		}
+
+		public void setStatsIDmgLabel(Label statsIDmgLabel) {
+			this.statsIDmgLabel = statsIDmgLabel;
+		}
+
+		public Label getStatsIDefLabel() {
+			return statsIDefLabel;
+		}
+
+		public void setStatsIDefLabel(Label statsIDefLabel) {
+			this.statsIDefLabel = statsIDefLabel;
+		}
+
+		public Label getStatsTargetsLabel() {
+			return statsTargetsLabel;
+		}
+
+		public void setStatsTargetsLabel(Label statsTargetsLabel) {
+			this.statsTargetsLabel = statsTargetsLabel;
+		}
+
+		public Label getStatsRangeLabel() {
+			return statsRangeLabel;
+		}
+
+		public void setStatsRangeLabel(Label statsRangeLabel) {
+			this.statsRangeLabel = statsRangeLabel;
+		}
+		
+		public Image makeStatsIco(float size, String imgPath, Color color)
+		{
+			if (imgPath != "")
+			{
+/*				if (size == 0.0f)
+				{
+					size = 32.0f;
+				}*/
+				
+				Texture texture = new Texture(Gdx.files.internal(imgPath));
+		        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+		        TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
+		        Image resImage = new Image(region);
+		        resImage.setScaling(Scaling.stretch);
+		        resImage.setAlign((Align.bottom | Align.left));
+		        resImage.setSize(size, size);
+		        if (color == null)
+		        {
+		        	color = Color.GRAY;
+		        }
+		        resImage.setColor(color);
+		        
+		        return resImage;
+			}
+			
+			return null;
+		}
+
+		public Image getStatsHpImage() {
+			return statsHpImage;
+		}
+
+		public void setStatsHpImage(Image statsHpImage) {
+			this.statsHpImage = statsHpImage;
+		}
+
+		public Image getStatsEpImage() {
+			return statsEpImage;
+		}
+
+		public void setStatsEpImage(Image statsEpImage) {
+			this.statsEpImage = statsEpImage;
+		}
+
+		public Image getStatsPDmgImage() {
+			return statsPDmgImage;
+		}
+
+		public void setStatsPDmgImage(Image statsPDmgImage) {
+			this.statsPDmgImage = statsPDmgImage;
+		}
+
+		public Image getStatsPDefImage() {
+			return statsPDefImage;
+		}
+
+		public void setStatsPDefImage(Image statsPDefImage) {
+			this.statsPDefImage = statsPDefImage;
+		}
+
+		public Image getStatsIDmgImage() {
+			return statsIDmgImage;
+		}
+
+		public void setStatsIDmgImage(Image statsIDmgImage) {
+			this.statsIDmgImage = statsIDmgImage;
+		}
+
+		public Image getStatsIDefImage() {
+			return statsIDefImage;
+		}
+
+		public void setStatsIDefImage(Image statsIDefImage) {
+			this.statsIDefImage = statsIDefImage;
+		}
+
+		public Image getStatsTargetsImage() {
+			return statsTargetsImage;
+		}
+
+		public void setStatsTargetsImage(Image statsTargetsImage) {
+			this.statsTargetsImage = statsTargetsImage;
+		}
+
+		public Image getStatsRangeImage() {
+			return statsRangeImage;
+		}
+
+		public void setStatsRangeImage(Image statsRangeImage) {
+			this.statsRangeImage = statsRangeImage;
+		}
     }
 }
