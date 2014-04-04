@@ -37,7 +37,6 @@ public class RvBPlayer extends RvBBase{
     public RvBUnit slot3;
     public RvBUnit slot4;
     public RvBUnit slot5;
-    
     public boolean isAI;
     public boolean isMyTurn;
 
@@ -70,6 +69,7 @@ public class RvBPlayer extends RvBBase{
         super(parentScreen);
         
         tower = new RvBTower(battleScreen, this, "data/json_files/tower.json");
+        tower.line = 3;
         
 //        units = new RvBUnit[5];
         units = new ArrayList<RvBUnit>();
@@ -78,18 +78,23 @@ public class RvBPlayer extends RvBBase{
         units.add(new UnitMelee(battleScreen, this, "data/json_files/melee.json"));
         
         slot1 = new UnitRanged(battleScreen, this, "data/json_files/ranged.json");
+        slot1.line = 3;
 //        units[0] = slot1;
 //        units.add(slot1);
         slot2 = new UnitSpecialStan(battleScreen, this, "data/json_files/special_stan.json");
+        slot2.line = 2;
 //        units[1] = slot2;
 //        units.add(slot2);
         slot3 = new UnitRangedMass(battleScreen, this, "data/json_files/ranged_mass.json");
+        slot3.line = 3;
 //        units[2] = slot3;
 //        units.add(slot3);
         slot4 = new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+        slot4.line = 1;
 //        units[3] = slot4;
 //        units.add(slot4);
         slot5 = new UnitMelee(battleScreen, this, "data/json_files/melee.json");
+        slot5.line = 1;
 //        units[4] = slot5;
 //        units.add(slot5);
         
@@ -260,23 +265,23 @@ public class RvBPlayer extends RvBBase{
 
 		if (slot1 != null)
 		{
-			slot1.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
+			slot1.setbReachable(false);////settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot2 != null)
 		{
-			slot2.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
+			slot2.setbReachable(false);//settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot3 != null)
 		{
-			slot3.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
+			slot3.setbReachable(false);//settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot4 != null)
 		{
-			slot4.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
+			slot4.setbReachable(false);//settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 		if (slot5 != null)
 		{
-			slot5.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
+			slot5.setbReachable(false);//settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
 	}
 	
@@ -692,7 +697,37 @@ public class RvBPlayer extends RvBBase{
                 break;
         }
     }
-	
+
+    public void fillAvailableVictims(int attackRange){
+        clearSelection();
+        int range = attackRange;
+        if (slot2!=null)
+            range += 1-numOfLinesInFront(slot2);
+        else if (slot1!=null)
+            range += 2-numOfLinesInFront(slot1);
+        else if (slot3!=null)
+            range += 2-numOfLinesInFront(slot3);
+        Gdx.app.log("PLA","range " + range);
+        switch (range){
+            case 1:
+                if (slot4!=null) slot4.setbReachable(true);//slot4.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot5!=null) slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                break;
+            case 2:
+                if (slot2!=null) slot2.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot4!=null) slot4.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot5!=null) slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                break;
+            default:
+                if (slot1!=null) slot1.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot2!=null) slot2.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot3!=null) slot3.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot4!=null) slot4.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot5!=null) slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                break;
+        }
+    }
+
 	public void toggleInventory() {
 		inventoryVisible(!isInventoryOpened);
 	}
@@ -1081,5 +1116,38 @@ public class RvBPlayer extends RvBBase{
                 || slot3.isbCanOperate()
                 || slot4.isbCanOperate()
                 || slot5.isbCanOperate());
+    }
+
+    public int numOfLinesInFront(RvBUnit unit){
+        Gdx.app.log("BVGE","numOfLinesInFront returns:");
+        switch (unit.line){
+            case 1:
+                Gdx.app.log("BVGE","case 1: "+0);
+                return 0;
+            case 2:
+                if (slot4 != null || slot5 != null){ //only first line ahead
+                    Gdx.app.log("BVGE","case 2: "+1);
+                    return 1;
+                }
+                if (slot4 == null && slot5 == null){
+                    Gdx.app.log("BVGE","case 2: "+0);
+                    return 0;
+                }
+            case 3:
+                if (slot2 != null && (slot4 != null || slot5 != null))  //first and second line ahead
+                {
+                    Gdx.app.log("BVGE","case 3: "+2);
+                    return 2;
+                }
+                else if (slot2 != null && (slot4 == null && slot5 == null)) //only second line ahead
+                {
+                    Gdx.app.log("BVGE","case 3: "+1);
+                    return 1;
+                }
+            default:
+                break;
+        }
+        Gdx.app.log("BVGE","nocase: "+0);
+        return 0;
     }
 }

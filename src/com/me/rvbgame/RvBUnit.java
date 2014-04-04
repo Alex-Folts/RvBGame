@@ -33,6 +33,7 @@ public abstract class RvBUnit extends RvBBase {
 
     private int criticalChance;
     private int actionPoints;
+    private boolean bReachable;
 
     public int getMinActionPoints() {
         return minActionPoints;
@@ -57,6 +58,7 @@ public abstract class RvBUnit extends RvBBase {
 	protected int avaTexHeight = 128;
 	protected Vector2 avaSize = new Vector2(48, 48);
     private boolean defended;
+    public int line;
 
     public RvBUnit(BattleScreen parentScreen, RvBPlayer playerOwner, String jsonData) {
         super(parentScreen);
@@ -276,12 +278,17 @@ public abstract class RvBUnit extends RvBBase {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.log("BVGE", "clicked:"+this);
+                Gdx.app.log("BVGE", "line:"+line);
+                Gdx.app.log("BVGE", "lines ahead:"+player.numOfLinesInFront(RvBUnit.this));
 				//show radial menu
                 if (RvBWorld.getCurrentTurnPlayer() == player)
 				{
                     if (!RvBUnit.this.bFreeze && RvBUnit.this.bCanOperate){
-                        RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this,RvBUnit.this.getAttackRange());
+//                        RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this,RvBUnit.this.getAttackRange());
                         player.setActingUnit(RvBUnit.this);
+                        Gdx.app.log("PLA","RvBUnit.this.getAttackRange() "+RvBUnit.this.getAttackRange());
+                        Gdx.app.log("PLA","RvBWorld.getCurrentTurnPlayer().numOfLinesInFront(RvBUnit.this) "+RvBWorld.getCurrentTurnPlayer().numOfLinesInFront(RvBUnit.this));
+                        RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this.getAttackRange() - RvBWorld.getCurrentTurnPlayer().numOfLinesInFront(RvBUnit.this));
                     }
 				}
                 else
@@ -508,5 +515,17 @@ public abstract class RvBUnit extends RvBBase {
 
     public void setActionPoints(int actionPoints) {
         this.actionPoints = actionPoints;
+    }
+
+    public void setbReachable(boolean bReachable) {
+        if (bReachable)
+            this.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+        else
+            this.settowerColor(Color.DARK_GRAY);
+        this.bReachable = bReachable;
+    }
+
+    public boolean isbReachable() {
+        return bReachable;
     }
 }
