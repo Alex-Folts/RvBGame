@@ -1,19 +1,21 @@
-package com.me.rvbgame;
+package com.me.rvbgame.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.me.rvbgame.RvBWorld;
+import com.me.rvbgame.RvbGdxGame;
 
 public class BattleScreen extends GameScreen {
 
-	protected final RvBWorld world;
-	protected Group sceneLayerZero = new Group();
-	protected Group sceneLayerBG = new Group();
-	protected Group sceneLayerTowers = new Group();
-	protected Group sceneLayerUnits = new Group();
-	protected Group sceneLayerFX = new Group();
-	protected Group sceneLayerRadialmenu = new Group();
-	protected Group sceneLayerGUI = new Group();
-	protected Group sceneLayerMenu = new Group();
-	protected Group sceneLayerTop = new Group();
+	public final RvBWorld world;
+	public Group sceneLayerZero = new Group();
+	public Group sceneLayerBG = new Group();
+	public Group sceneLayerTowers = new Group();
+	public Group sceneLayerUnits = new Group();
+	public Group sceneLayerFX = new Group();
+	public Group sceneLayerRadialmenu = new Group();
+	public Group sceneLayerGUI = new Group();
+	public Group sceneLayerMenu = new Group();
+	public Group sceneLayerTop = new Group();
 	
 	public float screenResW;
 	public float screenResH;

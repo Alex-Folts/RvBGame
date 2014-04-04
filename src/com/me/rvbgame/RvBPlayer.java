@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
+import com.me.rvbgame.screens.BattleScreen;
 import com.me.rvbgame.units.UnitDefender;
 import com.me.rvbgame.units.UnitMelee;
 import com.me.rvbgame.units.UnitRanged;

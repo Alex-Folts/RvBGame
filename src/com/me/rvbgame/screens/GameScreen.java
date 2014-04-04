@@ -1,4 +1,4 @@
-package com.me.rvbgame;
+package com.me.rvbgame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -7,11 +7,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.me.rvbgame.RvbGdxGame;
 
 public abstract class GameScreen implements Screen {
 
-	protected final RvbGdxGame mGame;
-	protected final Stage stage;
+	public final RvbGdxGame mGame;
+	public final Stage stage;
 	
     private BitmapFont font;
     private SpriteBatch batch;
@@ -91,7 +92,7 @@ public abstract class GameScreen implements Screen {
         return batch;
     }
 
-    protected Skin getSkin()
+    public Skin getSkin()
     {
         if( skin == null ) {
         	skin = new Skin( Gdx.files.internal("data/uiskin.json"));

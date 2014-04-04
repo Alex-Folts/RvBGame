@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Scaling;
+import com.me.rvbgame.screens.BattleScreen;
 
 public abstract class RvBUnit extends RvBBase {
 

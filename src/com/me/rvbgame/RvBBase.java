@@ -1,5 +1,7 @@
 package com.me.rvbgame;
 
+import com.me.rvbgame.screens.BattleScreen;
+
 public abstract class RvBBase {
 
 	BattleScreen battleScreen;
