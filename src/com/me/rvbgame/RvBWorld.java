@@ -82,7 +82,8 @@ public class RvBWorld extends RvBBase {
 		super(parentScreen);
 		
 		playerLeft = new RvBPlayer(battleScreen);
-		playerRight = new RvBPlayer(battleScreen);
+//		playerRight = new RvBPlayer(battleScreen);
+		playerRight = new RvBAIPlayer(battleScreen);
 		
 //		calcTurn();
 	}
@@ -232,19 +233,19 @@ public class RvBWorld extends RvBBase {
             battleScreen.mGame.setScreen( new WinScreen(battleScreen.mGame, true));
 
         if (currentTurnRight) {
+        	playerLeft.endTurn();
 			playerRight.beginTurn();
-            playerLeft.endTurn();
+            
             Gdx.app.log("BVGE", "Current turn: Right");
             if (actionPointsLeftLabel != null)
             actionPointsLeftLabel.setText(String.format("Curr: right"));
 		} else {
-
-
             Gdx.app.log("BVGE", "Current turn: Left");
             if (actionPointsLeftLabel != null)
             actionPointsLeftLabel.setText(String.format("Curr: left"));
-			playerLeft.beginTurn();
+			
             playerRight.endTurn();
+            playerLeft.beginTurn();
 		}
 		return true;
 	}
@@ -709,6 +710,5 @@ public class RvBWorld extends RvBBase {
             case ACTION_TYPE_HEAL:
                 break;
         }
-
     }
 }

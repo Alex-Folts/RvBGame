@@ -215,11 +215,11 @@ public class RvBPlayer extends RvBBase{
             if (slot5.bFreeze) slot5.unFreeze();
             if (slot5.getActionPoints() <= 0) slot5.setActionPoints(slot5.getMinActionPoints());
         }
-        if(isAI)
+/*        if(isAI)
             this.makeMove();
         else {
 //       enable interaction
-        }
+        }*/
 
         clearWaitingUnit();
         
@@ -230,7 +230,7 @@ public class RvBPlayer extends RvBBase{
     }
 
 
-    private void makeMove() {
+    protected void makeMove() {
 //        make move by AI
         this.battleScreen.world.endTurn(this);
     }
@@ -244,7 +244,7 @@ public class RvBPlayer extends RvBBase{
 		
 		clearSelection();
 
-		if (this.actingUnit != null)
+		if (this.actingUnit != null && !isAI)
 		{
 			this.actingUnit.settowerColor(StatsHelper.COLOR_DARK_GREEN);
             battleScreen.world.updateStatLabels(this.actingUnit);
@@ -1082,4 +1082,33 @@ public class RvBPlayer extends RvBBase{
                 || slot4.isbCanOperate()
                 || slot5.isbCanOperate());
     }
+    
+    //if slotIdx == 0 return random (1..5) slot
+    public RvBUnit getSlotUnitByIdx(int slotIdx) {
+    	if (slotIdx < 0 || slotIdx > 5)
+    	{
+    		return null;
+    	}
+
+    	int idx;
+    	if (slotIdx == 0)
+    	{
+    		idx = (int)Math.round((Math.random() * 5)) + 1;
+    	} else
+    	{
+    		idx = slotIdx;
+    	}
+    	
+    	switch (idx) {
+			case 1:	return slot1;
+			case 2:	return slot2;
+			case 3:	return slot3;
+			case 4:	return slot4;
+			case 5:	return slot5;
+			default:
+				break;
+		}
+    	
+		return null;
+	}
 }
