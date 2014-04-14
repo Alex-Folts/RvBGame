@@ -1111,11 +1111,11 @@ public class RvBPlayer extends RvBBase{
     }
     
     public boolean checkIfCanMove() {
-        return  (slot1.isbCanOperate()
-                || slot2.isbCanOperate()
-                || slot3.isbCanOperate()
-                || slot4.isbCanOperate()
-                || slot5.isbCanOperate());
+        return  (slot1!= null && slot1.isbCanOperate()
+                || slot2!= null&&slot2.isbCanOperate()
+                || slot3!= null&&slot3.isbCanOperate()
+                || slot4!= null&&slot4.isbCanOperate()
+                || slot5!= null&&slot5.isbCanOperate());
     }
     
     //if slotIdx == 0 return random (1..5) slot

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class RvBWorld extends RvBBase {
 
 	private static boolean currentTurnRight = true;
-	private String bgPath = "data/abstract_v1.png";
+	private String bgPath = "data/abstract_v2.png";
 	static final Vector2 BG_IMAGE_SIZE = new Vector2(1024, 522);
 	
 	private Image bgImage;
@@ -442,8 +442,10 @@ public class RvBWorld extends RvBBase {
 		bgImage = new Image(region);
 		bgImage.setScaling(Scaling.stretch);
 		bgImage.setAlign((Align.bottom | Align.left));
-		bgImage.setSize(-(height * (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y)), height);//mirrored image!!
-		bgImage.setPosition((width * 0.5f) - (bgImage.getWidth() * 0.5f), 0);
+//		bgImage.setSize(-(height * (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y)), height);//mirrored image!!
+        bgImage.setSize(width, height);
+//		bgImage.setPosition((width * 0.5f) - (bgImage.getWidth() * 0.5f), 0);
+        bgImage.setPosition(0, 0);
 //		bgImage.setColor(0.75f, 0.75f, 0.75f, 1);
 //		bgImage.setSize(width, (float)width / (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y));
 
