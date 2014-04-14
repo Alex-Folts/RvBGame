@@ -55,21 +55,26 @@ public class RvBAIPlayer extends RvBPlayer {
 								{
 									Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 5");
 									getActingUnit().actionType = ActionType.ACTION_TYPE_ATTACK;
-					                if(RvBWorld.applyActionOnVictim(getActingUnit(), tmpVictim));
+									RvBWorld.getOppositePlayer().fillAvailableVictims(getActingUnit().getAttackRange());
+									if (tmpVictim.isbReachable())
 									{
-										Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 6");
-					                    if (RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints() == 0){
-					                    	Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 7");
-					                        RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
-					                        RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
-	//				                        if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
-	//				                            RvBWorld.getCurrentTurnPlayer().endTurn();
-	//				                        }
-					                    }
-	//				                    battleScreen.sceneLayerRadialMenu.setDefaultColors();
-	//				                    battleScreen.sceneLayerRadialMenu.hide();
-					                    attackCount++;
-					                    break;
+										Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 5.5");
+						                if(RvBWorld.applyActionOnVictim(getActingUnit(), tmpVictim));
+										{
+											Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 6");
+						                    if (RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints() == 0){
+						                    	Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 7");
+						                        RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
+						                        RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
+		//				                        if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
+		//				                            RvBWorld.getCurrentTurnPlayer().endTurn();
+		//				                        }
+						                    }
+		//				                    battleScreen.sceneLayerRadialMenu.setDefaultColors();
+		//				                    battleScreen.sceneLayerRadialMenu.hide();
+						                    attackCount++;
+						                    break;
+										}
 									}
 								}
 							}
