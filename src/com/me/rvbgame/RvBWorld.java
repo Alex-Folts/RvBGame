@@ -662,7 +662,9 @@ public class RvBWorld extends RvBBase {
 
     public static boolean applyActionOnVictim(RvBUnit attacker, RvBUnit victim) {
         if (!victim.isbReachable())
+        {
             return false;
+        }
         switch (attacker.actionType) {
             case ACTION_TYPE_ATTACK:
                 Gdx.app.log("RM","v def"+victim.getpDefence());
