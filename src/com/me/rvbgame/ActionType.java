@@ -9,5 +9,6 @@ public enum ActionType {
     ACTION_TYPE_AIM,
     ACTION_TYPE_HEAL,
     ACTION_TYPE_HACK,
+    ACTION_TYPE_STONE,
     ACTION_TYPE_READY
 }

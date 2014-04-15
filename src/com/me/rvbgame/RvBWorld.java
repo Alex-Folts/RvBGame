@@ -472,7 +472,7 @@ public class RvBWorld extends RvBBase {
         });
 		
 //      battleScreen.sceneLayerGUI.addActor(toggleInventoryButton);
-		buttonsTable.add(toggleInventoryButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
+//		buttonsTable.add(toggleInventoryButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
 		buttonsTable.row();
 		
 //      nextTurnButton

@@ -30,7 +30,7 @@ public class StatsHelper {
                 return "UNIT_TYPE_MASS";
 //                break;
             case UNIT_TYPE_TOWER:
-                break;
+                return "UNIT_TYPE_TOWER";
         }
         return "";
     }
