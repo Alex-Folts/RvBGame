@@ -7,14 +7,13 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.me.rvbgame.screens.BattleScreen;
+import com.me.rvbgame.screens.GameScreen;
+import com.me.rvbgame.screens.MainMenuScreen;
 import com.me.rvbgame.screens.WinScreen;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 public class RvBWorld extends RvBBase {
 
 	private static boolean currentTurnRight = true;
-	private String bgPath = "data/abstract_v1.png";
+	private String bgPath = "data/abstract_v2.png";
 	static final Vector2 BG_IMAGE_SIZE = new Vector2(1024, 522);
 	
 	private Image bgImage;
@@ -30,9 +29,10 @@ public class RvBWorld extends RvBBase {
 
 	private Table buttonsTable;
 
-    private TextButton toggleInventoryButton;
+//    private TextButton toggleInventoryButton;
 	
-    private TextButton nextTurnButton;
+    private Image nextTurnButton;
+    private Image pauseButton;
     //Stats:
     public Label actionPointsLeftLabel;
     public Label statHealthLabel;
@@ -75,6 +75,12 @@ public class RvBWorld extends RvBBase {
 	static final Vector2 WORLD_NATIVE_RES = new Vector2(480, 360);
 	static final float WORLD_NATIVE_RATIO = (WORLD_NATIVE_RES.x / WORLD_NATIVE_RES.y);
     public ArrayList<UnitType> selectedUnitsList = new ArrayList<UnitType>();
+    private Window pauseWindow;
+    private TextButton pauseCloseButton;
+    private TextButton pauseExitButton;
+
+    private int resizeWidth;
+    private int resizeHeight;
 
     static ActionAnimator actionAnimator;
     
@@ -109,6 +115,7 @@ public class RvBWorld extends RvBBase {
                 finalEnergyDamage = attacker.getiAttack() - victim.getiDefence();
                 break;
 
+            case UNIT_TYPE_TOWER:
             case UNIT_TYPE_RANGED:
                 finalHealthDamage = attacker.getpAttack() - victim.getpDefence();
                 finalEnergyDamage = attacker.getiAttack() - victim.getiDefence();
@@ -122,8 +129,6 @@ public class RvBWorld extends RvBBase {
             case UNIT_TYPE_RANGED_MASS:
                 return massDamage(attacker, getOppositePlayer(), victim.getAttackRange());
 
-            case UNIT_TYPE_TOWER:
-                break;
         }
 
         if (attacker.unitType == UnitType.UNIT_TYPE_RANGED_MASS)
@@ -189,18 +194,23 @@ public class RvBWorld extends RvBBase {
         int rand = (int)(Math.random() * 100) ;
         if (rand <= unitRangedMass.getCriticalChance())
             critDamage += unitRangedMass.getpAttack()/2;
-        if (attackRange == 3){
-            for(RvBUnit unit : oppositePlayer.units){//bug
+        if (attackRange == 5){
+            for(int i = 1; i <= 5; i++)
+            {
+                RvBUnit tmpVictim = RvBWorld.getOppositePlayer().getSlotUnitByIdx(i);
+
                 if (unitRangedMass.getEnergy()>0)
                     randDamage = (int)(Math.random() * (unitRangedMass.getEnergy()/5));
                 else
                     randDamage = 0;
-                ordinaryDamage(unitRangedMass,unit,randDamage+critDamage);
+                ordinaryDamage(unitRangedMass,tmpVictim,randDamage+critDamage);
             }
+            if (oppositePlayer.slot4 == null && oppositePlayer.slot5 == null)
+                ordinaryDamage(unitRangedMass, oppositePlayer.tower, randDamage + critDamage);
             unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
         }
         else
-        if (attackRange == 2)
+        if (attackRange == 3)
         {
             if (unitRangedMass.getEnergy()>0)
                 randDamage = 5+(int)(Math.random() * (unitRangedMass.getEnergy()/3));
@@ -228,8 +238,18 @@ public class RvBWorld extends RvBBase {
 		return false;
 	}
 	
-	public static boolean heal(RvBUnit heller, RvBUnit target, int attackID) {
-		return false;
+	public static boolean heal(RvBUnit healler, RvBUnit target, int attackID) {
+        Gdx.app.log("TOW","heal "+target);
+        if (target.getHealth() == target.getMaxHealth())
+            return false;
+        int newHealth = target.getHealth() + StatsHelper.HEAL_POINTS;
+        if (newHealth > target.getMaxHealth())
+        {
+            newHealth = target.getMaxHealth();
+        }
+        target.setHealth(newHealth);
+
+		return true;
 	}
 	
 	public boolean calcTurn() {
@@ -302,7 +322,18 @@ public class RvBWorld extends RvBBase {
 		initWorld();
 		calcTurn();
 
-        nextTurnButton = new TextButton("Next turn", battleScreen.getSkin());
+        Texture texture = new Texture(Gdx.files.internal("data/btn_next.png"));
+        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+        TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        nextTurnButton = new Image(region);//TextButton("Next turn", battleScreen.getSkin());
+
+        texture = new Texture(Gdx.files.internal("data/btn_pause.png"));
+        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
+
+        pauseButton = new Image(region);
+
         actionPointsLeftLabel = new Label("",battleScreen.getSkin());
 
         statHealthLabel = new Label("",battleScreen.getSkin());
@@ -315,9 +346,9 @@ public class RvBWorld extends RvBBase {
         critChanceLabel = new Label("",battleScreen.getSkin());
 
 
-        Texture texture = new Texture(Gdx.files.internal("data/heart_ico.png"));
+        texture = new Texture(Gdx.files.internal("data/heart_ico.png"));
         texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
-        TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
+        region = new TextureRegion(texture, 0, 0, 512, 512);
         healthImage = new Image(region);
         healthImage.setScaling(Scaling.stretch);
         healthImage.setAlign((Align.bottom | Align.left));
@@ -445,7 +476,8 @@ public class RvBWorld extends RvBBase {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		
+		resizeHeight = height;
+        resizeWidth = width;
 		if (playerLeft != null){
 			playerLeft.resize(width, height);
 		}
@@ -462,8 +494,10 @@ public class RvBWorld extends RvBBase {
 		bgImage = new Image(region);
 		bgImage.setScaling(Scaling.stretch);
 		bgImage.setAlign((Align.bottom | Align.left));
-		bgImage.setSize(-(height * (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y)), height);//mirrored image!!
-		bgImage.setPosition((width * 0.5f) - (bgImage.getWidth() * 0.5f), 0);
+//		bgImage.setSize(-(height * (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y)), height);//mirrored image!!
+        bgImage.setSize(width, height);
+//		bgImage.setPosition((width * 0.5f) - (bgImage.getWidth() * 0.5f), 0);
+        bgImage.setPosition(0, 0);
 //		bgImage.setColor(0.75f, 0.75f, 0.75f, 1);
 //		bgImage.setSize(width, (float)width / (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y));
 
@@ -475,34 +509,34 @@ public class RvBWorld extends RvBBase {
 		battleScreen.sceneLayerGUI.addActor(buttonsTable);
 		
 		//inventory button
-		toggleInventoryButton = new TextButton("Inventory", battleScreen.getSkin());
-		toggleInventoryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	if (currentTurnRight)
-            	{
-            		playerRight.inventoryVisible(true);
-            	} else
-            	{
-            		playerLeft.inventoryVisible(true);
-            	}
-            };
-        });
-		
+//		toggleInventoryButton = new TextButton("Inventory", battleScreen.getSkin());
+//		toggleInventoryButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//            	if (currentTurnRight)
+//            	{
+//            		playerRight.inventoryVisible(true);
+//            	} else
+//            	{
+//            		playerLeft.inventoryVisible(true);
+//            	}
+//            };
+//        });
+//
 //      battleScreen.sceneLayerGUI.addActor(toggleInventoryButton);
-		buttonsTable.add(toggleInventoryButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
+//		buttonsTable.add(toggleInventoryButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
 		buttonsTable.row();
 		
 //      nextTurnButton
-        float currX = width-100;
-        float currY = LEFT_TOWER_SLOT.y;
-        float bWidth = 100;
-        float bHeight = 100;
+        float currX = width-50;
+        float currY = 5;
+        float bWidth = 50;
+        float bHeight = 50;
         nextTurnButton.setBounds(currX, currY, bWidth, bHeight);
         nextTurnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("BVGE", "Next turn");
+                Gdx.app.log("GUI", "Next turn");
                 clearStatLabels();
                 if (currentTurnRight) {
                     endTurn(playerRight);
@@ -513,7 +547,21 @@ public class RvBWorld extends RvBBase {
 
             ;
         });
-        buttonsTable.add(nextTurnButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
+        battleScreen.sceneLayerGUI.addActor(nextTurnButton);
+
+        pauseButton.setBounds(currX-bWidth-5,currY,bWidth,bHeight);
+        pauseButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Gdx.app.log("GUI", "Stop");
+
+                revealPauseWindow();
+            }
+        });
+        battleScreen.sceneLayerGUI.addActor(pauseButton);
+
+//        buttonsTable.add(nextTurnButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
         
         actionPointsLeftLabel.setBounds(35, height-60, 30, 30);
         actionPointsLeftLabel.setAlignment(Align.center);
@@ -558,6 +606,56 @@ public class RvBWorld extends RvBBase {
 //        Gdx.app.log("BVGE", "resize!!");
 	}
 
+    private void revealPauseWindow() {
+        if (pauseWindow == null){
+            pauseWindow = new Window("Pause Game", battleScreen.getSkin());
+            pauseWindow.setVisible(false);
+            pauseWindow.setMovable(false);
+            pauseWindow.setSize(resizeWidth, resizeHeight * 0.75f);
+            pauseWindow.setPosition(0, resizeHeight * 0.5f - pauseWindow.getHeight() * 0.5f);
+
+//            Texture texture = new Texture(Gdx.files.internal("data/btn_next.png"));
+//            texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+//            TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
+//            pauseCloseButton = new Image(region);
+
+            float currX = (pauseWindow.getWidth() - StatsHelper.BUTTON_WIDTH) / 2;
+            float currY = pauseWindow.getHeight() - StatsHelper.BUTTON_HEIGHT - 20;
+            pauseCloseButton = new TextButton("Resume game", battleScreen.getSkin());
+            pauseCloseButton.setBounds(currX,currY,StatsHelper.BUTTON_WIDTH,StatsHelper.BUTTON_HEIGHT);
+            pauseCloseButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+    //                        inventoryVisible(false);
+                    Gdx.app.log("GUI","Close window");
+                    pauseWindow.setVisible(false);
+                };
+            });
+            pauseWindow.addActor(pauseCloseButton);
+
+            pauseExitButton = new TextButton("To Main Menu",battleScreen.getSkin());
+            currY -= StatsHelper.BUTTON_HEIGHT + StatsHelper.BUTTON_SPACING;
+            pauseExitButton.setBounds(currX,currY,StatsHelper.BUTTON_WIDTH,StatsHelper.BUTTON_HEIGHT);
+            pauseExitButton.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    Gdx.app.log("GUI","Exit battle");
+                    exitBattle();
+                }
+            });
+            pauseWindow.addActor(pauseExitButton);
+            battleScreen.sceneLayerGUI.addActor(pauseWindow);
+        }
+        pauseWindow.setVisible(true);
+    }
+
+    private void exitBattle() {
+//        getCurrentTurnPlayer().setActingUnit(null);
+        currentTurnRight = true;
+        battleScreen.mGame.setScreen(new MainMenuScreen(battleScreen.mGame));
+    }
+
     public void updateStatLabels(RvBUnit unit){
         statPAtackLabel.setText(String.format("%d",unit.getpAttack()));
         statIAtackLabel.setText(String.format("%d",unit.getiAttack()));
@@ -576,7 +674,7 @@ public class RvBWorld extends RvBBase {
         iDefenceImage.setColor(StatsHelper.COLOR_DARK_BLUE);
         rangeImage.setColor(StatsHelper.COLOR_DARK_RED);
 
-        if (unit.unitType == UnitType.UNIT_TYPE_RANGED || unit.unitType == UnitType.UNIT_TYPE_RANGED_MASS)
+        if (unit.unitType == UnitType.UNIT_TYPE_RANGED || unit.unitType == UnitType.UNIT_TYPE_RANGED_MASS || unit.unitType == UnitType.UNIT_TYPE_TOWER)
         {
             critChanceLabel.setText(String.format("%d%%", unit.getCriticalChance()));
             critChanceImage.setColor(Color.GRAY);
@@ -682,7 +780,7 @@ public class RvBWorld extends RvBBase {
     }
 
     public static boolean applyActionOnVictim(RvBUnit attacker, RvBUnit victim) {
-        if (!victim.isbReachable())
+        if (!victim.isbReachable() && attacker.unitType != UnitType.UNIT_TYPE_TOWER)
         {
             return false;
         }
@@ -710,8 +808,12 @@ public class RvBWorld extends RvBBase {
                 return true;
             case ACTION_TYPE_DONE:
                 break;
-            case ACTION_TYPE_HEAL:
-                break;
+//            case ACTION_TYPE_HEAL:
+//                if (attacker.getEnergy()>=StatsHelper.HEAL_COST){
+//                    if (heal(attacker,victim,0)){
+//                    };
+//                }
+//                break;
             case ACTION_TYPE_HACK:
                 break;
         }

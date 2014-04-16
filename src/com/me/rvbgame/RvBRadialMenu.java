@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -32,26 +33,17 @@ public class RvBRadialMenu extends Group{
     private Image leftChoiceImage;
     private Image rightChoiceImage;
 
+    private Image additionalUpperImage;
+    private Image additionalUpperLeftImage;
+    private Image additionalLeftImage;
+    private Image additionalBottomImage;
+
+    Vector2 itemSize = new Vector2(48, 48);
+
+    boolean additionalVisibe = false;
+
     public RvBRadialMenu(RvBUnit unit){
         this.unit = unit;
-        if (unit.unitType == UnitType.UNIT_TYPE_TOWER)
-            return;
-
-        Actor background = new Actor() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                super.draw(batch, parentAlpha);
-
-                batch.end();
-                ShapeRenderer shapeRenderer = new ShapeRenderer();
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(StatsHelper.COLOR_BLACK_ALPHA_0_5);
-                shapeRenderer.rect(0, 0, 300, 20);
-                shapeRenderer.end();
-                batch.begin();
-            }
-        };
-//        this.addActor(background);
 
         //default actions:
         Image avaImage = applyTexture("data/radial_menu_files/rm_att.png");
@@ -110,15 +102,21 @@ public class RvBRadialMenu extends Group{
         });
         this.bottomChoiceImage = avaImage;
         this.addActor(bottomChoiceImage);
-
-        this.changeCoords(unit);
+        if (unit.unitType != UnitType.UNIT_TYPE_TOWER)
+            this.changeCoords(unit);
+        else
+            this.changeCoordsToTower();
         this.setVisible(false);
     }
 
     private void applyAction(ActionType actionType) {
         unit.actionType = actionType;
-        if (actionType != ActionType.ACTION_TYPE_ATTACK && actionType!=ActionType.ACTION_TYPE_FREEZE){
+        Gdx.app.log("TOW","at clicked "+actionType);
+        if (actionType != ActionType.ACTION_TYPE_ATTACK
+                && actionType!=ActionType.ACTION_TYPE_FREEZE
+                && actionType!=ActionType.ACTION_TYPE_HEAL){
             unit.battleScreen.world.applyActionOnSelf(unit);
+
             if (unit.getActionPoints() == 0){
                 unit.setbCanOperate(false);
                 this.hide();
@@ -131,8 +129,6 @@ public class RvBRadialMenu extends Group{
     }
 
     public void reveal(){
-        if (unit.unitType == UnitType.UNIT_TYPE_TOWER)
-            return;
         this.setVisible(true);
     }
 
@@ -143,7 +139,20 @@ public class RvBRadialMenu extends Group{
     public void changeCoords(RvBUnit unit){
 
         this.unit = unit;
-        Gdx.app.log("RM",""+StatsHelper.whatUnit(unit.unitType));
+        Gdx.app.log("RM","what "+StatsHelper.whatUnit(unit.unitType));
+        if (unit.unitType == UnitType.UNIT_TYPE_TOWER){
+            changeCoordsToTower();
+            return;
+        }else{
+            if (additionalBottomImage!=null) additionalBottomImage.setVisible(false);
+            if (additionalLeftImage!=null) additionalLeftImage.setVisible(false);
+            if (additionalUpperLeftImage!=null) additionalUpperLeftImage.setVisible(false);
+            if (additionalUpperImage!=null) additionalUpperImage.setVisible(false);
+            additionalVisibe = false;
+            if  (upperChoiceImage!=null) upperChoiceImage.setVisible(true);
+            if  (upperLeftChoiceImage!=null) upperLeftChoiceImage.setVisible(true);
+            if  (upperRightChoiceImage!=null) upperRightChoiceImage.setVisible(true);
+        }
 
         if (upperChoiceImage != null){
             upperChoiceImage.setPosition(
@@ -236,6 +245,131 @@ public class RvBRadialMenu extends Group{
 
     }
 
+    //change coords for Tower
+    private void changeCoordsToTower() {
+        if (additionalBottomImage == null){
+            additionalBottomImage = applyTexture("data/radial_menu_files/rm_more.png");
+            additionalBottomImage.addListener( new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    Gdx.app.log("RM", "clicked: more");
+                    applyActionMore();
+                }
+            } );
+            this.addActor(additionalBottomImage);
+            additionalBottomImage.setPosition(
+                    unit.avaImage.getX() + 3*unit.avaSize.x / 5,
+                    unit.avaImage.getY() + 2
+            );
+        }else
+            additionalBottomImage.setVisible(true);
+
+        if (upperChoiceImage != null){
+            upperChoiceImage.setPosition(
+                    unit.avaImage.getX() + itemSize.y/2,
+                    (float) (unit.avaImage.getY() + itemSize.y * 2.5)// unit.avaSize.y
+            );
+        }
+        if (upperLeftChoiceImage != null){
+            upperLeftChoiceImage.setPosition(
+                    unit.avaImage.getX() + 3*unit.avaSize.x / 5, // - StatsHelper.SPACING,
+                    unit.avaImage.getY() + itemSize.y*2
+            );
+        }
+        if (upperRightChoiceImage != null){
+            upperRightChoiceImage.setPosition(
+                    unit.avaImage.getX() + 3*unit.avaSize.x / 4,//unit.avaImage.getHeight() + StatsHelper.SPACING,
+                    unit.avaImage.getY() + itemSize.y
+            );
+        }
+        if (bottomChoiceImage != null){
+            bottomChoiceImage.setPosition(
+                    unit.avaImage.getX() + itemSize.y/2,
+                    unit.avaImage.getY()
+            );
+
+        }
+        if (bottomLeftChoiceImage!=null)
+            bottomLeftChoiceImage.setVisible(false);
+        if (bottomRightChoiceImage!=null)
+            bottomRightChoiceImage.setVisible(false);
+    }
+
+    private void applyActionMore() {
+
+        if (!additionalVisibe){
+            if (additionalUpperImage == null){
+                additionalUpperImage = applyTexture("data/radial_menu_files/rm_heal.png");
+                additionalUpperImage.setPosition(upperChoiceImage.getX(), upperChoiceImage.getY());
+                additionalUpperImage.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        applyAction(ActionType.ACTION_TYPE_HEAL);
+                    }
+                });
+                upperChoiceImage.setVisible(false);
+                this.addActor(additionalUpperImage);
+            } else {
+                upperChoiceImage.setVisible(false);
+                additionalUpperImage.setVisible(true);
+            }
+            if (additionalUpperLeftImage == null){
+                additionalUpperLeftImage = applyTexture("data/radial_menu_files/rm_aim.png");
+                additionalUpperLeftImage.setPosition(upperLeftChoiceImage.getX(), upperLeftChoiceImage.getY());
+                additionalUpperLeftImage.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        applyAction(ActionType.ACTION_TYPE_AIM);
+                    }
+                });
+                upperLeftChoiceImage.setVisible(false);
+                this.addActor(additionalUpperLeftImage);
+            }
+            else
+            {
+                upperLeftChoiceImage.setVisible(false);
+                additionalUpperLeftImage.setVisible(true);
+            }
+
+            if (additionalLeftImage == null){
+                additionalLeftImage = applyTexture("data/radial_menu_files/rm_inv.png");
+                additionalLeftImage.setPosition(upperRightChoiceImage.getX(), upperRightChoiceImage.getY());
+                additionalLeftImage.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        RvBWorld.getCurrentTurnPlayer().inventoryVisible(true);
+                        hide();
+                    }
+                });
+                upperRightChoiceImage.setVisible(false);
+                this.addActor(additionalLeftImage);
+            }
+            else
+            {
+                upperRightChoiceImage.setVisible(false);
+                additionalLeftImage.setVisible(true);
+            }
+
+            upperRightChoiceImage.setVisible(false);
+//            additionalVisibe = true;
+        }
+        else
+        {
+            upperRightChoiceImage.setVisible(true);
+            upperLeftChoiceImage.setVisible(true);
+            upperChoiceImage.setVisible(true);
+            additionalUpperImage.setVisible(false);
+            additionalUpperLeftImage.setVisible(false);
+            additionalLeftImage.setVisible(false);
+//            additionalVisibe = false;
+        }
+        additionalVisibe = !additionalVisibe;
+    }
+
     public Image applyTexture(String path){
 
         Texture avaTexture = new Texture(Gdx.files.internal(path));
@@ -244,7 +378,7 @@ public class RvBRadialMenu extends Group{
         Image avaImage = new Image(region);
         avaImage.setScaling(Scaling.stretch);
         avaImage.setAlign((Align.bottom | Align.left));
-        avaImage.setSize(unit.getAvaSize().x, unit.getAvaSize().y);
+        avaImage.setSize(itemSize.x, itemSize.y);
 
         return avaImage;
     }

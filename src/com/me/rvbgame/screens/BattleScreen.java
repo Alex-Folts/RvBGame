@@ -7,7 +7,7 @@ import com.me.rvbgame.RvbGdxGame;
 
 public class BattleScreen extends GameScreen {
 
-	public final RvBWorld world;
+	public RvBWorld world;
     public Group sceneLayerZero = new Group();
 	public Group sceneLayerBG = new Group();
 	public Group sceneLayerTowers = new Group();
@@ -47,7 +47,7 @@ public class BattleScreen extends GameScreen {
 	@Override
 	public void show() {
 		super.show();
-		
+
 		if (world != null){
 			world.show();
 		}

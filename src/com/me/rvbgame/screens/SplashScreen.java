@@ -108,6 +108,7 @@ public class SplashScreen extends GameScreen implements InputProcessor {
 		Gdx.app.log("RvB", "SPSettingsScreen:touchDown");
 		mGame.setScreen( new MainMenuScreen(mGame));
 //        mGame.setScreen( new SPSettingsScreen(mGame));
+//        mGame.setScreen(new BattleScreen(mGame));
 		return true;
 	}
 

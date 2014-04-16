@@ -288,6 +288,28 @@ public abstract class RvBUnit extends RvBBase {
 				//show radial menu
                 if (RvBWorld.getCurrentTurnPlayer() == player)
 				{
+                    if (RvBWorld.getCurrentTurnPlayer().getActingUnit()!=null) {
+                        if (RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType == ActionType.ACTION_TYPE_HEAL)
+                        {
+                            if (RvBWorld.heal(RvBWorld.getCurrentTurnPlayer().getActingUnit(),RvBUnit.this,0)){
+//                                RvBWorld.getCurrentTurnPlayer().clearSelection();
+//                                battleScreen.world.updateStatLabels(RvBWorld.getCurrentTurnPlayer().getActingUnit());
+                                RvBWorld.getCurrentTurnPlayer().getActingUnit().setActionPoints(RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints()-1);
+                                if (RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints() == 0){
+
+                                    RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
+                                    RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
+                                    if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
+                                        RvBWorld.getCurrentTurnPlayer().endTurn();
+                                    }
+                                }
+                                battleScreen.sceneLayerRadialMenu.setDefaultColors();
+                                battleScreen.sceneLayerRadialMenu.hide();
+                                return;
+                            };
+                        }
+                    }
+
                     if (!RvBUnit.this.bFreeze && RvBUnit.this.bCanOperate){
 //                        RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this,RvBUnit.this.getAttackRange());
                         player.setActingUnit(RvBUnit.this);
@@ -299,7 +321,7 @@ public abstract class RvBUnit extends RvBBase {
                 else
                 //or apply selected action on victim
 				{
-					if (RvBWorld.getCurrentTurnPlayer().getActingUnit() != null)
+					if (RvBWorld.getCurrentTurnPlayer().getActingUnit() != null && RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType != ActionType.ACTION_TYPE_HEAL)
 					{
                         if(RvBWorld.applyActionOnVictim(RvBWorld.getCurrentTurnPlayer().getActingUnit(), RvBUnit.this));
 						{
@@ -537,4 +559,8 @@ public abstract class RvBUnit extends RvBBase {
 	public String getUnitName() {
 		return unitName;
 	}
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
 }

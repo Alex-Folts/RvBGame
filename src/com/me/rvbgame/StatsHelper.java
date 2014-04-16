@@ -11,6 +11,8 @@ public class StatsHelper {
     public static final Color COLOR_EMPTY_UNIT_SLOT = new Color(0, 0.25f, 0.75f, 1);
     public static final Color COLOR_BLACK_ALPHA_0_5 = new Color(0, 0, 0, 0.5f);
     public static final float SPACING = 120.0f;
+    public static final int HEAL_COST = 50;
+    public static final int HEAL_POINTS = 30;
 
     public static String whatUnit(UnitType unitType) {
         switch (unitType) {
@@ -30,7 +32,7 @@ public class StatsHelper {
                 return "UNIT_TYPE_MASS";
 //                break;
             case UNIT_TYPE_TOWER:
-                break;
+                return "UNIT_TYPE_TOWER";
         }
         return "";
     }
@@ -40,4 +42,8 @@ public class StatsHelper {
     public static int MAX_AVAILABLE_RAN = 4;
     public static int MAX_AVAILABLE_MAS = 4;
     public static int MAX_AVAILABLE_SPE = 4;
+
+    public static float BUTTON_WIDTH = 300f;
+    public static float BUTTON_HEIGHT = 50f;
+    public static float BUTTON_SPACING = 10f;
 }
