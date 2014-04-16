@@ -111,7 +111,7 @@ public class RvBRadialMenu extends Group{
 
     private void applyAction(ActionType actionType) {
         unit.actionType = actionType;
-        Gdx.app.log("RM","at clicked "+actionType);
+        Gdx.app.log("TOW","at clicked "+actionType);
         if (actionType != ActionType.ACTION_TYPE_ATTACK
                 && actionType!=ActionType.ACTION_TYPE_FREEZE
                 && actionType!=ActionType.ACTION_TYPE_HEAL){
@@ -267,25 +267,25 @@ public class RvBRadialMenu extends Group{
 
         if (upperChoiceImage != null){
             upperChoiceImage.setPosition(
-                    unit.avaImage.getX() + additionalBottomImage.getImageHeight()/2,
-                    (float) (unit.avaImage.getY() + additionalBottomImage.getImageHeight() * 2.5)// unit.avaSize.y
+                    unit.avaImage.getX() + itemSize.y/2,
+                    (float) (unit.avaImage.getY() + itemSize.y * 2.5)// unit.avaSize.y
             );
         }
         if (upperLeftChoiceImage != null){
             upperLeftChoiceImage.setPosition(
                     unit.avaImage.getX() + 3*unit.avaSize.x / 5, // - StatsHelper.SPACING,
-                    unit.avaImage.getY() + additionalBottomImage.getImageHeight()*2
+                    unit.avaImage.getY() + itemSize.y*2
             );
         }
         if (upperRightChoiceImage != null){
             upperRightChoiceImage.setPosition(
                     unit.avaImage.getX() + 3*unit.avaSize.x / 4,//unit.avaImage.getHeight() + StatsHelper.SPACING,
-                    unit.avaImage.getY() + additionalBottomImage.getImageHeight()
+                    unit.avaImage.getY() + itemSize.y
             );
         }
         if (bottomChoiceImage != null){
             bottomChoiceImage.setPosition(
-                    unit.avaImage.getX() + additionalBottomImage.getImageHeight()/2,
+                    unit.avaImage.getX() + itemSize.y/2,
                     unit.avaImage.getY()
             );
 
@@ -316,13 +316,13 @@ public class RvBRadialMenu extends Group{
                 additionalUpperImage.setVisible(true);
             }
             if (additionalUpperLeftImage == null){
-                additionalUpperLeftImage = applyTexture("data/radial_menu_files/rm_stone.png");
+                additionalUpperLeftImage = applyTexture("data/radial_menu_files/rm_aim.png");
                 additionalUpperLeftImage.setPosition(upperLeftChoiceImage.getX(), upperLeftChoiceImage.getY());
                 additionalUpperLeftImage.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         super.clicked(event, x, y);
-                        applyAction(ActionType.ACTION_TYPE_STONE);
+                        applyAction(ActionType.ACTION_TYPE_AIM);
                     }
                 });
                 upperLeftChoiceImage.setVisible(false);
@@ -355,7 +355,7 @@ public class RvBRadialMenu extends Group{
             }
 
             upperRightChoiceImage.setVisible(false);
-            additionalVisibe = true;
+//            additionalVisibe = true;
         }
         else
         {
@@ -365,9 +365,9 @@ public class RvBRadialMenu extends Group{
             additionalUpperImage.setVisible(false);
             additionalUpperLeftImage.setVisible(false);
             additionalLeftImage.setVisible(false);
-            additionalVisibe = false;
+//            additionalVisibe = false;
         }
-
+        additionalVisibe = !additionalVisibe;
     }
 
     public Image applyTexture(String path){

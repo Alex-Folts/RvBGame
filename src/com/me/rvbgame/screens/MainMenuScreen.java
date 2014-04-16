@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.me.rvbgame.RvbGdxGame;
+import com.me.rvbgame.StatsHelper;
 
 public class MainMenuScreen extends GameScreen implements InputProcessor {
 
@@ -30,10 +31,6 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
 
         float currX, currY;
 
-        float BUTTON_WIDTH = 300f;
-        float BUTTON_HEIGHT = 50f;
-        float BUTTON_SPACING = 10f;
-
         Table table = new Table( getSkin() );
         table.setWidth(width);
         table.setHeight(height);
@@ -42,15 +39,15 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
 
 
         String full = "w ";
-        currX = (width - BUTTON_WIDTH) / 2;
-        currY = height - BUTTON_HEIGHT ;
+        currX = (width - StatsHelper.BUTTON_WIDTH) / 2;
+        currY = height - StatsHelper.BUTTON_HEIGHT ;
 //label "welcome"
         Label welcomeLabel = new Label( "Hi!", getSkin() );
-        welcomeLabel.setBounds(currX, currY, BUTTON_WIDTH, BUTTON_HEIGHT / 2);
+        welcomeLabel.setBounds(currX, currY, StatsHelper.BUTTON_WIDTH, StatsHelper.BUTTON_HEIGHT / 2);
 //btnBegin  //
-        currY -= BUTTON_HEIGHT + BUTTON_SPACING;
+        currY -= StatsHelper.BUTTON_HEIGHT + StatsHelper.BUTTON_SPACING;
         TextButton startGameButton = new TextButton("Start game", getSkin());
-        startGameButton.setBounds(currX, currY, BUTTON_WIDTH, BUTTON_HEIGHT);
+        startGameButton.setBounds(currX, currY, StatsHelper.BUTTON_WIDTH, StatsHelper.BUTTON_HEIGHT);
         startGameButton.
                 addListener(new ClickListener() {
             @Override
@@ -64,9 +61,9 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
         });
 
 //btnExit
-        currY -= (BUTTON_HEIGHT + BUTTON_SPACING);
+        currY -= (StatsHelper.BUTTON_HEIGHT + StatsHelper.BUTTON_SPACING);
         TextButton exitGameButton = new TextButton("Escape game", getSkin());
-        exitGameButton.setBounds(currX, currY, BUTTON_WIDTH, BUTTON_HEIGHT);
+        exitGameButton.setBounds(currX, currY, StatsHelper.BUTTON_WIDTH, StatsHelper.BUTTON_HEIGHT);
         exitGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
