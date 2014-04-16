@@ -14,6 +14,7 @@ public class BattleScreen extends GameScreen {
 	public Group sceneLayerUnits = new Group();
     public Group sceneLayerFX = new Group();
     public RvBRadialMenu sceneLayerRadialMenu = null;
+    public Group sceneLayerActionAnimation = new Group();
 	public Group sceneLayerGUI = new Group();
 	public Group sceneLayerMenu = new Group();
     public Group sceneLayerTop = new Group();
@@ -32,6 +33,7 @@ public class BattleScreen extends GameScreen {
 		stage.addActor(sceneLayerUnits);
 		stage.addActor(sceneLayerFX);
 //		stage.addActor(sceneLayerRadialMenu);
+		stage.addActor(sceneLayerActionAnimation);
 		stage.addActor(sceneLayerGUI);
 		stage.addActor(sceneLayerMenu);
 		stage.addActor(sceneLayerTop);

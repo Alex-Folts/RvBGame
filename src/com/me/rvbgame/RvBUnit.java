@@ -18,6 +18,8 @@ import com.me.rvbgame.screens.BattleScreen;
 
 public abstract class RvBUnit extends RvBBase {
 
+	private String unitName = "RvBUnit";
+	
     private int health;
     private int energy;
     private int maxHealth;
@@ -70,8 +72,11 @@ public abstract class RvBUnit extends RvBBase {
         RvBUnit tmpUnit = js.fromJson(RvBTower.class, Gdx.files.internal(jsonData));
         if (tmpUnit != null)
         {
+        	this.unitName = tmpUnit.getUnitName();
+        	
         	this.setHealth(tmpUnit.getHealth());
-        	this.setEnergy(tmpUnit.getEnergy());
+        	//this.setEnergy(tmpUnit.getEnergy());
+        	this.energy = tmpUnit.getEnergy();
         	
         	this.setpAttack(tmpUnit.getpAttack());
         	this.setpDefence(tmpUnit.getpDefence());
@@ -528,4 +533,8 @@ public abstract class RvBUnit extends RvBBase {
     public boolean isbReachable() {
         return bReachable;
     }
+
+	public String getUnitName() {
+		return unitName;
+	}
 }

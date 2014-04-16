@@ -88,8 +88,10 @@ public class SPSettingsScreen extends GameScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
+            	Gdx.app.log("RvB", "SPSettingsScreen: selectedUnitsList:"+selectedUnitsList);
                 BattleScreen battleScreen = new BattleScreen(mGame);
                 battleScreen.world.selectedUnitsList = selectedUnitsList;
+                Gdx.app.log("RvB", "SPSettingsScreen: selectedUnitsList:"+battleScreen.world.selectedUnitsList);
                 mGame.setScreen(battleScreen);
             };
         });

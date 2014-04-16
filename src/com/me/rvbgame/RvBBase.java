@@ -4,7 +4,7 @@ import com.me.rvbgame.screens.BattleScreen;
 
 public abstract class RvBBase {
 
-	BattleScreen battleScreen;
+	static BattleScreen battleScreen;
 	
 	public RvBBase(BattleScreen parentScreen) {
 		battleScreen = parentScreen;

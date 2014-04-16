@@ -7,8 +7,6 @@ public class RvBAIPlayer extends RvBPlayer {
 
 	public RvBAIPlayer(BattleScreen parentScreen) {
 		super(parentScreen);
-		
-		isAI = true;
 	}
 
 	@Override
@@ -116,5 +114,10 @@ public class RvBAIPlayer extends RvBPlayer {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean isAI() {
+		return true;
 	}
 }

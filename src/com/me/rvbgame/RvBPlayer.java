@@ -37,7 +37,6 @@ public class RvBPlayer extends RvBBase{
     public RvBUnit slot3;
     public RvBUnit slot4;
     public RvBUnit slot5;
-    public boolean isAI;
     public boolean isMyTurn;
 
     private RvBUnit actingUnit;
@@ -73,9 +72,19 @@ public class RvBPlayer extends RvBBase{
         
 //        units = new RvBUnit[5];
         units = new ArrayList<RvBUnit>();
-        units.add(new UnitRangedMass(battleScreen, this, "data/json_files/ranged_mass.json"));
-        units.add(new UnitRanged(battleScreen, this, "data/json_files/ranged.json"));
-        units.add(new UnitMelee(battleScreen, this, "data/json_files/melee.json"));
+/*        if (isAI())
+        {
+        	units.add(new UnitRangedMass(battleScreen, this, "data/json_files/ranged_mass.json"));
+        	units.add(new UnitRanged(battleScreen, this, "data/json_files/ranged.json"));
+        	units.add(new UnitMelee(battleScreen, this, "data/json_files/melee.json"));
+        } else
+        {
+//        	Gdx.app.log("BVGE", "RvBPlayer: selectedUnitsList"+battleScreen.world.selectedUnitsList);
+        	for (UnitType unitType: battleScreen.world.selectedUnitsList)
+        	{
+				units.add(createUnitByType(unitType));
+			}
+        }*/
         
         slot1 = new UnitRanged(battleScreen, this, "data/json_files/ranged.json");
         slot1.line = 3;
@@ -174,7 +183,7 @@ public class RvBPlayer extends RvBBase{
     	{
     		slot05EmptyImage.setVisible(true);
     	}
-        if(isAI)
+        if(isAI())
             this.makeMove();
         else {
 //       enable interaction
@@ -249,7 +258,7 @@ public class RvBPlayer extends RvBBase{
 		
 		clearSelection();
 
-		if (this.actingUnit != null && !isAI)
+		if (this.actingUnit != null && !isAI())
 		{
 			this.actingUnit.settowerColor(StatsHelper.COLOR_DARK_GREEN);
             battleScreen.world.updateStatLabels(this.actingUnit);
@@ -349,6 +358,20 @@ public class RvBPlayer extends RvBBase{
 	public void show() {
 		super.show();
 		
+        if (isAI())
+        {
+        	units.add(new UnitRangedMass(battleScreen, this, "data/json_files/ranged_mass.json"));
+        	units.add(new UnitRanged(battleScreen, this, "data/json_files/ranged.json"));
+        	units.add(new UnitMelee(battleScreen, this, "data/json_files/melee.json"));
+        } else
+        {
+//        	Gdx.app.log("BVGE", "RvBPlayer: selectedUnitsList"+battleScreen.world.selectedUnitsList);
+        	for (UnitType unitType: battleScreen.world.selectedUnitsList)
+        	{
+				units.add(createUnitByType(unitType));
+			}
+        }
+		
 		if (tower != null){
 			tower.show();
 		}
@@ -398,7 +421,7 @@ public class RvBPlayer extends RvBBase{
 		inventoryWindow = new Window("Inventory", battleScreen.getSkin());
 		inventoryWindow.setVisible(false);
 		inventoryWindow.setMovable(false);
-		inventoryWindow.setSize(width, height * 0.75f);
+		inventoryWindow.setSize(width, height * 0.6f);
 		inventoryWindow.setPosition(0, height * 0.5f - inventoryWindow.getHeight() * 0.5f);
 		
 		inventoryCloseButton = new TextButton("Close", battleScreen.getSkin());
@@ -755,8 +778,8 @@ public class RvBPlayer extends RvBBase{
 					tmpImage.setAlign((Align.bottom | Align.left));
 					tmpImage.setSize(units.get(i).getAvaSize().x, units.get(i).getAvaSize().y);
 //					tmpImage.setColor(Color.DARK_GRAY);
-					tmpImage.setName(""+i);
-					tmpImage.addListener( new ClickListener() {             
+//					tmpImage.setName(""+i);
+/*					tmpImage.addListener( new ClickListener() {             
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
 							Gdx.app.log("BVGE", "clicked:");
@@ -771,7 +794,7 @@ public class RvBPlayer extends RvBBase{
 //								Gdx.app.log("BVGE", "inventoryUpdated: "+event.getListenerActor().toString());
 							}
 						};
-					});
+					});*/
 					
 					InventoryItem tmpInvItem = new InventoryItem();
 					tmpInvItem.setUnit(units.get(i));
@@ -780,9 +803,30 @@ public class RvBPlayer extends RvBBase{
 					
 					
 //					inventoryItemsTable.add(tmpImage).width(battleScreen.screenResH * 0.35f).height(battleScreen.screenResH * 0.35f).padLeft(5).padRight(5).padBottom(20).padTop(10);
-					inventoryItemsTable.add(tmpInvItem).width(battleScreen.screenResH * 0.35f).height(battleScreen.screenResH * 0.55f).padLeft(5).padRight(5).padBottom(20).padTop(10);
+					inventoryItemsTable.add(tmpInvItem).width(battleScreen.screenResH * 0.35f).height(battleScreen.screenResH * 0.35f).padLeft(5).padRight(5).padBottom(20).padTop(5);
 					
-					tmpInvItem.init(battleScreen.screenResH * 0.35f, battleScreen.screenResH * 0.55f);
+					tmpInvItem.init(battleScreen.screenResH * 0.35f, battleScreen.screenResH * 0.35f);
+					
+//					tmpInvItem.getPlaceUnitImage().setName(""+i);
+					tmpInvItem.setIndex(i);
+					tmpInvItem.getPlaceUnitImage().setUserObject(tmpInvItem);
+					tmpInvItem.getPlaceUnitImage().addListener( new ClickListener() {             
+						@Override
+						public void clicked(InputEvent event, float x, float y) {
+							Gdx.app.log("BVGE", "clicked:");
+							if (bWaitForCard)
+							{
+								
+							} else
+							{
+//								waitForSlotUnit = units.get(Integer.decode(event.getListenerActor().toString()));								
+								waitForSlotUnit = units.get(((InventoryItem)event.getListenerActor().getUserObject()).getIndex());
+								bWaitForSlot = true;
+								inventoryVisible(false);
+//								Gdx.app.log("BVGE", "inventoryUpdated: "+event.getListenerActor().toString());
+							}
+						};
+					});
 				}
 			} else
 			{
@@ -806,11 +850,15 @@ public class RvBPlayer extends RvBBase{
     
     class InventoryItem extends Group
     {
+    	private int index;
+    	
     	private RvBUnit unit;
     	private Image avaImage;
     	private TextButton pickButton;
     	private Table bgTable;
     	private Table fgTable;
+    	
+    	private Label statsNameLabel;
     	
     	private Label statsHpLabel;
     	private Label statsEpLabel;
@@ -836,6 +884,8 @@ public class RvBPlayer extends RvBBase{
     	private Image statsTargetsImage;
     	private Image statsRangeImage;
     	
+    	private Image placeUnitImage;
+    	
     	InventoryItem(){
     		super();
     	}
@@ -843,6 +893,7 @@ public class RvBPlayer extends RvBBase{
     	void init(float width, float height)
     	{
     		float statsIcoSize = 24;
+    		float placeIcoSize = 32;
     		
     		setWidth(width);
     		setHeight(height);
@@ -852,15 +903,24 @@ public class RvBPlayer extends RvBBase{
     		bgTable = new Table(battleScreen.getSkin());
     		bgTable.setWidth(width);
     		bgTable.setHeight(height);
+//    		bgTable.right();
 
     		fgTable = new Table(battleScreen.getSkin());
     		fgTable.setWidth(width);
     		fgTable.setHeight(height);
     		
+    		Table textTable = new Table(battleScreen.getSkin());
+    		textTable.setWidth(width);
+    		textTable.setHeight(height);
+    		textTable.right();
+    		textTable.top();
+    		
     		this.addActor(bgTable);
+    		this.addActor(textTable);
     		this.addActor(fgTable);
     		
     		setPickButton(new TextButton("pick", battleScreen.getSkin()));
+    		setStatsNameLabel(new Label("", battleScreen.getSkin()));
     		setStatsHpLabel(new Label("HP: ", battleScreen.getSkin()));
     		setStatsEpLabel(new Label("EP: ", battleScreen.getSkin()));
     		setStatsPDmgLabel(new Label("PDmg: ", battleScreen.getSkin()));
@@ -882,35 +942,50 @@ public class RvBPlayer extends RvBBase{
     		setStatsTargetsImage(makeStatsIco(0, "data/range_cross.png", StatsHelper.COLOR_DARK_BLUE));
     		setStatsRangeImage(makeStatsIco(0, "data/range_cross.png", StatsHelper.COLOR_DARK_BLUE));
     		
+			Texture texture = new Texture(Gdx.files.internal("data/6_social_add_person.png"));
+	        texture.setFilter(TextureFilter.Linear,TextureFilter.Linear);
+	        TextureRegion region = new TextureRegion(texture, 0, 0, 64, 64);
+	        Image resImage = new Image(region);
+	        resImage.setScaling(Scaling.stretch);
+	        resImage.setAlign((Align.bottom | Align.left));
+//	        resImage.setSize(size, size);
+	        resImage.setColor(StatsHelper.COLOR_DARK_BLUE);
+	        setPlaceUnitImage(resImage);
+	        
     		fgTable.left();
     		fgTable.bottom();
+//    		fgTable.add(statsNameLabel);
+//    		fgTable.row();
     		fgTable.add(statsHpImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsHpLabel);
-    		fgTable.row();
+//    		fgTable.row();
     		fgTable.add(statsEpImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsEpLabel);
     		fgTable.row();
     		fgTable.add(statsPDmgImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsPDmgLabel);
-    		fgTable.row();
+//    		fgTable.row();
     		fgTable.add(statsPDefImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsPDefLabel);
     		fgTable.row();
     		fgTable.add(statsIDmgImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsIDmgLabel);
-    		fgTable.row();
+//    		fgTable.row();
     		fgTable.add(statsIDefImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsIDefLabel);
     		fgTable.row();
     		fgTable.add(statsTargetsImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsTargetsLabel);
-    		fgTable.row();
+//    		fgTable.row();
     		fgTable.add(statsRangeImage).width(statsIcoSize).height(statsIcoSize);
     		fgTable.add(statsRangeLabel);
 //    		fgTable.row();
-    		fgTable.add(pickButton);
+//    		fgTable.add(pickButton);
     		
-    		bgTable.add(this.avaImage);
+    		textTable.add(statsNameLabel);
+    		textTable.add(placeUnitImage).width(placeIcoSize).height(placeIcoSize);
+    		
+    		bgTable.add(this.avaImage);//.width(width*0.75f).height(width*0.75f);
     		
     		avaImage.setColor(0.222f, 0.555f, 0.555f, 1.0f);
     		
@@ -919,6 +994,7 @@ public class RvBPlayer extends RvBBase{
     	
     	public void fillLabels()
     	{
+    		statsNameLabel.setText(unit.getUnitName());
     		statsHpLabel.setText(""+unit.getHealth());
     		statsEpLabel.setText(""+unit.getEnergy());
     		statsPDmgLabel.setText(""+unit.getpAttack());
@@ -1108,6 +1184,30 @@ public class RvBPlayer extends RvBBase{
 		public void setStatsRangeImage(Image statsRangeImage) {
 			this.statsRangeImage = statsRangeImage;
 		}
+
+		public Label getStatsNameLabel() {
+			return statsNameLabel;
+		}
+
+		public void setStatsNameLabel(Label statsNameLabel) {
+			this.statsNameLabel = statsNameLabel;
+		}
+
+		public Image getPlaceUnitImage() {
+			return placeUnitImage;
+		}
+
+		public void setPlaceUnitImage(Image placeUnitImage) {
+			this.placeUnitImage = placeUnitImage;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public void setIndex(int index) {
+			this.index = index;
+		}
     }
     
     public boolean checkIfCanMove() {
@@ -1179,4 +1279,22 @@ public class RvBPlayer extends RvBBase{
         Gdx.app.log("BVGE","nocase: "+0);
         return 0;
     }
+    
+    public boolean isAI() {
+		return false;
+	}
+    
+    private RvBUnit createUnitByType(UnitType type) {
+    	
+    	switch (type) {
+			case UNIT_TYPE_DEFENDER: return new UnitDefender(battleScreen, this, "data/json_files/defender.json");
+			case UNIT_TYPE_MELEE: return new UnitMelee(battleScreen, this, "data/json_files/melee.json");
+			case UNIT_TYPE_RANGED: return new UnitRanged(battleScreen, this, "data/json_files/ranged.json");
+			case UNIT_TYPE_RANGED_MASS: return new UnitRangedMass(battleScreen, this, "data/json_files/ranged_mass.json");
+			case UNIT_TYPE_SPECIAL: return new UnitSpecialStan(battleScreen, this, "data/json_files/special_stan.json");
+			default:
+			break;
+		}
+		return null;
+	}
 }

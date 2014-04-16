@@ -76,6 +76,8 @@ public class RvBWorld extends RvBBase {
 	static final float WORLD_NATIVE_RATIO = (WORLD_NATIVE_RES.x / WORLD_NATIVE_RES.y);
     public ArrayList<UnitType> selectedUnitsList = new ArrayList<UnitType>();
 
+    static ActionAnimator actionAnimator;
+    
 //    private int actionPointsLeft = 10;
 
     public RvBWorld(BattleScreen parentScreen) {
@@ -86,6 +88,10 @@ public class RvBWorld extends RvBBase {
 		playerRight = new RvBAIPlayer(battleScreen);
 		
 //		calcTurn();
+		
+		actionAnimator = new ActionAnimator(battleScreen.getSkin());
+		battleScreen.sceneLayerActionAnimation.addActor(actionAnimator);
+		actionAnimator.setVisible(false);
 	}
 
 	public static boolean damage(RvBUnit attacker, RvBUnit victim, int attackID) {
@@ -142,6 +148,7 @@ public class RvBWorld extends RvBBase {
             newHealth = 0;
             victim.setbDead(true);
         }
+        setupActionAnimation(attacker, victim, finalHealthDamage, ActionType.ACTION_TYPE_ATTACK);
         victim.setHealth(newHealth);
         Gdx.app.log("BVGE", "victim health = "+victim.getHealth());
 
@@ -183,7 +190,7 @@ public class RvBWorld extends RvBBase {
         if (rand <= unitRangedMass.getCriticalChance())
             critDamage += unitRangedMass.getpAttack()/2;
         if (attackRange == 3){
-            for(RvBUnit unit : oppositePlayer.units){
+            for(RvBUnit unit : oppositePlayer.units){//bug
                 if (unitRangedMass.getEnergy()>0)
                     randDamage = (int)(Math.random() * (unitRangedMass.getEnergy()/5));
                 else
@@ -216,6 +223,7 @@ public class RvBWorld extends RvBBase {
         }
         return true;
     }
+	
     public boolean performTickDamage() {
 		return false;
 	}
@@ -282,6 +290,10 @@ public class RvBWorld extends RvBBase {
 		}
 		if (playerRight != null){
 			playerRight.show();
+		}
+		if (actionAnimator != null)
+		{
+			actionAnimator.show();
 		}
 		
 		bgTexture = new Texture(Gdx.files.internal(bgPath));
@@ -422,6 +434,10 @@ public class RvBWorld extends RvBBase {
 		if (playerLeft != null){
 			playerRight.dispose();
 		}
+		if (actionAnimator != null)
+		{
+			actionAnimator.dispose();
+		}
 		
 		bgTexture.dispose();
 	}
@@ -435,6 +451,10 @@ public class RvBWorld extends RvBBase {
 		}
 		if (playerLeft != null){
 			playerRight.resize(width, height);
+		}
+		if (actionAnimator != null)
+		{
+			actionAnimator.resize(width, height);
 		}
 		
 		TextureRegion region = new TextureRegion(bgTexture, 0, 0, 1024, 522);
@@ -589,6 +609,7 @@ public class RvBWorld extends RvBBase {
 
 	protected void initWorld()
 	{
+		currentTurnRight = true;
 /*		if (playerLeft != null)
 		{
 			if (playerLeft.tower != null)
@@ -665,10 +686,16 @@ public class RvBWorld extends RvBBase {
         {
             return false;
         }
+        
+        if (victim.isbDead())
+        {
+        	return false;
+        }
+        
         switch (attacker.actionType) {
             case ACTION_TYPE_ATTACK:
                 Gdx.app.log("RM","v def"+victim.getpDefence());
-                if (damage(attacker,victim,0)){
+                if (damage(attacker,victim,0)){                	
                     attacker.setActionPoints(attacker.getActionPoints()-1);
                     return true;
                 };
@@ -676,6 +703,7 @@ public class RvBWorld extends RvBBase {
             case ACTION_TYPE_FREEZE:
                 if (attacker.getEnergy()>0){    //can freeze
                     victim.freeze();
+                    setupActionAnimation(attacker, victim, 0, ActionType.ACTION_TYPE_FREEZE);
                     attacker.setEnergy(attacker.getEnergy()-20);
                     attacker.setActionPoints(attacker.getActionPoints()-1);
                 }
@@ -690,6 +718,62 @@ public class RvBWorld extends RvBBase {
         return false;
     }
 
+    //actionType: 0 - phys attack, 1 - int attack, 2 - skill
+    public static void setupActionAnimation(RvBUnit attacker, RvBUnit victim, int damage, ActionType actionType) {
+    	actionAnimator.getRightDamageLabel().setVisible(false);
+    	actionAnimator.getLeftDamageLabel().setVisible(false);
+    	
+    	if (currentTurnRight)
+    	{
+    		actionAnimator.changeTexture(actionAnimator.getLeftUnitImage(), victim.getImagePath());
+    		actionAnimator.changeTexture(actionAnimator.getRightUnitImage(), attacker.getImagePath());
+    		if (actionType == ActionType.ACTION_TYPE_ATTACK)
+    		{
+    			actionAnimator.getLeftDamageLabel().setText("-"+damage);
+    			actionAnimator.getLeftDamageLabel().setVisible(true);
+    			actionAnimator.changeTexture(actionAnimator.getRightAnimImage(), "data/anim_sword_ico.png");
+    		} else if (actionType == ActionType.ACTION_TYPE_FREEZE)
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getRightAnimImage(), "data/radial_menu_files/rm_freeze.png");
+    		} else
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getRightAnimImage(), "data/anim_sword_ico.png");
+    		}
+    		if (victim.isDefended())
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getLeftAnimImage(), "data/anim_shield_ico.png");
+    		} else
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getLeftAnimImage(), "data/anim_swordleft_ico.png");
+    		}
+    	} else
+    	{
+    		actionAnimator.changeTexture(actionAnimator.getLeftUnitImage(), attacker.getImagePath());
+    		actionAnimator.changeTexture(actionAnimator.getRightUnitImage(), victim.getImagePath());
+    		if (actionType == ActionType.ACTION_TYPE_ATTACK)
+    		{
+    			actionAnimator.getRightDamageLabel().setText("-"+damage);
+    			actionAnimator.getRightDamageLabel().setVisible(true);
+    			actionAnimator.changeTexture(actionAnimator.getLeftAnimImage(), "data/anim_swordleft_ico.png");
+    		} else if (actionType == ActionType.ACTION_TYPE_FREEZE)
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getLeftAnimImage(), "data/radial_menu_files/rm_freeze.png");
+    		} else
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getLeftAnimImage(), "data/anim_swordleft_ico.png");
+    		}
+    		if (victim.isDefended())
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getRightAnimImage(), "data/anim_shield_ico.png");
+    		} else
+    		{
+    			actionAnimator.changeTexture(actionAnimator.getRightAnimImage(), "data/anim_sword_ico.png");
+    		}
+    	}
+//    	actionAnimator.setVisible(true);
+    	actionAnimator.showAndStartAnim();
+	}
+    
     public void applyActionOnSelf(RvBUnit unit) {
 
         switch (unit.actionType) {
@@ -715,4 +799,8 @@ public class RvBWorld extends RvBBase {
                 break;
         }
     }
+
+	public ActionAnimator getActionAnimator() {
+		return actionAnimator;
+	}
 }
