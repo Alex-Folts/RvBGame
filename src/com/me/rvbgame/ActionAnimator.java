@@ -29,6 +29,23 @@ public class ActionAnimator extends Table {
 	private Table centerContainerTable;
 	private Table rightContainerTable;
 	
+	static final int ICON_NATIVE_SIZE = 64;
+	static final int WINDOW_NATIVE_WIDTH = (int)(RvBWorld.WORLD_NATIVE_RES.x * 0.5f);
+	static final int WINDOW_NATIVE_HEIGHT = (int)(RvBWorld.WORLD_NATIVE_RES.y * 0.5f);
+	private float moveByValue = ICON_NATIVE_SIZE / 2;
+//	private float leftIcoLastPosX;
+//	private float rightIcoLastPosX;
+//	private float leftIcoLastPosY;
+//	private float rightIcoLastPosY;
+	
+	private boolean bDoDamage;
+	private boolean bRightAtack;
+	
+	private boolean bPlayAnim;
+	
+	private boolean notifyEndofAnim = false;
+	private RvBPlayer notifyEndofAnimTo = null;
+	
 	public ActionAnimator() {
 		super();
 		
@@ -57,6 +74,12 @@ public class ActionAnimator extends Table {
 		setWidth(width);
 		setHeight(height);
 		
+		float heightDelta = RvBBase.battleScreen.screenResH / RvBBase.battleScreen.world.WORLD_NATIVE_RES.y;
+		float icoSize = ICON_NATIVE_SIZE * heightDelta;
+		float windowWidth = WINDOW_NATIVE_WIDTH * heightDelta;
+		float windowHeight = WINDOW_NATIVE_HEIGHT * heightDelta;
+		moveByValue = icoSize / 2;
+				
 		leftUnitImage = applyTexture("data/ap_icon.png", false);
 		rightUnitImage = applyTexture("data/ap_icon.png", false);
 		
@@ -64,17 +87,17 @@ public class ActionAnimator extends Table {
 		rightAnimImage = applyTexture("data/ap_icon.png", false);
 		
 		leftDamageLabel = new Label("-100", RvBBase.battleScreen.getSkin());
-		leftDamageLabel.setColor(1, 0, 0, 1);
+		leftDamageLabel.setColor(1, 0, 0, 0);
 		rightDamageLabel = new Label("-100", RvBBase.battleScreen.getSkin());
-		rightDamageLabel.setColor(1, 0, 0, 1);
+		rightDamageLabel.setColor(1, 0, 0, 0);
 		
 		containerTable = new Table(RvBBase.battleScreen.getSkin());
-		containerTable.setWidth(width * 0.5f);
-		containerTable.setHeight(height * 0.5f);
+		containerTable.setWidth(windowWidth);
+		containerTable.setHeight(windowHeight);
 		containerTable.center();
 		containerTable.setBackground("textfield");
 //		containerTable.setColor(1, 1, 1, 0.5f);
-		add(containerTable).width(width * 0.75f).height(height * 0.3f);
+		add(containerTable).width(windowWidth * 1.5f).height(windowHeight * 0.6f);
 		
 		leftContainerTable = new Table(RvBBase.battleScreen.getSkin());
 //		leftContainerTable.setWidth(64);
@@ -91,17 +114,22 @@ public class ActionAnimator extends Table {
 		containerTable.add(rightContainerTable);
 		
 		leftContainerTable.add(leftDamageLabel);
-		leftContainerTable.add(leftUnitImage).width(64).height(64);
+		leftContainerTable.add(leftUnitImage).width(icoSize).height(icoSize);
 		
-		centerContainerTable.add(leftAnimImage).width(64).height(64);
-		centerContainerTable.add(rightAnimImage).width(64).height(64);
+		centerContainerTable.add(leftAnimImage).width(icoSize).height(icoSize);
+		centerContainerTable.add(rightAnimImage).width(icoSize).height(icoSize);
 		
-		rightContainerTable.add(rightUnitImage).width(64).height(64);
+		rightContainerTable.add(rightUnitImage).width(icoSize).height(icoSize);
 		rightContainerTable.add(rightDamageLabel);
 		
 //		leftUnitImage = applyTexture("data/atacker_melee.png");
 //		Gdx.app.log("BVGE", "ActionAnimator:resize() "+leftUnitImage.getDrawable());
 //		((TextureRegionDrawable)leftUnitImage.getDrawable()).getRegion().setRegion(new Texture("data/atacker_melee.png"));
+		
+//		leftIcoLastPosX = leftAnimImage.getX();
+//		rightIcoLastPosX = rightAnimImage.getX();
+//		leftIcoLastPosY = leftAnimImage.getY();
+//		rightIcoLastPosY = rightAnimImage.getY();
 	}
 	
     public Image applyTexture(String path, boolean invertX){
@@ -131,7 +159,18 @@ public class ActionAnimator extends Table {
     	}
 	}
     
-    public void showAndStartAnim() {
+    public void showAndStartAnim(boolean isDoDamage, boolean isRightAtack, RvBPlayer notifyPlayer) {
+    	if (bPlayAnim)
+    	{
+    		return;
+    	}
+    	
+    	if (notifyPlayer != null)
+    	{
+    		notifyEndofAnim = true;
+    		notifyEndofAnimTo = notifyPlayer;
+    	}
+    	
     	setVisible(true);
 /*		this.addAction( Actions.sequence(Actions.fadeIn(0.5f), Actions.delay(1.0f), Actions.fadeOut(0.5f),
         	new Action() {
@@ -140,6 +179,9 @@ public class ActionAnimator extends Table {
         			return true;
         		}
         	}));*/
+    	bPlayAnim = true;
+    	bDoDamage = isDoDamage;
+    	bRightAtack = isRightAtack;
     	fadeIn(0.5f);
 	}
     
@@ -161,8 +203,27 @@ public class ActionAnimator extends Table {
 	        			return true;
 	        		}
 	        	}));
-		leftAnimImage.addAction(Actions.moveBy(32, 0, 0.5f));
-		rightAnimImage.addAction(Actions.moveBy(-32, 0, 0.5f));
+		leftAnimImage.addAction(Actions.moveBy(moveByValue, 0, 0.5f));
+		rightAnimImage.addAction(Actions.sequence(Actions.moveBy(-moveByValue, 0, 0.5f),
+	        new Action() {
+	    		public boolean act( float delta ) {
+	    			fadeInLabels(0.15f);
+	    			return true;
+	    		}
+    		}));
+	}
+    
+    private void fadeInLabels(float time) {
+		if (bDoDamage)
+		{
+			if (bRightAtack)
+			{
+				leftDamageLabel.addAction(Actions.fadeIn(time));
+			} else
+			{
+				rightDamageLabel.addAction(Actions.fadeIn(time));
+			}
+		}
 	}
     
     private void fadeOut(float time) {
@@ -170,8 +231,20 @@ public class ActionAnimator extends Table {
 	        	new Action() {
 	        		public boolean act( float delta ) {
 	        			setVisible(false);
-	        			leftAnimImage.addAction(Actions.moveBy(-32, 0, 0));
-	        			rightAnimImage.addAction(Actions.moveBy(32, 0, 0));
+	        			leftAnimImage.addAction(Actions.moveBy(-moveByValue, 0, 0));
+//	        			leftAnimImage.addAction(Actions.moveTo(leftIcoLastPosX, leftIcoLastPosY));
+	        			rightAnimImage.addAction(Actions.moveBy(moveByValue, 0, 0));
+//	        			rightAnimImage.addAction(Actions.moveTo(rightIcoLastPosX, rightIcoLastPosY));
+	        			leftDamageLabel.setColor(1, 0, 0, 0);
+	        			rightDamageLabel.setColor(1, 0, 0, 0);
+	        			bPlayAnim = false;
+	        			if (notifyEndofAnim)
+	        			{
+	        				if (notifyEndofAnimTo != null)
+	        				{
+	        					notifyEndofAnimTo.actionAnimEnded();
+	        				}
+	        			}
 	        			return true;
 	        		}
 	        	}));

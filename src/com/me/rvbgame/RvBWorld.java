@@ -1,5 +1,7 @@
 package com.me.rvbgame;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,22 +9,23 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.me.rvbgame.screens.BattleScreen;
-import com.me.rvbgame.screens.GameScreen;
 import com.me.rvbgame.screens.MainMenuScreen;
 import com.me.rvbgame.screens.WinScreen;
-
-import java.util.ArrayList;
 
 public class RvBWorld extends RvBBase {
 
 	private static boolean currentTurnRight = true;
 	private String bgPath = "data/abstract_v2.png";
-	static final Vector2 BG_IMAGE_SIZE = new Vector2(1024, 522);
+	static final Vector2 BG_IMAGE_SIZE = new Vector2(1024, 768);
 	
 	private Image bgImage;
 	private Texture bgTexture;
@@ -192,6 +195,8 @@ public class RvBWorld extends RvBBase {
         int randDamage = 0;
         int critDamage = 0;
         int rand = (int)(Math.random() * 100) ;
+        boolean bPlayedAnim = false;
+        RvBUnit firstVictim = null;
         if (rand <= unitRangedMass.getCriticalChance())
             critDamage += unitRangedMass.getpAttack()/2;
         if (attackRange == 5){
@@ -204,9 +209,19 @@ public class RvBWorld extends RvBBase {
                 else
                     randDamage = 0;
                 ordinaryDamage(unitRangedMass,tmpVictim,randDamage+critDamage);
+                if (tmpVictim != null && firstVictim == null)
+                {
+                	firstVictim = tmpVictim;
+                }
             }
             if (oppositePlayer.slot4 == null && oppositePlayer.slot5 == null)
+            {
                 ordinaryDamage(unitRangedMass, oppositePlayer.tower, randDamage + critDamage);
+                if (oppositePlayer.tower != null && firstVictim == null)
+                {
+                	firstVictim = oppositePlayer.tower;
+                }
+            }
             unitRangedMass.setEnergy(unitRangedMass.getEnergy()-randDamage);
         }
         else
@@ -220,6 +235,18 @@ public class RvBWorld extends RvBBase {
             ordinaryDamage(unitRangedMass,oppositePlayer.slot2,randDamage);
             ordinaryDamage(unitRangedMass,oppositePlayer.slot4,randDamage);
             ordinaryDamage(unitRangedMass, oppositePlayer.slot5, randDamage);
+            if (oppositePlayer.slot5 != null && firstVictim == null)
+            {
+            	firstVictim = oppositePlayer.slot5;
+            }
+            if (oppositePlayer.slot4 != null && firstVictim == null)
+            {
+            	firstVictim = oppositePlayer.slot4;
+            }
+            if (oppositePlayer.slot2 != null && firstVictim == null)
+            {
+            	firstVictim = oppositePlayer.slot2;
+            }
         }
         else
         if (attackRange == 1){
@@ -230,7 +257,16 @@ public class RvBWorld extends RvBBase {
             unitRangedMass.setEnergy(unitRangedMass.getEnergy() - randDamage);
             ordinaryDamage(unitRangedMass,oppositePlayer.slot4,0);
             ordinaryDamage(unitRangedMass,oppositePlayer.slot5,0);
+            if (oppositePlayer.slot5 != null && firstVictim == null)
+            {
+            	firstVictim = oppositePlayer.slot5;
+            }
+            if (oppositePlayer.slot4 != null && firstVictim == null)
+            {
+            	firstVictim = oppositePlayer.slot4;
+            }
         }
+        setupActionAnimation(unitRangedMass, firstVictim, randDamage, ActionType.ACTION_TYPE_ATTACK);
         return true;
     }
 	
@@ -427,7 +463,6 @@ public class RvBWorld extends RvBBase {
         actionPointsImage.setSize(48, 48);
         actionPointsImage.setColor(Color.DARK_GRAY);
 
-
         battleScreen.sceneLayerGUI.addActor(healthImage);
         battleScreen.sceneLayerGUI.addActor(energyImage);
         battleScreen.sceneLayerGUI.addActor(pAtackImage);
@@ -489,7 +524,7 @@ public class RvBWorld extends RvBBase {
 			actionAnimator.resize(width, height);
 		}
 		
-		TextureRegion region = new TextureRegion(bgTexture, 0, 0, 1024, 522);
+		TextureRegion region = new TextureRegion(bgTexture, 0, 0, 1024, 768);
 		
 		bgImage = new Image(region);
 		bgImage.setScaling(Scaling.stretch);
@@ -873,7 +908,7 @@ public class RvBWorld extends RvBBase {
     		}
     	}
 //    	actionAnimator.setVisible(true);
-    	actionAnimator.showAndStartAnim();
+    	actionAnimator.showAndStartAnim(damage > 0, currentTurnRight, getCurrentTurnPlayer());
 	}
     
     public void applyActionOnSelf(RvBUnit unit) {

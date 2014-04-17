@@ -130,7 +130,10 @@ public class RvBPlayer extends RvBBase{
     	} else
     	{
 //    		Gdx.app.log("BVGE", "beginTurn: ");
-    		slot01EmptyImage.setVisible(true);
+    		if (!isAI())
+    		{
+    			slot01EmptyImage.setVisible(true);
+    		}
     	}
     	if (slot2 != null)
     	{
@@ -142,7 +145,10 @@ public class RvBPlayer extends RvBBase{
             }
     	} else
     	{
-    		slot02EmptyImage.setVisible(true);
+    		if (!isAI())
+    		{
+    			slot02EmptyImage.setVisible(true);
+    		}
     	}
     	if (slot3 != null)
     	{
@@ -155,7 +161,10 @@ public class RvBPlayer extends RvBBase{
 
         } else
     	{
-    		slot03EmptyImage.setVisible(true);
+        	if (!isAI())
+    		{
+        		slot03EmptyImage.setVisible(true);
+    		}
     	}
     	if (slot4 != null)
     	{
@@ -168,7 +177,10 @@ public class RvBPlayer extends RvBBase{
 
         } else
     	{
-    		slot04EmptyImage.setVisible(true);
+        	if (!isAI())
+    		{
+        		slot04EmptyImage.setVisible(true);
+    		}
     	}
     	if (slot5 != null)
     	{
@@ -181,7 +193,10 @@ public class RvBPlayer extends RvBBase{
 
         } else
     	{
-    		slot05EmptyImage.setVisible(true);
+        	if (!isAI())
+    		{
+        		slot05EmptyImage.setVisible(true);
+    		}
     	}
         if(isAI())
             this.makeMove();
@@ -370,6 +385,8 @@ public class RvBPlayer extends RvBBase{
         	units.add(new UnitRangedMass(battleScreen, this, "data/json_files/ranged_mass.json"));
         	units.add(new UnitRanged(battleScreen, this, "data/json_files/ranged.json"));
         	units.add(new UnitMelee(battleScreen, this, "data/json_files/melee.json"));
+        	units.add(new UnitDefender(battleScreen, this, "data/json_files/defender.json"));
+        	units.add(new UnitSpecialStan(battleScreen, this, "data/json_files/special_stan.json"));
         } else
         {
 //        	Gdx.app.log("BVGE", "RvBPlayer: selectedUnitsList"+battleScreen.world.selectedUnitsList);
@@ -425,237 +442,240 @@ public class RvBPlayer extends RvBBase{
 			slot5.resize(width, height);
 		}
 		
-		inventoryWindow = new Window("Inventory", battleScreen.getSkin());
-		inventoryWindow.setVisible(false);
-		inventoryWindow.setMovable(false);
-		inventoryWindow.setSize(width, height * 0.6f);
-		inventoryWindow.setPosition(0, height * 0.5f - inventoryWindow.getHeight() * 0.5f);
-		
-		inventoryCloseButton = new TextButton("Close", battleScreen.getSkin());
-		inventoryCloseButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	inventoryVisible(false);
-            };
-        });
-		
-		inventoryItemsTable = new Table(battleScreen.getSkin());
-		
-		inventoryItemsScrollPane = new ScrollPane(inventoryItemsTable, battleScreen.getSkin());
-		inventoryItemsScrollPane.setScrollingDisabled(false, true);
-		inventoryItemsScrollPane.setFadeScrollBars(true);
-		
-		inventoryWindow.add(inventoryItemsScrollPane);
-		inventoryWindow.row();
-		inventoryWindow.add(inventoryCloseButton);
-		
-		battleScreen.sceneLayerMenu.addActor(inventoryWindow);
-		
-		TextureRegion region = new TextureRegion(emptySlotTex, 0, 0, 64, 64);
-		
-		float deltaWidthCoef = (battleScreen.screenResW / RvBWorld.WORLD_NATIVE_RES.x);
-		float deltaHeightCoef = (battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y);
-		float deltaAvaSizeW = 48 * deltaHeightCoef;
-		
-		//slot 1
-		slot01EmptyImage = new Image(region);
-		slot01EmptyImage.setScaling(Scaling.stretch);
-		slot01EmptyImage.setAlign((Align.bottom | Align.left));
-		slot01EmptyImage.setSize(48, 48);
-		slot01EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
-		slot01EmptyImage.setVisible(false);
-		
-		slot01EmptyImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
-            	{
-            		if (bWaitForSlot)
-            		{
-            			if (waitForSlotUnit != null && slot1 == null)
-            			{
-            				slot1 = waitForSlotUnit;
-            				slot1.show();
-            				slot1.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
-            				slot01EmptyImage.setVisible(false);
-            				units.remove(waitForSlotUnit);
-            				inventoryUpdated();
-            				clearWaitingUnit();
-            			}
-            		}
-            	}
-            };
-        });
-		
-		if (this == battleScreen.world.playerRight)
+		if (!isAI())
 		{
-//			slot01EmptyImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (slot01EmptyImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (slot01EmptyImage.getHeight() * 0.5f));
-			slot01EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT01.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT01.y * deltaHeightCoef);
-		} else
-		{
-//			slot01EmptyImage.setPosition(RvBWorld.LEFT_UNIT_SLOT01.x - (slot01EmptyImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT01.y - (slot01EmptyImage.getHeight() * 0.5f));
-			slot01EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT01.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT01.y * deltaHeightCoef);
+			inventoryWindow = new Window("Inventory", battleScreen.getSkin());
+			inventoryWindow.setVisible(false);
+			inventoryWindow.setMovable(false);
+			inventoryWindow.setSize(width, height * 0.6f);
+			inventoryWindow.setPosition(0, height * 0.5f - inventoryWindow.getHeight() * 0.5f);
+			
+			inventoryCloseButton = new TextButton("Close", battleScreen.getSkin());
+			inventoryCloseButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	inventoryVisible(false);
+	            };
+	        });
+			
+			inventoryItemsTable = new Table(battleScreen.getSkin());
+			
+			inventoryItemsScrollPane = new ScrollPane(inventoryItemsTable, battleScreen.getSkin());
+			inventoryItemsScrollPane.setScrollingDisabled(false, true);
+			inventoryItemsScrollPane.setFadeScrollBars(true);
+			
+			inventoryWindow.add(inventoryItemsScrollPane);
+			inventoryWindow.row();
+			inventoryWindow.add(inventoryCloseButton);
+			
+			battleScreen.sceneLayerMenu.addActor(inventoryWindow);
+			
+			TextureRegion region = new TextureRegion(emptySlotTex, 0, 0, 64, 64);
+			
+			float deltaWidthCoef = (battleScreen.screenResW / RvBWorld.WORLD_NATIVE_RES.x);
+			float deltaHeightCoef = (battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y);
+			float deltaAvaSizeW = 48 * deltaHeightCoef;
+			
+			//slot 1
+			slot01EmptyImage = new Image(region);
+			slot01EmptyImage.setScaling(Scaling.stretch);
+			slot01EmptyImage.setAlign((Align.bottom | Align.left));
+			slot01EmptyImage.setSize(48, 48);
+			slot01EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
+			slot01EmptyImage.setVisible(false);
+			
+			slot01EmptyImage.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	{
+	            		if (bWaitForSlot)
+	            		{
+	            			if (waitForSlotUnit != null && slot1 == null)
+	            			{
+	            				slot1 = waitForSlotUnit;
+	            				slot1.show();
+	            				slot1.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
+	            				slot01EmptyImage.setVisible(false);
+	            				units.remove(waitForSlotUnit);
+	            				inventoryUpdated();
+	            				clearWaitingUnit();
+	            			}
+	            		}
+	            	}
+	            };
+	        });
+			
+			if (this == battleScreen.world.playerRight)
+			{
+	//			slot01EmptyImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (slot01EmptyImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (slot01EmptyImage.getHeight() * 0.5f));
+				slot01EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT01.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT01.y * deltaHeightCoef);
+			} else
+			{
+	//			slot01EmptyImage.setPosition(RvBWorld.LEFT_UNIT_SLOT01.x - (slot01EmptyImage.getWidth() * 0.5f), RvBWorld.LEFT_UNIT_SLOT01.y - (slot01EmptyImage.getHeight() * 0.5f));
+				slot01EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT01.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT01.y * deltaHeightCoef);
+			}
+			
+			battleScreen.sceneLayerUnits.addActor(slot01EmptyImage);
+			
+			//slot 2
+			slot02EmptyImage = new Image(region);
+			slot02EmptyImage.setScaling(Scaling.stretch);
+			slot02EmptyImage.setAlign((Align.bottom | Align.left));
+			slot02EmptyImage.setSize(48, 48);
+			slot02EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
+			slot02EmptyImage.setVisible(false);
+			
+			slot02EmptyImage.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	{
+	            		if (bWaitForSlot)
+	            		{
+	            			if (waitForSlotUnit != null && slot2 == null)
+	            			{
+	            				slot2 = waitForSlotUnit;
+	            				slot2.show();
+	            				slot2.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
+	            				slot02EmptyImage.setVisible(false);
+	            				units.remove(waitForSlotUnit);
+	            				inventoryUpdated();
+	            				clearWaitingUnit();
+	            			}
+	            		}
+	            	}
+	            };
+	        });
+			
+			if (this == battleScreen.world.playerRight)
+			{
+				slot02EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT02.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT02.y * deltaHeightCoef);
+			} else
+			{
+				slot02EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT02.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT02.y * deltaHeightCoef);
+			}
+			battleScreen.sceneLayerUnits.addActor(slot02EmptyImage);
+			
+			//slot 3
+			slot03EmptyImage = new Image(region);
+			slot03EmptyImage.setScaling(Scaling.stretch);
+			slot03EmptyImage.setAlign((Align.bottom | Align.left));
+			slot03EmptyImage.setSize(48, 48);
+			slot03EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
+			slot03EmptyImage.setVisible(false);
+			
+			slot03EmptyImage.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	{
+	            		if (bWaitForSlot)
+	            		{
+	            			if (waitForSlotUnit != null && slot3 == null)
+	            			{
+	            				slot3 = waitForSlotUnit;
+	            				slot3.show();
+	            				slot3.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
+	            				slot03EmptyImage.setVisible(false);
+	            				units.remove(waitForSlotUnit);
+	            				inventoryUpdated();
+	            				clearWaitingUnit();
+	            			}
+	            		}
+	            	}
+	            };
+	        });
+			
+			if (this == battleScreen.world.playerRight)
+			{
+				slot03EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT03.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT03.y * deltaHeightCoef);
+			} else
+			{
+				slot03EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT03.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT03.y * deltaHeightCoef);
+			}
+			battleScreen.sceneLayerUnits.addActor(slot03EmptyImage);
+		
+			//slot 4
+			slot04EmptyImage = new Image(region);
+			slot04EmptyImage.setScaling(Scaling.stretch);
+			slot04EmptyImage.setAlign((Align.bottom | Align.left));
+			slot04EmptyImage.setSize(48, 48);
+			slot04EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
+			slot04EmptyImage.setVisible(false);
+			
+			slot04EmptyImage.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	{
+	            		if (bWaitForSlot)
+	            		{
+	            			if (waitForSlotUnit != null && slot4 == null)
+	            			{
+	            				slot4 = waitForSlotUnit;
+	            				slot4.show();
+	            				slot4.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
+	            				slot04EmptyImage.setVisible(false);
+	            				units.remove(waitForSlotUnit);
+	            				inventoryUpdated();
+	            				clearWaitingUnit();
+	            			}
+	            		}
+	            	}
+	            };
+	        });
+			
+			if (this == battleScreen.world.playerRight)
+			{
+				slot04EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT04.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT04.y * deltaHeightCoef);
+			} else
+			{
+				slot04EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT04.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT04.y * deltaHeightCoef);
+			}
+			battleScreen.sceneLayerUnits.addActor(slot04EmptyImage);
+			
+			//slot 5
+			slot05EmptyImage = new Image(region);
+			slot05EmptyImage.setScaling(Scaling.stretch);
+			slot05EmptyImage.setAlign((Align.bottom | Align.left));
+			slot05EmptyImage.setSize(48, 48);
+			slot05EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
+			slot05EmptyImage.setVisible(false);
+			
+			slot05EmptyImage.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	{
+	            		if (bWaitForSlot)
+	            		{
+	            			if (waitForSlotUnit != null && slot5 == null)
+	            			{
+	            				slot5 = waitForSlotUnit;
+	            				slot5.show();
+	            				slot5.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
+	            				slot05EmptyImage.setVisible(false);
+	            				units.remove(waitForSlotUnit);
+	            				inventoryUpdated();
+	            				clearWaitingUnit();
+	            			}
+	            		}
+	            	}
+	            };
+	        });
+			
+			if (this == battleScreen.world.playerRight)
+			{
+				slot05EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT05.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT05.y * deltaHeightCoef);
+			} else
+			{
+				slot05EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT05.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT05.y * deltaHeightCoef);
+			}
+			battleScreen.sceneLayerUnits.addActor(slot05EmptyImage);
+			
+			inventoryUpdated();
 		}
-		
-		battleScreen.sceneLayerUnits.addActor(slot01EmptyImage);
-		
-		//slot 2
-		slot02EmptyImage = new Image(region);
-		slot02EmptyImage.setScaling(Scaling.stretch);
-		slot02EmptyImage.setAlign((Align.bottom | Align.left));
-		slot02EmptyImage.setSize(48, 48);
-		slot02EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
-		slot02EmptyImage.setVisible(false);
-		
-		slot02EmptyImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
-            	{
-            		if (bWaitForSlot)
-            		{
-            			if (waitForSlotUnit != null && slot2 == null)
-            			{
-            				slot2 = waitForSlotUnit;
-            				slot2.show();
-            				slot2.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
-            				slot02EmptyImage.setVisible(false);
-            				units.remove(waitForSlotUnit);
-            				inventoryUpdated();
-            				clearWaitingUnit();
-            			}
-            		}
-            	}
-            };
-        });
-		
-		if (this == battleScreen.world.playerRight)
-		{
-			slot02EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT02.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT02.y * deltaHeightCoef);
-		} else
-		{
-			slot02EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT02.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT02.y * deltaHeightCoef);
-		}
-		battleScreen.sceneLayerUnits.addActor(slot02EmptyImage);
-		
-		//slot 3
-		slot03EmptyImage = new Image(region);
-		slot03EmptyImage.setScaling(Scaling.stretch);
-		slot03EmptyImage.setAlign((Align.bottom | Align.left));
-		slot03EmptyImage.setSize(48, 48);
-		slot03EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
-		slot03EmptyImage.setVisible(false);
-		
-		slot03EmptyImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
-            	{
-            		if (bWaitForSlot)
-            		{
-            			if (waitForSlotUnit != null && slot3 == null)
-            			{
-            				slot3 = waitForSlotUnit;
-            				slot3.show();
-            				slot3.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
-            				slot03EmptyImage.setVisible(false);
-            				units.remove(waitForSlotUnit);
-            				inventoryUpdated();
-            				clearWaitingUnit();
-            			}
-            		}
-            	}
-            };
-        });
-		
-		if (this == battleScreen.world.playerRight)
-		{
-			slot03EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT03.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT03.y * deltaHeightCoef);
-		} else
-		{
-			slot03EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT03.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT03.y * deltaHeightCoef);
-		}
-		battleScreen.sceneLayerUnits.addActor(slot03EmptyImage);
-	
-		//slot 4
-		slot04EmptyImage = new Image(region);
-		slot04EmptyImage.setScaling(Scaling.stretch);
-		slot04EmptyImage.setAlign((Align.bottom | Align.left));
-		slot04EmptyImage.setSize(48, 48);
-		slot04EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
-		slot04EmptyImage.setVisible(false);
-		
-		slot04EmptyImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
-            	{
-            		if (bWaitForSlot)
-            		{
-            			if (waitForSlotUnit != null && slot4 == null)
-            			{
-            				slot4 = waitForSlotUnit;
-            				slot4.show();
-            				slot4.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
-            				slot04EmptyImage.setVisible(false);
-            				units.remove(waitForSlotUnit);
-            				inventoryUpdated();
-            				clearWaitingUnit();
-            			}
-            		}
-            	}
-            };
-        });
-		
-		if (this == battleScreen.world.playerRight)
-		{
-			slot04EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT04.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT04.y * deltaHeightCoef);
-		} else
-		{
-			slot04EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT04.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT04.y * deltaHeightCoef);
-		}
-		battleScreen.sceneLayerUnits.addActor(slot04EmptyImage);
-		
-		//slot 5
-		slot05EmptyImage = new Image(region);
-		slot05EmptyImage.setScaling(Scaling.stretch);
-		slot05EmptyImage.setAlign((Align.bottom | Align.left));
-		slot05EmptyImage.setSize(48, 48);
-		slot05EmptyImage.setColor(StatsHelper.COLOR_EMPTY_UNIT_SLOT);
-		slot05EmptyImage.setVisible(false);
-		
-		slot05EmptyImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
-            	{
-            		if (bWaitForSlot)
-            		{
-            			if (waitForSlotUnit != null && slot5 == null)
-            			{
-            				slot5 = waitForSlotUnit;
-            				slot5.show();
-            				slot5.resize((int)battleScreen.screenResW, (int)battleScreen.screenResH);
-            				slot05EmptyImage.setVisible(false);
-            				units.remove(waitForSlotUnit);
-            				inventoryUpdated();
-            				clearWaitingUnit();
-            			}
-            		}
-            	}
-            };
-        });
-		
-		if (this == battleScreen.world.playerRight)
-		{
-			slot05EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT05.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT05.y * deltaHeightCoef);
-		} else
-		{
-			slot05EmptyImage.setPosition((RvBWorld.LEFT_UNIT_SLOT05.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.LEFT_UNIT_SLOT05.y * deltaHeightCoef);
-		}
-		battleScreen.sceneLayerUnits.addActor(slot05EmptyImage);
-		
-		inventoryUpdated();
 	}
 	
 	@Override
@@ -723,6 +743,10 @@ public class RvBPlayer extends RvBBase{
 	}
 	
 	private void inventoryUpdated() {
+		if (isAI())
+		{
+			return;
+		}
 		if (inventoryItemsTable != null)
 		{
 			inventoryItemsTable.clear();
@@ -849,14 +873,17 @@ public class RvBPlayer extends RvBBase{
     	
     	private Image placeUnitImage;
     	
+    	static final int STATS_ICON_NATIVE_SIZE = 24;
+    	static final int PLACE_ICON_NATIVE_SIZE = 32;
+    	
     	InventoryItem(){
     		super();
     	}
 
     	void init(float width, float height)
     	{
-    		float statsIcoSize = 24;
-    		float placeIcoSize = 32;
+    		float statsIcoSize = STATS_ICON_NATIVE_SIZE * (battleScreen.screenResH / battleScreen.world.WORLD_NATIVE_RES.y);
+    		float placeIcoSize = PLACE_ICON_NATIVE_SIZE * (battleScreen.screenResH / battleScreen.world.WORLD_NATIVE_RES.y);
     		
     		setWidth(width);
     		setHeight(height);
@@ -1259,5 +1286,9 @@ public class RvBPlayer extends RvBBase{
 			break;
 		}
 		return null;
+	}
+    
+    public void actionAnimEnded() {
+		
 	}
 }
