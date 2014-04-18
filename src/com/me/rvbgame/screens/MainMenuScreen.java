@@ -37,7 +37,8 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
     public void resize(int width, int height )
     {
         super.resize( width, height );
-
+        StatsHelper.width = width;
+        StatsHelper.height = height;
         float currX, currY;
 
         Table table = new Table( getSkin() );

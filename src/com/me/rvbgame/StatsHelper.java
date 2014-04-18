@@ -1,6 +1,7 @@
 package com.me.rvbgame;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 
 public class StatsHelper {
 
@@ -13,6 +14,9 @@ public class StatsHelper {
     public static final float SPACING = 120.0f;
     public static final int HEAL_COST = 50;
     public static final int HEAL_POINTS = 30;
+    public static int width;
+    public static int height;
+    public static Vector2 size = new Vector2(0,0);
 
     public static String whatUnit(UnitType unitType) {
         switch (unitType) {
