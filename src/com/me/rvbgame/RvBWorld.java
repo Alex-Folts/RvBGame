@@ -551,11 +551,11 @@ public class RvBWorld extends RvBBase {
 		buttonsTable.row();
 		
 //      nextTurnButton
-        float currX = width-50;
-        float currY = 5;
-        float bWidth = 50;
-        float bHeight = 50;
-        nextTurnButton.setBounds(currX, currY, bWidth, bHeight);
+//        float currX = width-50;
+//        float currY = 5;
+//        float bWidth = 50;
+//        float bHeight = 50;
+//        nextTurnButton.setBounds(currX, currY, bWidth, bHeight);
         nextTurnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -570,9 +570,9 @@ public class RvBWorld extends RvBBase {
 
             ;
         });
-        battleScreen.sceneLayerGUI.addActor(nextTurnButton);
+//        battleScreen.sceneLayerGUI.addActor(nextTurnButton);
 
-        pauseButton.setBounds(currX-bWidth-5,currY,bWidth,bHeight);
+//        pauseButton.setBounds(currX-bWidth-5,currY,bWidth,bHeight);
         pauseButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -582,9 +582,11 @@ public class RvBWorld extends RvBBase {
                 revealPauseWindow();
             }
         });
-        battleScreen.sceneLayerGUI.addActor(pauseButton);
+//        battleScreen.sceneLayerGUI.addActor(pauseButton);
 
 //        buttonsTable.add(nextTurnButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
+        buttonsTable.add(pauseButton).width(50 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(50 * (battleScreen.screenResW / WORLD_NATIVE_RES.x));
+        buttonsTable.add(nextTurnButton).width(50 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(50 * (battleScreen.screenResW / WORLD_NATIVE_RES.x));
         
         actionPointsLeftLabel.setBounds(35, height-60, 30, 30);
         actionPointsLeftLabel.setAlignment(Align.center);
