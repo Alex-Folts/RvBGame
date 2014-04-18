@@ -4,13 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
 import com.me.rvbgame.RvbGdxGame;
 import com.me.rvbgame.StatsHelper;
 
@@ -21,11 +27,14 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
     private Texture texture;
     private Sprite sprite;
     private RvbGdxGame mGame;
+    
+    private String bgPath = "data/the_city_v7.png";
+    static final Vector2 BG_IMAGE_SIZE = new Vector2(1024, 694);
+    private Texture bgTexture;
+    private Image bgImage;
 
     @Override
-    public void resize(
-            int width,
-            int height )
+    public void resize(int width, int height )
     {
         super.resize( width, height );
 
@@ -40,7 +49,7 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
 
         String full = "w ";
         currX = (width - StatsHelper.BUTTON_WIDTH) / 2;
-        currY = height - StatsHelper.BUTTON_HEIGHT ;
+        currY = (height * 0.85f) - StatsHelper.BUTTON_HEIGHT ;
 //label "welcome"
         Label welcomeLabel = new Label( "Hi!", getSkin() );
         welcomeLabel.setBounds(currX, currY, StatsHelper.BUTTON_WIDTH, StatsHelper.BUTTON_HEIGHT / 2);
@@ -76,8 +85,24 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
         full += "xl ";
         full += String.valueOf(currX);
 
+        
+        TextureRegion region = new TextureRegion(bgTexture, 0, 0, 1024, 694);
+		bgImage = new Image(region);
+		bgImage.setScaling(Scaling.stretch);
+		bgImage.setAlign((Align.bottom | Align.left));
+//		bgImage.setSize(height * (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y), height);
+		bgImage.setSize(width, width * (BG_IMAGE_SIZE.y / BG_IMAGE_SIZE.x));
+//        bgImage.setSize(width, height);
+//		bgImage.setPosition((width * 0.5f) - (bgImage.getWidth() * 0.5f), 0);
+		bgImage.setPosition(0, (height * 0.5f) - (bgImage.getHeight() * 0.5f));
+//        bgImage.setPosition(0, 0);
+//		bgImage.setColor(0.75f, 0.75f, 0.75f, 1);
+//		bgImage.setSize(width, (float)width / (BG_IMAGE_SIZE.x / BG_IMAGE_SIZE.y));
+        
+        
         welcomeLabel.setText(full);
         Gdx.input.setInputProcessor(stage);
+        stage.addActor( bgImage );
         stage.addActor( welcomeLabel );
         stage.addActor( startGameButton );
         stage.addActor( exitGameButton );
@@ -85,6 +110,21 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
 
     }
 
+    @Override
+    public void show() {
+    	super.show();
+    	
+        bgTexture = new Texture(Gdx.files.internal(bgPath));
+		bgTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    }
+    
+    @Override
+    public void dispose() {
+    	super.dispose();
+    	
+    	bgTexture.dispose();
+    }
+    
     public MainMenuScreen(RvbGdxGame game) {
         super(game);
         mGame = game;

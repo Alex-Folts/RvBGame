@@ -343,7 +343,10 @@ public class RvBAIPlayer extends RvBPlayer {
 		}
 		if (!wasAction)
 		{
-			attackQueryList.remove(0);
+			if (attackQueryList.size() > 0)
+			{
+				attackQueryList.remove(0);
+			}
 			checkAction();
 		}
 	}
