@@ -282,9 +282,6 @@ public abstract class RvBUnit extends RvBBase {
 		avaImage.addListener( new ClickListener() {             
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.log("BVGE", "clicked:"+this);
-                Gdx.app.log("BVGE", "line:"+line);
-                Gdx.app.log("BVGE", "lines ahead:"+player.numOfLinesInFront(RvBUnit.this));
 				//show radial menu
                 if (RvBWorld.getCurrentTurnPlayer() == player)
 				{
@@ -313,8 +310,6 @@ public abstract class RvBUnit extends RvBBase {
                     if (!RvBUnit.this.bFreeze && RvBUnit.this.bCanOperate){
 //                        RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this,RvBUnit.this.getAttackRange());
                         player.setActingUnit(RvBUnit.this);
-                        Gdx.app.log("PLA","RvBUnit.this.getAttackRange() "+RvBUnit.this.getAttackRange());
-                        Gdx.app.log("PLA","RvBWorld.getCurrentTurnPlayer().numOfLinesInFront(RvBUnit.this) "+RvBWorld.getCurrentTurnPlayer().numOfLinesInFront(RvBUnit.this));
                         RvBWorld.getOppositePlayer().fillAvailableVictims( RvBUnit.this.getAttackRange() - RvBWorld.getCurrentTurnPlayer().numOfLinesInFront(RvBUnit.this));
                     }
 				}
@@ -340,36 +335,22 @@ public abstract class RvBUnit extends RvBBase {
 				}
 			};
 		});	
-/*		
-		if (bCanOperate)
-		{
-			settowerColor(new Color(0, 1, 0, 1));
-		} else
-		{
-			settowerColor(new Color(1, 1, 1, 1));
-		}
-*/
+
 		switch (unitType)
 		{
 			case UNIT_TYPE_TOWER:
 				battleScreen.sceneLayerTowers.addActor(avaImage);
                 battleScreen.sceneLayerTowers.addActor(healthLeftLabel);
-//                battleScreen.sceneLayerTowers.addActor(healthMaxLabel);
 				break;
 	
 			default:
 				battleScreen.sceneLayerUnits.addActor(avaImage);
-//				battleScreen.sceneLayerUnits.addActor(healthMaxLabel);
                 battleScreen.sceneLayerUnits.addActor(healthLeftLabel);
                 break;
 		}
 		
 		if (unitType != UnitType.UNIT_TYPE_TOWER)
 		{
-/*			Gdx.app.log("RvB", "addToDraw player = "+player);
-			Gdx.app.log("RvB", "addToDraw battleScreen = "+battleScreen);
-			Gdx.app.log("RvB", "addToDraw world = "+battleScreen.world);
-			Gdx.app.log("RvB", "addToDraw playerRight = "+battleScreen.world.playerRight);*/
 	    	if (player == battleScreen.world.playerRight)
 	    	{
 	    		if (player.slot1 == this)
@@ -428,14 +409,12 @@ public abstract class RvBUnit extends RvBBase {
 		{
 			case UNIT_TYPE_TOWER:
 				battleScreen.sceneLayerTowers.removeActor(avaImage);
-//                battleScreen.sceneLayerTowers.removeActor(healthMaxLabel);
                 battleScreen.sceneLayerTowers.removeActor(healthLeftLabel);
 				break;
 	
 			default:
 				battleScreen.sceneLayerUnits.removeActor(avaImage);
                 battleScreen.sceneLayerUnits.removeActor(healthLeftLabel);
-//                battleScreen.sceneLayerUnits.removeActor(healthMaxLabel);
 				break;
 		}
 	}
@@ -545,9 +524,7 @@ public abstract class RvBUnit extends RvBBase {
     }
 
     public void setbReachable(boolean bReachable) {
-        if (bReachable)
-            this.settowerColor(StatsHelper.COLOR_DARK_GREEN);
-        else
+        if (!bReachable)
             this.settowerColor(Color.DARK_GRAY);
         this.bReachable = bReachable;
     }

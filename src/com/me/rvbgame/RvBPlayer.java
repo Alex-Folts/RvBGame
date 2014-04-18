@@ -263,6 +263,8 @@ public class RvBPlayer extends RvBBase{
 
         if (this.battleScreen.sceneLayerRadialMenu!=null)
             this.battleScreen.sceneLayerRadialMenu.setDefaultColors();
+        if (this.battleScreen.sceneLayerFX!=null)
+            this.battleScreen.sceneLayerFX.allInvisiblie();
     }
 
 
@@ -277,18 +279,38 @@ public class RvBPlayer extends RvBBase{
 
 	public void setActingUnit(RvBUnit actingUnit) {
 		this.actingUnit = actingUnit;
-		
-		clearSelection();
-
+        if (actingUnit!=null){
+		    clearSelection();
+        }
 		if (this.actingUnit != null && !isAI())
 		{
-			this.actingUnit.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+
+//			this.actingUnit.settowerColor(StatsHelper.COLOR_DARK_GREEN);
+            this.actingUnit.settowerColor(Color.WHITE);
             battleScreen.world.updateStatLabels(this.actingUnit);
             battleScreen.world.revealRadialMenu(this.actingUnit);
+            if (actingUnit.unitType == UnitType.UNIT_TYPE_TOWER)
+                battleScreen.sceneLayerFX.shineUnit(6);
+            else
+                battleScreen.sceneLayerFX.shineUnit(findSlotNumForUnit(this.actingUnit));
 		}
 	}
-	
-	public void clearSelection(){
+
+    private int findSlotNumForUnit(RvBUnit actingUnit) {
+        if (this.slot1 == actingUnit)
+            return 1;
+        if (this.slot2 == actingUnit)
+            return 2;
+        if (this.slot3 == actingUnit)
+            return 3;
+        if (this.slot4 == actingUnit)
+            return 4;
+        if (this.slot5 == actingUnit)
+            return 5;
+        return 0;
+    }
+
+    public void clearSelection(){
 		if (tower != null)
 		{
 			tower.settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
@@ -314,6 +336,8 @@ public class RvBPlayer extends RvBBase{
 		{
 			slot5.setbReachable(false);//settowerColor(Color.DARK_GRAY);//(new Color(1, 1, 1, 1));
 		}
+
+        battleScreen.sceneLayerFX.halfInvisiblie(true);
 	}
 	
 	private void ClearCorpses() {
@@ -714,21 +738,141 @@ public class RvBPlayer extends RvBBase{
         Gdx.app.log("PLA","range " + range);
         switch (range){
             case 1:
-                if (slot4!=null) slot4.setbReachable(true);//slot4.settowerColor(StatsHelper.COLOR_DARK_GREEN);
-                if (slot5!=null) slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot4!=null){
+                    slot4.setbReachable(true);
+                    slot4.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot4.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot4.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot4.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot4.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+                if (slot5!=null){
+                    slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    slot5.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot5.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot5.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot5.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot5.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
                 break;
             case 2:
-                if (slot2!=null) slot2.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
-                if (slot4!=null) slot4.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
-                if (slot5!=null) slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot2!=null){
+                    slot2.setbReachable(true);
+                    slot2.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot2.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot2.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot2.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot2.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+                if (slot4!=null){
+                    slot4.setbReachable(true);
+                    slot4.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot4.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot4.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot4.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot4.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+                if (slot5!=null){
+                    slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    slot5.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot5.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot5.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot5.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot5.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
                 break;
             default:
-                if (slot1!=null) slot1.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
-                if (slot2!=null) slot2.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
-                if (slot3!=null) slot3.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
-                if (slot4!=null) slot4.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
-                if (slot5!=null) slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                if (slot1!=null){
+                    slot1.setbReachable(true);
+                    slot1.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot1.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot1.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot1.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot1.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+
+                if (slot3!=null){
+                    slot3.setbReachable(true);
+                    slot3.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot3.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot3.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot3.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot3.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+                if (slot2!=null){
+                    slot2.setbReachable(true);
+                    slot2.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot2.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot2.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot2.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot2.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+                if (slot4!=null){
+                    slot4.setbReachable(true);
+                    slot4.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot4.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot4.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot4.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot4.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+                if (slot5!=null){
+                    slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
+                    slot5.settowerColor(Color.WHITE);
+                    if (this == battleScreen.world.playerRight){
+                        battleScreen.sceneLayerFX.shineRightSlot5.setVisible(true);
+                        battleScreen.sceneLayerFX.shineRightSlot5.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                    else{
+                        battleScreen.sceneLayerFX.shineLeftSlot5.setVisible(true);
+                        battleScreen.sceneLayerFX.shineLeftSlot5.setColor(StatsHelper.COLOR_DARK_RED);
+                    }
+                }
+
                 tower.setbReachable(true);
+                tower.settowerColor(Color.WHITE);
+                if (this == battleScreen.world.playerRight) {
+                    battleScreen.sceneLayerFX.shineRightTower.setVisible(true);
+                    battleScreen.sceneLayerFX.shineRightTower.setColor(StatsHelper.COLOR_DARK_RED);
+                }else{
+                    battleScreen.sceneLayerFX.shineLeftTower.setVisible(true);
+                    battleScreen.sceneLayerFX.shineLeftTower.setColor(StatsHelper.COLOR_DARK_RED);
+                }
                 break;
         }
     }
