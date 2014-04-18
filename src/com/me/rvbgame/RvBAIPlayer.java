@@ -7,7 +7,9 @@ public class RvBAIPlayer extends RvBPlayer {
 
 	public RvBAIPlayer(BattleScreen parentScreen) {
 		super(parentScreen);
-	}
+        this.tower = new RvBTower(battleScreen, this, "data/json_files/tower_ai.json");
+        this.tower.line = 3;
+    }
 
 	@Override
 	protected void makeMove() {

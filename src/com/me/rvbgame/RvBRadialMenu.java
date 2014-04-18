@@ -285,8 +285,8 @@ public class RvBRadialMenu extends Group{
         }
         if (bottomChoiceImage != null){
             bottomChoiceImage.setPosition(
-                    unit.avaImage.getX() + itemSize.y/2,
-                    unit.avaImage.getY()
+                    0,
+                    unit.avaImage.getY()+itemSize.y
             );
 
         }

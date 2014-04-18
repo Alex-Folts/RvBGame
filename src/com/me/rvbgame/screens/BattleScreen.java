@@ -2,6 +2,7 @@ package com.me.rvbgame.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.me.rvbgame.RvBRadialMenu;
+import com.me.rvbgame.RvBSceneLayerFX;
 import com.me.rvbgame.RvBWorld;
 import com.me.rvbgame.RvbGdxGame;
 
@@ -12,7 +13,7 @@ public class BattleScreen extends GameScreen {
 	public Group sceneLayerBG = new Group();
 	public Group sceneLayerTowers = new Group();
 	public Group sceneLayerUnits = new Group();
-    public Group sceneLayerFX = new Group();
+    public RvBSceneLayerFX sceneLayerFX = new RvBSceneLayerFX();
     public RvBRadialMenu sceneLayerRadialMenu = null;
     public Group sceneLayerActionAnimation = new Group();
 	public Group sceneLayerGUI = new Group();
@@ -29,9 +30,9 @@ public class BattleScreen extends GameScreen {
 		
 		stage.addActor(sceneLayerZero);
 		stage.addActor(sceneLayerBG);
+        stage.addActor(sceneLayerFX);       //for shining
 		stage.addActor(sceneLayerTowers);
 		stage.addActor(sceneLayerUnits);
-		stage.addActor(sceneLayerFX);
 //		stage.addActor(sceneLayerRadialMenu);
 		stage.addActor(sceneLayerActionAnimation);
 		stage.addActor(sceneLayerGUI);

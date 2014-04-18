@@ -83,7 +83,8 @@ public class RvBWorld extends RvBBase {
     private int resizeHeight;
 
     static ActionAnimator actionAnimator;
-    
+    private RvBSceneLayerFX layerFX = null;
+
 //    private int actionPointsLeft = 10;
 
     public RvBWorld(BattleScreen parentScreen) {
@@ -92,7 +93,6 @@ public class RvBWorld extends RvBBase {
 		playerLeft = new RvBPlayer(battleScreen);
 //		playerRight = new RvBPlayer(battleScreen);
 		playerRight = new RvBAIPlayer(battleScreen);
-		
 //		calcTurn();
 		
 		actionAnimator = new ActionAnimator(battleScreen.getSkin());
@@ -315,8 +315,7 @@ public class RvBWorld extends RvBBase {
 		{
 			actionAnimator.show();
 		}
-		
-		bgTexture = new Texture(Gdx.files.internal(bgPath));
+        bgTexture = new Texture(Gdx.files.internal(bgPath));
 		bgTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		initWorld();
@@ -488,8 +487,13 @@ public class RvBWorld extends RvBBase {
 		{
 			actionAnimator.resize(width, height);
 		}
-		
-		TextureRegion region = new TextureRegion(bgTexture, 0, 0, 1024, 522);
+        if ( layerFX == null )
+        {
+            layerFX = new RvBSceneLayerFX();
+            battleScreen.sceneLayerFX.applyShine(playerLeft,playerRight);
+            battleScreen.sceneLayerFX.setVisible(true);
+        }
+        TextureRegion region = new TextureRegion(bgTexture, 0, 0, 1024, 522);
 		
 		bgImage = new Image(region);
 		bgImage.setScaling(Scaling.stretch);
@@ -508,23 +512,6 @@ public class RvBWorld extends RvBBase {
 		
 		battleScreen.sceneLayerGUI.addActor(buttonsTable);
 		
-		//inventory button
-//		toggleInventoryButton = new TextButton("Inventory", battleScreen.getSkin());
-//		toggleInventoryButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//            	if (currentTurnRight)
-//            	{
-//            		playerRight.inventoryVisible(true);
-//            	} else
-//            	{
-//            		playerLeft.inventoryVisible(true);
-//            	}
-//            };
-//        });
-//
-//      battleScreen.sceneLayerGUI.addActor(toggleInventoryButton);
-//		buttonsTable.add(toggleInventoryButton).width(96 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).height(24 * (battleScreen.screenResW / WORLD_NATIVE_RES.x)).padBottom(4);
 		buttonsTable.row();
 		
 //      nextTurnButton
