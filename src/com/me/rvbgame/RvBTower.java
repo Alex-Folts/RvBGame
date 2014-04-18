@@ -2,9 +2,6 @@ package com.me.rvbgame;
 
 import com.me.rvbgame.screens.BattleScreen;
 
-
-import com.me.rvbgame.screens.BattleScreen;
-
 public class RvBTower extends RvBUnit {
 
 //	public String avaPath = "data/towerimage01.png";

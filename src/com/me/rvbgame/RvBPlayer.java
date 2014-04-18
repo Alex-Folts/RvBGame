@@ -735,7 +735,7 @@ public class RvBPlayer extends RvBBase{
             range += 2-numOfLinesInFront(slot1);
         else if (slot3!=null)
             range += 2-numOfLinesInFront(slot3);
-        Gdx.app.log("PLA","range " + range);
+//        Gdx.app.log("PLA","range " + range);
         switch (range){
             case 1:
                 if (slot4!=null){
@@ -943,7 +943,7 @@ public class RvBPlayer extends RvBBase{
 					tmpInvItem.getPlaceUnitImage().addListener( new ClickListener() {             
 						@Override
 						public void clicked(InputEvent event, float x, float y) {
-							Gdx.app.log("BVGE", "clicked:");
+//							Gdx.app.log("BVGE", "clicked:");
 							if (bWaitForCard)
 							{
 								
@@ -1382,35 +1382,35 @@ public class RvBPlayer extends RvBBase{
 	}
 
     public int numOfLinesInFront(RvBUnit unit){
-        Gdx.app.log("BVGE","numOfLinesInFront returns:");
+//        Gdx.app.log("BVGE","numOfLinesInFront returns:");
         switch (unit.line){
             case 1:
-                Gdx.app.log("BVGE","case 1: "+0);
+//                Gdx.app.log("BVGE","case 1: "+0);
                 return 0;
             case 2:
                 if (slot4 != null || slot5 != null){ //only first line ahead
-                    Gdx.app.log("BVGE","case 2: "+1);
+//                    Gdx.app.log("BVGE","case 2: "+1);
                     return 1;
                 }
                 if (slot4 == null && slot5 == null){
-                    Gdx.app.log("BVGE","case 2: "+0);
+//                    Gdx.app.log("BVGE","case 2: "+0);
                     return 0;
                 }
             case 3:
                 if (slot2 != null && (slot4 != null || slot5 != null))  //first and second line ahead
                 {
-                    Gdx.app.log("BVGE","case 3: "+2);
+//                    Gdx.app.log("BVGE","case 3: "+2);
                     return 2;
                 }
                 else if (slot2 != null && (slot4 == null && slot5 == null)) //only second line ahead
                 {
-                    Gdx.app.log("BVGE","case 3: "+1);
+//                    Gdx.app.log("BVGE","case 3: "+1);
                     return 1;
                 }
             default:
                 break;
         }
-        Gdx.app.log("BVGE","nocase: "+0);
+//        Gdx.app.log("BVGE","nocase: "+0);
         return 0;
     }
     

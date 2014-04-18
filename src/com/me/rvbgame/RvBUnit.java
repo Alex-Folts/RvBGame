@@ -225,7 +225,7 @@ public abstract class RvBUnit extends RvBBase {
 		{
 			settowerColor(new Color(1, 1, 1, 1));
 		}
-		Gdx.app.log("RvB", "setbCanOperate "+bCanOperate);
+//		Gdx.app.log("RvB", "setbCanOperate "+bCanOperate);
 	}
 
 

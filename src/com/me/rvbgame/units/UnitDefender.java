@@ -15,12 +15,10 @@ public class UnitDefender extends RvBUnit {
     public UnitDefender(BattleScreen parentScreen, RvBPlayer playerOwner) {
         super(parentScreen, playerOwner);
         this.unitType = UnitType.UNIT_TYPE_DEFENDER;
-//        StatsHelper.initiate(this);
 
     }
 	
     public UnitDefender(){
         this.unitType = UnitType.UNIT_TYPE_DEFENDER;
-//        StatsHelper.initiate(this);
     }
 }

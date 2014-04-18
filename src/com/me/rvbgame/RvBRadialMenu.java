@@ -53,7 +53,7 @@ public class RvBRadialMenu extends Group{
                 super.clicked(event, x, y);
 
                 //This method is overrided with:
-                Gdx.app.log("RM", "clicked: attack");
+//                Gdx.app.log("RM", "clicked: attack");
                 upperChoiceImage.setColor(StatsHelper.COLOR_DARK_RED);
                 applyAction(ActionType.ACTION_TYPE_ATTACK);
             }
@@ -68,7 +68,7 @@ public class RvBRadialMenu extends Group{
                 super.clicked(event, x, y);
 
                 //This method is overrided with:
-                Gdx.app.log("RM", "clicked: defence");
+//                Gdx.app.log("RM", "clicked: defence");
                 applyAction(ActionType.ACTION_TYPE_DEFEND);
             }
         });
@@ -82,7 +82,7 @@ public class RvBRadialMenu extends Group{
                 super.clicked(event, x, y);
 
                 //This method is overrided with:
-                Gdx.app.log("RM", "clicked: wait");
+//                Gdx.app.log("RM", "clicked: wait");
                 applyAction(ActionType.ACTION_TYPE_WAIT);
             }
         });
@@ -96,7 +96,7 @@ public class RvBRadialMenu extends Group{
                 super.clicked(event, x, y);
 
                 //This method is overrided with:
-                Gdx.app.log("RM", "clicked: cancel");
+//                Gdx.app.log("RM", "clicked: cancel");
                 hide();
             }
         });
@@ -111,7 +111,7 @@ public class RvBRadialMenu extends Group{
 
     private void applyAction(ActionType actionType) {
         unit.actionType = actionType;
-        Gdx.app.log("TOW","at clicked "+actionType);
+//        Gdx.app.log("TOW","at clicked "+actionType);
         if (actionType != ActionType.ACTION_TYPE_ATTACK
                 && actionType!=ActionType.ACTION_TYPE_FREEZE
                 && actionType!=ActionType.ACTION_TYPE_HEAL){
@@ -139,7 +139,7 @@ public class RvBRadialMenu extends Group{
     public void changeCoords(RvBUnit unit){
 
         this.unit = unit;
-        Gdx.app.log("RM","what "+StatsHelper.whatUnit(unit.unitType));
+//        Gdx.app.log("RM","what "+StatsHelper.whatUnit(unit.unitType));
         if (unit.unitType == UnitType.UNIT_TYPE_TOWER){
             changeCoordsToTower();
             return;
@@ -197,7 +197,7 @@ public class RvBRadialMenu extends Group{
                     super.clicked(event, x, y);
 
                     //This method is overrided with:
-                    Gdx.app.log("RM", "clicked: freeze");
+//                    Gdx.app.log("RM", "clicked: freeze");
                     bottomRightChoiceImage.setColor(StatsHelper.COLOR_DARK_RED);
                     applyAction(ActionType.ACTION_TYPE_FREEZE);
                 }
@@ -228,7 +228,7 @@ public class RvBRadialMenu extends Group{
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
                     //This method is overrided with:
-                    Gdx.app.log("RM", "clicked: aim");
+//                    Gdx.app.log("RM", "clicked: aim");
                     applyAction(ActionType.ACTION_TYPE_AIM);
                 }
             });
@@ -253,7 +253,7 @@ public class RvBRadialMenu extends Group{
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    Gdx.app.log("RM", "clicked: more");
+//                    Gdx.app.log("RM", "clicked: more");
                     applyActionMore();
                 }
             } );

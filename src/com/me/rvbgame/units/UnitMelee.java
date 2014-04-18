@@ -17,11 +17,9 @@ public class UnitMelee extends RvBUnit{
         super(parentScreen, playerOwner);
 
         this.unitType = UnitType.UNIT_TYPE_MELEE;
-//        StatsHelper.initiate(this);
     }
 
     public UnitMelee(){
         this.unitType = UnitType.UNIT_TYPE_MELEE;
-//        StatsHelper.initiate(this);
     }
 }

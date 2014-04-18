@@ -106,7 +106,7 @@ public class RvBWorld extends RvBBase {
 	public static boolean damage(RvBUnit attacker, RvBUnit victim, int attackID) {
 		int finalHealthDamage = 0, finalEnergyDamage = 0;
 		
-		Gdx.app.log("BVGE", "damage: "+attacker+" "+victim);
+//		Gdx.app.log("BVGE", "damage: "+attacker+" "+victim);
         switch (attacker.unitType) {
             case UNIT_TYPE_DEFENDER:
             case UNIT_TYPE_MELEE:
@@ -145,7 +145,7 @@ public class RvBWorld extends RvBBase {
             victim.setEnergy(newEnergy);
         }else if (finalEnergyDamage>0) victim.setEnergy(newEnergy);
 
-        Gdx.app.log("BVGE", "energy damage: ");
+//        Gdx.app.log("BVGE", "energy damage: ");
 
         if (finalHealthDamage<0)
             return false;
@@ -158,7 +158,7 @@ public class RvBWorld extends RvBBase {
         }
         setupActionAnimation(attacker, victim, finalHealthDamage, ActionType.ACTION_TYPE_ATTACK);
         victim.setHealth(newHealth);
-        Gdx.app.log("BVGE", "victim health = "+victim.getHealth());
+//        Gdx.app.log("BVGE", "victim health = "+victim.getHealth());
 
 		return true;
 	}
@@ -275,7 +275,7 @@ public class RvBWorld extends RvBBase {
 	}
 	
 	public static boolean heal(RvBUnit healler, RvBUnit target, int attackID) {
-        Gdx.app.log("TOW","heal "+target);
+//        Gdx.app.log("TOW","heal "+target);
         if (target.getHealth() == target.getMaxHealth())
             return false;
         int newHealth = target.getHealth() + StatsHelper.HEAL_POINTS;
@@ -300,11 +300,11 @@ public class RvBWorld extends RvBBase {
         	playerLeft.endTurn();
 			playerRight.beginTurn();
             
-            Gdx.app.log("BVGE", "Current turn: Right");
+//            Gdx.app.log("BVGE", "Current turn: Right");
             if (actionPointsLeftLabel != null)
             actionPointsLeftLabel.setText(String.format("Curr: right"));
 		} else {
-            Gdx.app.log("BVGE", "Current turn: Left");
+//            Gdx.app.log("BVGE", "Current turn: Left");
             if (actionPointsLeftLabel != null)
             actionPointsLeftLabel.setText(String.format("Curr: left"));
 			
@@ -559,7 +559,7 @@ public class RvBWorld extends RvBBase {
         nextTurnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("GUI", "Next turn");
+//                Gdx.app.log("GUI", "Next turn");
                 clearStatLabels();
                 if (currentTurnRight) {
                     endTurn(playerRight);
@@ -577,7 +577,7 @@ public class RvBWorld extends RvBBase {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Gdx.app.log("GUI", "Stop");
+//                Gdx.app.log("GUI", "Stop");
 
                 revealPauseWindow();
             }
@@ -652,7 +652,7 @@ public class RvBWorld extends RvBBase {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
     //                        inventoryVisible(false);
-                    Gdx.app.log("GUI","Close window");
+//                    Gdx.app.log("GUI","Close window");
                     pauseWindow.setVisible(false);
                 };
             });
@@ -665,7 +665,7 @@ public class RvBWorld extends RvBBase {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    Gdx.app.log("GUI","Exit battle");
+//                    Gdx.app.log("GUI","Exit battle");
                     exitBattle();
                 }
             });
@@ -795,11 +795,11 @@ public class RvBWorld extends RvBBase {
             battleScreen.sceneLayerRadialMenu = new RvBRadialMenu(actingUnit);
             battleScreen.sceneLayerRadialMenu.setVisible(true);
             battleScreen.stage.addActor(battleScreen.sceneLayerRadialMenu);
-            Gdx.app.log("RM", "Creating...");
+//            Gdx.app.log("RM", "Creating...");
         }else {
             battleScreen.sceneLayerRadialMenu.changeCoords(actingUnit);
             battleScreen.sceneLayerRadialMenu.setVisible(true);
-            Gdx.app.log("RM", "Moving...");
+//            Gdx.app.log("RM", "Moving...");
         }
 
     }
@@ -817,7 +817,7 @@ public class RvBWorld extends RvBBase {
         
         switch (attacker.actionType) {
             case ACTION_TYPE_ATTACK:
-                Gdx.app.log("RM","v def"+victim.getpDefence());
+//                Gdx.app.log("RM","v def"+victim.getpDefence());
                 if (damage(attacker,victim,0)){                	
                     attacker.setActionPoints(attacker.getActionPoints()-1);
                     return true;

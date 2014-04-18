@@ -62,7 +62,7 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
                 addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("BVG", "MainMenuScreen:clicked start");
+//                Gdx.app.log("BVG", "MainMenuScreen:clicked start");
 
                 mGame.setScreen(new SPSettingsScreen(mGame));
             };
@@ -77,7 +77,7 @@ public class MainMenuScreen extends GameScreen implements InputProcessor {
         exitGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("BVG", "MainMenuScreen:clicked exit");
+//                Gdx.app.log("BVG", "MainMenuScreen:clicked exit");
 
 //                mGame.setScreen(new SplashScreen(mGame));
                 Gdx.app.exit();

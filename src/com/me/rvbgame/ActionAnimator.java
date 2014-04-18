@@ -74,7 +74,7 @@ public class ActionAnimator extends Table {
 		setWidth(width);
 		setHeight(height);
 		
-		float heightDelta = RvBBase.battleScreen.screenResH / RvBBase.battleScreen.world.WORLD_NATIVE_RES.y;
+		float heightDelta = RvBBase.battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y;
 		float icoSize = ICON_NATIVE_SIZE * heightDelta;
 		float windowWidth = WINDOW_NATIVE_WIDTH * heightDelta;
 		float windowHeight = WINDOW_NATIVE_HEIGHT * heightDelta;

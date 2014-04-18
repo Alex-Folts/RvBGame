@@ -19,7 +19,7 @@ public class RvBAIPlayer extends RvBPlayer {
 	@Override
 	protected void makeMove() {
 		
-		Gdx.app.log("BVGE", "RvBAIPlayer:makeMove()");
+//		Gdx.app.log("BVGE", "RvBAIPlayer:makeMove()");
 		
 		manageUnits();
 		
@@ -32,12 +32,12 @@ public class RvBAIPlayer extends RvBPlayer {
 	}
 	
 	private boolean manageUnits() {
-		Gdx.app.log("BVGE", "RvBAIPlayer:manageUnits()...");
+//		Gdx.app.log("BVGE", "RvBAIPlayer:manageUnits()...");
 		return false;
 	}
 	
 	private boolean fillAttackQuery() {
-		Gdx.app.log("BVGE", "RvBAIPlayer:fillAttackQuery()...");
+//		Gdx.app.log("BVGE", "RvBAIPlayer:fillAttackQuery()...");
 		
 		RvBUnit tmpUnit;
 		
@@ -63,7 +63,7 @@ public class RvBAIPlayer extends RvBPlayer {
 	}
 	
 	private boolean unitsActions() {
-		Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions()...");
+//		Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions()...");
 /*		
  		int attackCount = 0;
 		if (tower != null && !tower.isbDead() && !tower.bFreeze)
@@ -219,7 +219,7 @@ public class RvBAIPlayer extends RvBPlayer {
 		boolean wasAction = false;
 		if (attackQueryList != null && attackQueryList.size() > 0)
 		{
-			Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 1");
+//			Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 1");
 			attackQueryList.get(0);
 			if (!attackQueryList.get(0).bFreeze && attackQueryList.get(0).isbCanOperate())
 			{
@@ -228,7 +228,7 @@ public class RvBAIPlayer extends RvBPlayer {
 //					Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() Tower");
 //					return;
 //				}
-				Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 2");
+//				Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 2");
 				setActingUnit(attackQueryList.get(0));
 				
 				for(int i = 1; i <= 5; i++)
@@ -236,23 +236,23 @@ public class RvBAIPlayer extends RvBPlayer {
 					RvBUnit tmpVictim = RvBWorld.getOppositePlayer().getSlotUnitByIdx(i);
 					if (tmpVictim != null)
 					{
-						Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 3");
+//						Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 3");
 						if (!tmpVictim.isbDead())
 						{
-							Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 4");
+//							Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 4");
 							if (!tmpVictim.isDefended())
 							{
-								Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 5");
+//								Gdx.app.log("BVGE", "RvBAIPlayer:unitsActions() 5");
 								getActingUnit().actionType = ActionType.ACTION_TYPE_ATTACK;
 								RvBWorld.getOppositePlayer().fillAvailableVictims(getActingUnit().getAttackRange());
 								if (tmpVictim.isbReachable())
 								{
-									Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 5.5");
+//									Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 5.5");
 					                if(RvBWorld.applyActionOnVictim(getActingUnit(), tmpVictim));
 									{
-										Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 6");
+//										Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 6");
 					                    if (RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints() == 0){
-					                    	Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 7");
+//					                    	Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 7");
 					                        RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
 					                        RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
 	//				                        if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
@@ -276,20 +276,20 @@ public class RvBAIPlayer extends RvBPlayer {
 				{
 					if (RvBWorld.getOppositePlayer().tower != null)
 					{
-						Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 3");
+//						Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 3");
 						if (!RvBWorld.getOppositePlayer().tower.isbDead())
 						{
-							Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 4");
+//							Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 4");
 							getActingUnit().actionType = ActionType.ACTION_TYPE_ATTACK;
 							RvBWorld.getOppositePlayer().fillAvailableVictims(getActingUnit().getAttackRange());
 							if (RvBWorld.getOppositePlayer().tower.isbReachable())
 							{
-								Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 5.5");
+//								Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 5.5");
 				                if(RvBWorld.applyActionOnVictim(getActingUnit(), RvBWorld.getOppositePlayer().tower));
 								{
-									Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 6");
+//									Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 6");
 				                    if (RvBWorld.getCurrentTurnPlayer().getActingUnit().getActionPoints() == 0){
-				                    	Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 7");
+//				                    	Gdx.app.log("BVGE", "RvBAIPlayer:DoAction() 7");
 				                        RvBWorld.getCurrentTurnPlayer().getActingUnit().setbCanOperate(false);
 				                        RvBWorld.getCurrentTurnPlayer().getActingUnit().actionType = ActionType.ACTION_TYPE_DONE;
 //				                        if (!RvBWorld.getCurrentTurnPlayer().checkIfCanMove()){
@@ -366,7 +366,7 @@ public class RvBAIPlayer extends RvBPlayer {
 	public void actionAnimEnded() {
 		super.actionAnimEnded();
 		
-		Gdx.app.log("BVGE", "RvBAIPlayer:actionAnimEnded()");
+//		Gdx.app.log("BVGE", "RvBAIPlayer:actionAnimEnded()");
 		
 		checkAction();
 /*		if (attackQueryList != null && attackQueryList.size() > 0)

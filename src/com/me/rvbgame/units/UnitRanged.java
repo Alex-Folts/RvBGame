@@ -19,12 +19,10 @@ public class UnitRanged extends RvBUnit{
         super(parentScreen, playerOwner);
 
         this.unitType = UnitType.UNIT_TYPE_RANGED;
-//        StatsHelper.initiate(this);
     }
 
     public UnitRanged(){
         this.unitType = UnitType.UNIT_TYPE_RANGED;
-//        StatsHelper.initiate(this);
     }
 
     void useAim(){

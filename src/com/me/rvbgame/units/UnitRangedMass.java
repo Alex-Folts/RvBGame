@@ -17,11 +17,9 @@ public class UnitRangedMass extends RvBUnit {
         super(parentScreen, playerOwner);
 
         this.unitType = UnitType.UNIT_TYPE_RANGED_MASS;
-//        StatsHelper.initiate(this);
     }
 
     public UnitRangedMass(){
         this.unitType = UnitType.UNIT_TYPE_RANGED_MASS;
-//        StatsHelper.initiate(this);
     }
 }

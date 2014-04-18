@@ -1,7 +1,6 @@
 package com.me.rvbgame;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -121,7 +120,7 @@ public class RvBSceneLayerFX extends Group {
 
 
     public void shineUnit(int slotNum){//,boolean isRight) {
-        Gdx.app.log("TOW","slotNum "+slotNum);
+//        Gdx.app.log("TOW","slotNum "+slotNum);
         switch (slotNum){
             case 1:
                 shineLeftSlot1.setVisible(true);
