@@ -195,7 +195,7 @@ public class RvBWorld extends RvBBase {
         int randDamage = 0;
         int critDamage = 0;
         int rand = (int)(Math.random() * 100) ;
-        boolean bPlayedAnim = false;
+//        boolean bPlayedAnim = false;
         RvBUnit firstVictim = null;
         if (rand <= unitRangedMass.getCriticalChance())
             critDamage += unitRangedMass.getpAttack()/2;
@@ -841,6 +841,8 @@ public class RvBWorld extends RvBBase {
 //                break;
             case ACTION_TYPE_HACK:
                 break;
+			default:
+				break;
         }
         return false;
     }
@@ -914,7 +916,7 @@ public class RvBWorld extends RvBBase {
             case ACTION_TYPE_WAIT:
                 unit.setActionPoints(unit.getActionPoints()+1);
                 unit.setbCanOperate(false);
-                this.battleScreen.sceneLayerRadialMenu.hide();
+                RvBBase.battleScreen.sceneLayerRadialMenu.hide();
                 this.updateStatLabels(unit);
                 break;
             case ACTION_TYPE_AIM:
@@ -924,6 +926,8 @@ public class RvBWorld extends RvBBase {
                 break;
             case ACTION_TYPE_HEAL:
                 break;
+			default:
+				break;
         }
     }
 

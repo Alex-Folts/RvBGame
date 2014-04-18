@@ -351,7 +351,7 @@ public abstract class RvBUnit extends RvBBase {
 		
 		if (unitType != UnitType.UNIT_TYPE_TOWER)
 		{
-	    	if (player == battleScreen.world.playerRight)
+	    	if (player == RvBWorld.playerRight)
 	    	{
 	    		if (player.slot1 == this)
 	    		{
@@ -428,7 +428,7 @@ public abstract class RvBUnit extends RvBBase {
     		float deltaWidthCoef = (battleScreen.screenResW / RvBWorld.WORLD_NATIVE_RES.x);
     		float deltaHeightCoef = (battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y);
     		float deltaAvaSizeW = getAvaSize().x * deltaHeightCoef;
-	    	if (player == battleScreen.world.playerRight)
+	    	if (player == RvBWorld.playerRight)
 	    	{
 	    		if (player.slot1 == this)
 	    		{

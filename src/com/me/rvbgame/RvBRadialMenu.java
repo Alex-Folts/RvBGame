@@ -3,20 +3,13 @@ package com.me.rvbgame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 
 public class RvBRadialMenu extends Group{
@@ -30,8 +23,8 @@ public class RvBRadialMenu extends Group{
 
     private Image bottomLeftChoiceImage;
     private Image bottomRightChoiceImage;
-    private Image leftChoiceImage;
-    private Image rightChoiceImage;
+//    private Image leftChoiceImage;
+//    private Image rightChoiceImage;
 
     private Image additionalUpperImage;
     private Image additionalUpperLeftImage;
@@ -115,7 +108,7 @@ public class RvBRadialMenu extends Group{
         if (actionType != ActionType.ACTION_TYPE_ATTACK
                 && actionType!=ActionType.ACTION_TYPE_FREEZE
                 && actionType!=ActionType.ACTION_TYPE_HEAL){
-            unit.battleScreen.world.applyActionOnSelf(unit);
+            RvBBase.battleScreen.world.applyActionOnSelf(unit);
 
             if (unit.getActionPoints() == 0){
                 unit.setbCanOperate(false);

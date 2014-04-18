@@ -2,7 +2,6 @@ package com.me.rvbgame;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.me.rvbgame.screens.BattleScreen;
 
 public class RvBAIPlayer extends RvBPlayer {
@@ -215,7 +214,7 @@ public class RvBAIPlayer extends RvBPlayer {
 	}
 	
 	private void DoAction() {
-		int attackCount = 0;
+//		int attackCount = 0;
 		boolean wasAction = false;
 		if (attackQueryList != null && attackQueryList.size() > 0)
 		{
@@ -261,7 +260,7 @@ public class RvBAIPlayer extends RvBPlayer {
 					                    }
 	//				                    battleScreen.sceneLayerRadialMenu.setDefaultColors();
 	//				                    battleScreen.sceneLayerRadialMenu.hide();
-					                    attackCount++;
+//					                    attackCount++;
 					                    attackQueryList.remove(0);
 					                    wasAction = true;
 					                    break;
@@ -298,7 +297,7 @@ public class RvBAIPlayer extends RvBPlayer {
 				                    }
 //				                    battleScreen.sceneLayerRadialMenu.setDefaultColors();
 //				                    battleScreen.sceneLayerRadialMenu.hide();
-				                    attackCount++;
+//				                    attackCount++;
 				                    attackQueryList.remove(0);
 				                    wasAction = true;
 								}

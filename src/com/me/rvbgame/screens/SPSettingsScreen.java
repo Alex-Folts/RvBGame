@@ -592,6 +592,8 @@ public class SPSettingsScreen extends GameScreen {
                     updated = true;
                 }
                 break;
+			default:
+				break;
         }
         return updated;
     }

@@ -51,7 +51,7 @@ public class RvBTower extends RvBUnit {
         		float deltaHeightCoef = (battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y);
         		float deltaAvaSizeW = getAvaSize().x * deltaHeightCoef;
         		
-    	    	if (player == battleScreen.world.playerRight)
+    	    	if (player == RvBWorld.playerRight)
     	    	{
 /*    	    		Gdx.app.log("RvB", "addToDraw "+RvBWorld.WORLD_NATIVE_RES.x);
     	    		Gdx.app.log("RvB", "addToDraw "+battleScreen.screenResW);

@@ -261,16 +261,16 @@ public class RvBPlayer extends RvBBase{
         
         setActingUnit(null);
 
-        if (this.battleScreen.sceneLayerRadialMenu!=null)
-            this.battleScreen.sceneLayerRadialMenu.setDefaultColors();
-        if (this.battleScreen.sceneLayerFX!=null)
-            this.battleScreen.sceneLayerFX.allInvisiblie();
+        if (RvBBase.battleScreen.sceneLayerRadialMenu!=null)
+        	RvBBase.battleScreen.sceneLayerRadialMenu.setDefaultColors();
+        if (RvBBase.battleScreen.sceneLayerFX!=null)
+        	RvBBase.battleScreen.sceneLayerFX.allInvisiblie();
     }
 
 
     protected void makeMove() {
 //        make move by AI
-        this.battleScreen.world.endTurn(this);
+    	RvBBase.battleScreen.world.endTurn(this);
     }
 
 	public RvBUnit getActingUnit() {
@@ -511,7 +511,7 @@ public class RvBPlayer extends RvBBase{
 			slot01EmptyImage.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	if (RvBWorld.getCurrentTurnPlayer() == RvBPlayer.this)
 	            	{
 	            		if (bWaitForSlot)
 	            		{
@@ -530,7 +530,7 @@ public class RvBPlayer extends RvBBase{
 	            };
 	        });
 			
-			if (this == battleScreen.world.playerRight)
+			if (this == RvBWorld.playerRight)
 			{
 	//			slot01EmptyImage.setPosition(RvBWorld.RIGHT_UNIT_SLOT01.x - (slot01EmptyImage.getWidth() * 0.5f), RvBWorld.RIGHT_UNIT_SLOT01.y - (slot01EmptyImage.getHeight() * 0.5f));
 				slot01EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT01.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT01.y * deltaHeightCoef);
@@ -553,7 +553,7 @@ public class RvBPlayer extends RvBBase{
 			slot02EmptyImage.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	if (RvBWorld.getCurrentTurnPlayer() == RvBPlayer.this)
 	            	{
 	            		if (bWaitForSlot)
 	            		{
@@ -572,7 +572,7 @@ public class RvBPlayer extends RvBBase{
 	            };
 	        });
 			
-			if (this == battleScreen.world.playerRight)
+			if (this == RvBWorld.playerRight)
 			{
 				slot02EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT02.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT02.y * deltaHeightCoef);
 			} else
@@ -592,7 +592,7 @@ public class RvBPlayer extends RvBBase{
 			slot03EmptyImage.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	if (RvBWorld.getCurrentTurnPlayer() == RvBPlayer.this)
 	            	{
 	            		if (bWaitForSlot)
 	            		{
@@ -611,7 +611,7 @@ public class RvBPlayer extends RvBBase{
 	            };
 	        });
 			
-			if (this == battleScreen.world.playerRight)
+			if (this == RvBWorld.playerRight)
 			{
 				slot03EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT03.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT03.y * deltaHeightCoef);
 			} else
@@ -631,7 +631,7 @@ public class RvBPlayer extends RvBBase{
 			slot04EmptyImage.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	if (RvBWorld.getCurrentTurnPlayer() == RvBPlayer.this)
 	            	{
 	            		if (bWaitForSlot)
 	            		{
@@ -650,7 +650,7 @@ public class RvBPlayer extends RvBBase{
 	            };
 	        });
 			
-			if (this == battleScreen.world.playerRight)
+			if (this == RvBWorld.playerRight)
 			{
 				slot04EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT04.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT04.y * deltaHeightCoef);
 			} else
@@ -670,7 +670,7 @@ public class RvBPlayer extends RvBBase{
 			slot05EmptyImage.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
-	            	if (battleScreen.world.getCurrentTurnPlayer() == RvBPlayer.this)
+	            	if (RvBWorld.getCurrentTurnPlayer() == RvBPlayer.this)
 	            	{
 	            		if (bWaitForSlot)
 	            		{
@@ -689,7 +689,7 @@ public class RvBPlayer extends RvBBase{
 	            };
 	        });
 			
-			if (this == battleScreen.world.playerRight)
+			if (this == RvBWorld.playerRight)
 			{
 				slot05EmptyImage.setPosition((RvBWorld.RIGHT_UNIT_SLOT05.x * deltaWidthCoef * (1.0f + ((deltaAvaSizeW - 48) / battleScreen.screenResW))), RvBWorld.RIGHT_UNIT_SLOT05.y * deltaHeightCoef);
 			} else
@@ -741,7 +741,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot4!=null){
                     slot4.setbReachable(true);
                     slot4.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot4.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot4.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -753,7 +753,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot5!=null){
                     slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
                     slot5.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot5.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot5.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -767,7 +767,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot2!=null){
                     slot2.setbReachable(true);
                     slot2.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot2.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot2.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -779,7 +779,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot4!=null){
                     slot4.setbReachable(true);
                     slot4.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot4.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot4.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -791,7 +791,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot5!=null){
                     slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
                     slot5.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot5.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot5.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -805,7 +805,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot1!=null){
                     slot1.setbReachable(true);
                     slot1.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot1.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot1.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -818,7 +818,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot3!=null){
                     slot3.setbReachable(true);
                     slot3.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot3.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot3.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -830,7 +830,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot2!=null){
                     slot2.setbReachable(true);
                     slot2.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot2.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot2.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -842,7 +842,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot4!=null){
                     slot4.setbReachable(true);
                     slot4.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot4.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot4.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -854,7 +854,7 @@ public class RvBPlayer extends RvBBase{
                 if (slot5!=null){
                     slot5.setbReachable(true);//settowerColor(StatsHelper.COLOR_DARK_GREEN);
                     slot5.settowerColor(Color.WHITE);
-                    if (this == battleScreen.world.playerRight){
+                    if (this == RvBWorld.playerRight){
                         battleScreen.sceneLayerFX.shineRightSlot5.setVisible(true);
                         battleScreen.sceneLayerFX.shineRightSlot5.setColor(StatsHelper.COLOR_DARK_RED);
                     }
@@ -866,7 +866,7 @@ public class RvBPlayer extends RvBBase{
 
                 tower.setbReachable(true);
                 tower.settowerColor(Color.WHITE);
-                if (this == battleScreen.world.playerRight) {
+                if (this == RvBWorld.playerRight) {
                     battleScreen.sceneLayerFX.shineRightTower.setVisible(true);
                     battleScreen.sceneLayerFX.shineRightTower.setColor(StatsHelper.COLOR_DARK_RED);
                 }else{
@@ -1026,8 +1026,8 @@ public class RvBPlayer extends RvBBase{
 
     	void init(float width, float height)
     	{
-    		float statsIcoSize = STATS_ICON_NATIVE_SIZE * (battleScreen.screenResH / battleScreen.world.WORLD_NATIVE_RES.y);
-    		float placeIcoSize = PLACE_ICON_NATIVE_SIZE * (battleScreen.screenResH / battleScreen.world.WORLD_NATIVE_RES.y);
+    		float statsIcoSize = STATS_ICON_NATIVE_SIZE * (battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y);
+    		float placeIcoSize = PLACE_ICON_NATIVE_SIZE * (battleScreen.screenResH / RvBWorld.WORLD_NATIVE_RES.y);
     		
     		setWidth(width);
     		setHeight(height);

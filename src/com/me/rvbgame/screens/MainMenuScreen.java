@@ -2,11 +2,8 @@ package com.me.rvbgame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,10 +19,10 @@ import com.me.rvbgame.StatsHelper;
 
 public class MainMenuScreen extends GameScreen implements InputProcessor {
 
-    private OrthographicCamera camera;
-    private SpriteBatch batch;
-    private Texture texture;
-    private Sprite sprite;
+//    private OrthographicCamera camera;
+//    private SpriteBatch batch;
+//    private Texture texture;
+//    private Sprite sprite;
     private RvbGdxGame mGame;
     
     private String bgPath = "data/the_city_v7.png";
