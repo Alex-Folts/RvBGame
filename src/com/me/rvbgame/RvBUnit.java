@@ -58,7 +58,7 @@ public abstract class RvBUnit extends RvBBase {
 	private Texture avaTexture;
 	protected int avaTexWidth = 128;
 	protected int avaTexHeight = 128;
-	protected Vector2 avaSize = new Vector2(48, 48);
+	public Vector2 avaSize = new Vector2(48, 48);
     private boolean defended;
     public int line;
 
@@ -485,7 +485,8 @@ public abstract class RvBUnit extends RvBBase {
 	    	}
 	    	avaImage.setSize(deltaAvaSizeW, deltaAvaSizeW);
             avaImage.setColor(Color.DARK_GRAY);
-
+            avaSize.set(deltaAvaSizeW,deltaAvaSizeW);
+            StatsHelper.size = avaSize;
             healthLeftLabel.setPosition(avaImage.getX(),avaImage.getY());
 	    }
 	}

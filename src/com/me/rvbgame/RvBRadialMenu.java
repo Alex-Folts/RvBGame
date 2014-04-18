@@ -44,7 +44,7 @@ public class RvBRadialMenu extends Group{
 
     public RvBRadialMenu(RvBUnit unit){
         this.unit = unit;
-
+        itemSize = StatsHelper.size;
         //default actions:
         Image avaImage = applyTexture("data/radial_menu_files/rm_att.png");
         avaImage.addListener(new ClickListener(){
@@ -270,6 +270,12 @@ public class RvBRadialMenu extends Group{
                     unit.avaImage.getX() + itemSize.y/2,
                     (float) (unit.avaImage.getY() + itemSize.y * 2.5)// unit.avaSize.y
             );
+            if (RvBWorld.WORLD_NATIVE_RES.x<StatsHelper.width)
+                upperChoiceImage.setPosition(
+                        0,
+                        (float) (unit.avaImage.getY() + itemSize.y * 2.5)// unit.avaSize.y
+                );
+            ;
         }
         if (upperLeftChoiceImage != null){
             upperLeftChoiceImage.setPosition(

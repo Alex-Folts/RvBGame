@@ -87,11 +87,11 @@ public class SPSettingsScreen extends GameScreen {
         startBattleButton.addListener( new ClickListener() {             
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
-            	Gdx.app.log("RvB", "SPSettingsScreen: selectedUnitsList:"+selectedUnitsList);
+//            	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
+//            	Gdx.app.log("RvB", "SPSettingsScreen: selectedUnitsList:"+selectedUnitsList);
                 BattleScreen battleScreen = new BattleScreen(mGame);
                 battleScreen.world.selectedUnitsList = selectedUnitsList;
-                Gdx.app.log("RvB", "SPSettingsScreen: selectedUnitsList:"+battleScreen.world.selectedUnitsList);
+//                Gdx.app.log("RvB", "SPSettingsScreen: selectedUnitsList:"+battleScreen.world.selectedUnitsList);
                 mGame.setScreen(battleScreen);
             };
         });
@@ -99,7 +99,7 @@ public class SPSettingsScreen extends GameScreen {
         backButton.addListener( new ClickListener() {             
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
+//            	Gdx.app.log("RvB", "SPSettingsScreen:clicked");
                 mGame.setScreen(new MainMenuScreen(mGame));
             };
         });
@@ -296,13 +296,13 @@ public class SPSettingsScreen extends GameScreen {
         };
 
         Image validTargetImage = new Image(skin, "badlogic");
-        validTargetImage.setBounds(200, 50, 100, 100);
+        validTargetImage.setBounds(StatsHelper.width/2-100, StatsHelper.height/4, 100, 100);
         stage.addActor(validTargetImage);
 
         Image invalidTargetImage = new Image(skin, "badlogic");
 //        invalidTargetImage.setBounds(200, 200, 100, 100);
 //        stage.addActor(invalidTargetImage);
-        infoLabel.setPosition(200,200);
+        infoLabel.setPosition(StatsHelper.width/2-100,StatsHelper.height/2);
 
         DragAndDrop dragAndDrop = new DragAndDrop();
 
@@ -326,11 +326,8 @@ public class SPSettingsScreen extends GameScreen {
                 if(selectedUnitsList.size() < maxUnitsToChoose){
                     updateLabels();
                     selectedUnitsList.add(unitTypeCurrent);
-                    Gdx.app.log("DAD", "Accepted: " + payload.getObject() );
-                }else
-                    Gdx.app.log("DAD", "Declined: " + payload.getObject() );
-//                Gdx.app.log("DAD", "selectedUnitsList: " + selectedUnitsList);
-                Gdx.app.log("DAD","Size " + selectedUnitsList.size());
+//                    Gdx.app.log("DAD", "Accepted: " + payload.getObject() );
+                }
             }
         });
 
@@ -345,7 +342,7 @@ public class SPSettingsScreen extends GameScreen {
             }
 
             public void drop (DragAndDrop.Source source, DragAndDrop.Payload payload, float x, float y, int pointer) {
-                Gdx.app.log("DAD", "Deleted: " + payload.getObject() + " " + x + ", " + y);
+//                Gdx.app.log("DAD", "Deleted: " + payload.getObject() + " " + x + ", " + y);
 //                imageArrayList.remove(payload.getDragActor());
 //                for (Actor actor: imageArrayList){
 //                    Gdx.app.log("DAD", "Deleted: " + actor);
